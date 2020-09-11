@@ -1,0 +1,51 @@
+,Topic
+0,America's favorite movie stars 
+1,America's favorite movie stars 
+2,America's favorite movie stars 
+3,America's favorite movie stars 
+4,America's favorite movie stars 
+5,America's favorite movie stars 
+6,America's favorite movie stars 
+7,America's favorite movie stars 
+8,America's favorite movie stars 
+9,America's favorite movie stars 
+10,America's favorite movies 
+11,America's favorite movies 
+12,America's favorite movies 
+13,America's favorite movies 
+14,America's favorite movies 
+15,America's favorite movies 
+16,America's favorite movies 
+17,America's favorite movies 
+18,America's favorite movies 
+19,America's favorite movies 
+20,film characters 
+21,film characters 
+22,film characters 
+23,film characters 
+24,film characters 
+25,film characters 
+26,film characters 
+27,film characters 
+28,film characters 
+29,film characters 
+30,film quotes 
+31,film quotes 
+32,film quotes 
+33,film quotes 
+34,film quotes 
+35,"Relevant results must denote the films in which the actor Mark Hamill plays the character Luke Skywalker. Note that because of limitations of existing systems, relevant results are *not* required to include a tuple from the title relation ."
+36,Relevant results contain 3 tuples  must denote all films in which the actor Tom Hanks appeared in the year 2004.
+37,"Relevant results must denote the character that Henry Fonda plays in the film ""Yours, Mine, and Ours."" Note that because of limitations of existing systems, relevant results are *not* required to include the appropriate tuple from the char_name relation ."
+38,"Relevant results must denote the character that Russell Crowe plays in the film ""Gladiator."" Note that because of limitations of existing systems, relevant results are *not* required to include the appropriate tuple from the char_name relation ."
+39,"Relevant results must denote the characters that the actor Brent Spiner plays in a Star Trek film. Note that because of limitations of existing systems, relevant results are *not* required to include a tuple from the char_name relation ."
+40,Relevant results contain 3 tuples  must denote all films in which the actor Audry Hepburn appeared in the year 1951.
+41,A relevant result must identify an actor who plays Jacques Clouseau in a movie.
+42,A relevant result must identify an actor who plays Jack Ryan in a movie.
+43,"Relevant results must denote a film in which Sylvester Stallone plays the character Rocky. Note that because of limitations of existing systems, relevant results are *not* required to include the appropriate tuple from the title relation ."
+44,"A relevant result must identify an actor who plays ""The Terminator."""
+45,Relevant results identify collaborations  between Harrison Ford and George Lucas.
+46,Relevant results identify collaborations  between Sean Connery and Ian Flemming.
+47,Relevant results identify collaborations  between Keanu Reeves and  the Wachowski brothers.
+48,Relevant results identify collaborations  between Dean Jones and Herbie .
+49,"Relevant results identify cast members in common between the films ""Raiders of the Lost Ark"" and ""Indiana Jones and the Last Crusade."""
