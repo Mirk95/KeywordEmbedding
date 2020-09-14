@@ -60,7 +60,8 @@ def create_query_embedding(mat, keys):
             query = extract_query(path_file)
             tokens = extract_tokens(query)
             if tokens and len(tokens) < 10:
-                create_embeddings(tokens, mat, keys)
+                #create_embeddings(tokens, mat, keys)
+                pass
 
 
 
