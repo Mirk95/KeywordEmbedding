@@ -3,6 +3,9 @@ import re
 import datetime
 import warnings
 
+import nltk
+from nltk.tokenize import RegexpTokenizer
+
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
     from local_embedding import create_local_embedding
@@ -21,13 +24,21 @@ def extract_query(file):
     print('# Query extraction from {}'.format(file))
     f = open(file)
     lines = f.readlines()
-    query = lines[2]        # Take only the third line
-    query = query.replace('# ', '')
+    query = lines[2]                        # Take only the third line
+    query = query.replace('# ', '')         # Remove the initial '# '
     print('# Query extracted: {}'.format(query))
     return query
 
 
-def extract_embedding(query, mat, keys):
+def extract_tokens(query):
+    print('# Tokens extraction from query {}'.format(query))
+    tokenizer = RegexpTokenizer(r'\w+')
+    list_tokens = tokenizer.tokenize(query)
+    print('# Tokens extracted: {}'.format(list_tokens))
+    return list_tokens
+
+
+def create_embeddings(tokens, mat, keys):
     pass
 
 
@@ -47,7 +58,9 @@ def create_query_embedding(mat, keys):
         if re.match('^\d+', file):
             path_file = path + file
             query = extract_query(path_file)
-            emb = extract_embedding(query, mat, keys)
+            tokens = extract_tokens(query)
+            if tokens and len(tokens) < 10:
+                create_embeddings(tokens, mat, keys)
 
 
 
