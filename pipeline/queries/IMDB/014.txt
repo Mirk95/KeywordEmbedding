@@ -1,0 +1,6 @@
+# [reference standard]
+# imdb2009
+# lord of the rings
+([44246360], []) # The Lord of the Rings: The Return of the King
+([44300268], []) # The Lord of the Rings: The Two Towers
+([44282840], []) # The Lord of the Rings: The Fellowship of the Ring

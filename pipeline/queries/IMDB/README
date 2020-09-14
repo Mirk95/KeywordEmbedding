@@ -1,0 +1,12 @@
+Each numbered file in this directory contains the relevance assessments for the topic corresponding to the file name. Each file has the following structure:
+# <query>
+<relevant result>
+<relevant result>
+...
+Hash marks ('#') denote comments and should be ignored. (Most comments relate additional information about a particular result judged relevant or clarification about the topic.) Each relevant result has the following structure:
+([<comma-separated list of tuples>], [<comma-separated list of relationships between tuples>])
+Tuples are identified by their *unique* __search_id in the database. Each relationship is an edge (foreign key) between tuples, labeled by the source and destination of the edge.
+
+
+Please reference the following publication when using these topics and relevance assessments:
+Joel Coffman and Alfred C. Weaver. "A Framework for Evaluating Database Keyword Search Strategies." CIKM '10: Proceedings of the 19th ACM Conference on Information and Knowledge Management." Toronto, Canada, October 2010.

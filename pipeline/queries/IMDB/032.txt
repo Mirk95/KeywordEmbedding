@@ -1,0 +1,6 @@
+# [reference standard]
+# imdb2009
+# title i'm gonna make him an offer he won't refuse
+# NOTE: AFI reports the quote as "I'm going to make him an offer he can't refuse." but that wording
+# is *not* present in the IMDb database (at least when downloaded).
+([44306726, 26289717], [(26289717, 44306726)]) # The Godfather

@@ -1,0 +1,5 @@
+# [reference standard]
+# imdb2009
+# name terminator
+([39768793, 8782951, 21243595], [(8782951, 39768793), (8782951, 21243595)]) # Schwarzenegger, Arnold in "The Terminator"
+([39768793, 8782918, 21243595], [(8782918, 39768793), (8782918, 21243595)]) # Schwarzenegger, Arnold in "Terminator 2: Judgment Day"

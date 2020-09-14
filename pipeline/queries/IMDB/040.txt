@@ -1,0 +1,8 @@
+# [reference standard]
+# imdb2009
+# brent spiner star trek
+([39815480, 9103406, 44215275], [(9103406, 39815480), (9103406, 44215275)]) # Lt. Commander Data in "Star Trek: Generations"
+([39815480, 9103405, 44194106], [(9103405, 39815480), (9103405, 44194106)]) # Lt. Commander Data in "Star Trek: First Contact"
+([39815480, 9103409, 44202515], [(9103409, 39815480), (9103409, 44202515)]) # Lt. Commander Data in "Star Trek: Insurrection"
+([39815480, 9103411, 44136433], [(9103411, 39815480), (9103411, 44136433)]) # B-4 in "Star Trek: Nemesis"
+([39815480, 9103410, 44136433], [(9103410, 39815480), (9103410, 44136433)]) # Lt. Commander Data in "Star Trek: Nemesis"

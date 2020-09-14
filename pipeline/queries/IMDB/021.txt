@@ -1,0 +1,4 @@
+# [reference standard]
+# imdb2009
+# title atticus finch
+([44264090, 7900883, 22335633], [(7900883, 44264090), (7900883, 22335633)]) # Peck, Gregory in "To Kill a Mockingbird"

@@ -1,0 +1,7 @@
+# [reference standard]
+# imdb2009
+# name jack ryan
+([38954912, 2809192, 21221126], [(2809192, 38954912), (2809192, 21221126)]) # Baldwin, Alec in "The Hunt for Red October"
+([39214967, 4803452, 21221126], [(4803452, 39214967), (4803452, 21221126)]) # Ford, Harrison in "Patriot Games"
+([39214967, 4783373, 21221126], [(4783373, 39214967), (4783373, 21221126)]) # Ford, Harrison in "Clear and Present Danger"
+([38910128, 2487835, 21221126], [(2487835, 38910128), (2487835, 21221126)]) # Affleck, Ben in "The Sum of All Fears"

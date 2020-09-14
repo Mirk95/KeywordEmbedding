@@ -1,0 +1,4 @@
+# [reference standard]
+# imdb2009
+# title norman bates
+([44221715, 7937428, 21477624], [(7937428, 44221715), (7937428, 21477624)]) # Perkins, Anthony in "Psycho"

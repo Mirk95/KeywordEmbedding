@@ -1,0 +1,12 @@
+# [reference standard]
+# imdb2009
+# name jacques clouseau
+([39776756, 8826993, 21282177], [(8826993, 39776756), (8826993, 21282177)]) # Sellers, Peter in "The Pink Panther"
+([39776756, 8826878, 21742657], [(8826878, 39776756), (8826878, 21742657)]) # Sellers, Peter in "A Shot in the Dark"
+([38937889, 2674049, 21282177], [(2674049, 38937889), (2674049, 21282177)]) # Arkin, Alan in "Inspector Clouseau"
+([39776756, 8826999, 21282177], [(8826999, 39776756), (8826999, 21282177)]) # Sellers, Peter in "The Return of the Pink Panther"
+([39776756, 8826938, 22250178], [(8826938, 39776756), (8826938, 22250178)]) # Sellers, Peter in "Revenge of the Pink Panther"
+([39197475, 4634201, 21742657], [(4634201, 39197475), (4634201, 21742657)]) # Farrell, Daniel in "Trail of the Pink Panther"
+([39776756, 8827011, 22250178], [(8827011, 39776756), (8827011, 22250178)]) # Sellers, Peter in "Trail of the Pink Panther"
+([39569415, 7328428, 22250178], [(7328428, 39569415), (7328428, 22250178)]) # Moore, Roger in "Curse of the Pink Panther"
+([39515316, 6913971, 22151540], [(6913971, 39515316), (6913971, 22151540)]) # Martin, Steve in "The Pink Panther 2"

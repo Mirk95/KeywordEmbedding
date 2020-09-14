@@ -1,0 +1,4 @@
+# [reference standard]
+# imdb2009
+# henry fonda yours mine ours char name
+([39214564, 4772684, 44314367, 21801075], [(4772684, 39214564), (4772684, 44314367), (4772684, 21801075)]) # Frank Beardsley

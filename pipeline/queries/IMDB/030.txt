@@ -1,0 +1,4 @@
+# [reference standard]
+# imdb2009
+# title nurse ratched
+([44119385, 11574969, 23077129], [(11574969, 44119385), (11574969, 23077129)]) # Fletcher, Louise in "One Flew Over the Cuckoo's Nest"

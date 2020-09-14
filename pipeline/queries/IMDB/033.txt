@@ -1,0 +1,4 @@
+# [reference standard]
+# imdb2009
+# title you don't understand i coulda had class i coulda been a contender i coulda been somebody instead of a bum which is what i am
+([44123538, 26224320], [(26224320, 44123538)]) # On the Waterfront

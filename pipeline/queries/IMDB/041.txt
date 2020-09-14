@@ -1,0 +1,9 @@
+# [reference standard]
+# imdb2009
+# audrey hepburn 1951
+([40223661, 12011272, 43947185], [(12011272, 40223661), (12011272, 43947185)]) # Cigarette girl in "Laughter in Paradise"
+([40223661, 12011277, 44086852], [(12011277, 40223661), (12011277, 44086852)]) # Linda Farrel in "Monte Carlo Baby"
+([40223661, 12011281, 44078626], [(12011281, 40223661), (12011281, 44078626)]) # Melissa Walter in "Nous irons à Monte Carlo"
+([40223661, 12011282, 44082975], [(12011282, 40223661), (12011282, 44082975)]) # Hotel receptionist in "One Wild Oat"
+([40223661, 12011323, 44267426], [(12011323, 40223661), (12011323, 44267426)]) # Chiquita in "The Lavender Hill Mob"
+([40223661, 12011336, 44231266], [(12011336, 40223661), (12011336, 44231266)]) # Eve Lester in "Young Wives' Tale"

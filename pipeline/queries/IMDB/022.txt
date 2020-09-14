@@ -1,0 +1,7 @@
+# [reference standard]
+# imdb2009
+# title indiana jones
+([44158312, 4783449, 21302298], [(4783449, 44158312), (4783449, 21302298)]) # Ford, Harrison in "Raiders of the Lost Ark"
+([43952269, 4783414, 21302298], [(4783414, 43952269), (4783414, 21302298)]) # Ford, Harrison in "Indiana Jones and the Temple of Doom"
+([43931406, 4783412, 21302298], [(4783412, 43931406), (4783412, 21302298)]) # Ford, Harrison in "Indiana Jones and the Last Crusade"
+([44013047, 4783411, 21302298], [(4783411, 44013047), (4783411, 21302298)]) # Ford, Harrison in "Indiana Jones and the Kingdom of the Crystal Skull"
