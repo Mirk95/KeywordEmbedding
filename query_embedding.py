@@ -78,6 +78,14 @@ def compute_similarity(embedding, mat):
     return similarity
 
 
+def get_idx_with_highest_sim(sim):
+    maxSim = np.amax(sim)
+    idxMaxSim = np.where(sim == maxSim)[1][0]
+    print('# Max Value of Similarity from sim array: {}'.format(maxSim))
+    print('# Index for Max Value of Similarity: {}'.format(idxMaxSim))
+    return idxMaxSim
+
+
 def create_query_embedding(input_file, mat, keys):
     '''
     input_file --> Dataset in file csv.
@@ -107,6 +115,8 @@ def create_query_embedding(input_file, mat, keys):
             else:
                 print('# Computing similarity vector')
                 sim = compute_similarity(embedding, mat)
+                idx = get_idx_with_highest_sim(sim)
+                print('# Corresponding Key: {}'.format(keys[idx]))
                 print()
 
 

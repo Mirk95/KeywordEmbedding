@@ -183,7 +183,7 @@ def create_local_embedding(input_file):
     # If the number of tuples is huge, we take the first N/4 tuples
     if (df.shape[0] > 100000):
         numrows = df.shape[0]
-        df = df[:int(numrows/12)]
+        df = df[:int(numrows/4)]
 
     prefixes = ['3#__tn', '3$__tt', '5$__idx', '1$__cid']
 
