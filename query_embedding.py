@@ -42,7 +42,8 @@ def extract_tokens(df, query):
     return list_tokens
 
 
-def tokens2embeddings(tokens, mat, keys):
+def tokens2embedding(tokens, mat, keys):
+    print ('# Embeddings extraction from matrix mat')
     tokens = [t.capitalize() for t in tokens]
     embeddings = []
     for token in tokens:
@@ -56,20 +57,29 @@ def tokens2embeddings(tokens, mat, keys):
             idx = keys.index(token_tt)
             embeddings.append(mat[idx])
 
-    if embeddings:
-        emb = np.array(embeddings)
-        print('Shape Embedding Matrix: {}'.format(emb.shape))
-        if emb.shape[0] > 1:
-            # Apply Mean
-            pass
+    emb = np.array(embeddings)
+    if emb.shape[0] > 1:
+        # Apply Mean
+        mean_vec = np.zeros((emb.shape[1]))
+        for j in range(emb.shape[1]):
+            mean = 0.00
+            sum = 0.00
+            for i in range(emb.shape[0]):
+                sum += mat[i][j]
+            mean = float(sum / emb.shape[0])
+            mean_vec[j] = mean
+        return mean_vec
+    else:
+        return emb
 
-    print()
-    return embeddings
+
+def compute_similarity(embedding, mat, keys):
+    pass
 
 
 def create_query_embedding(input_file, mat, keys):
     '''
-    input_file --> Dataset in file csv.
+    input_file --> Dataset in fiembeddingsle csv.
     mat --> NxM matrix, where N is the number of tokens that convert and M is 
     the feature vector size (the embedding).
     keys --> List of rows values.
@@ -86,14 +96,20 @@ def create_query_embedding(input_file, mat, keys):
             path_file = path + file
             query = extract_query(path_file)
             tokens = extract_tokens(df, query)
-            if tokens:
-                embeddings = tokens2embeddings(tokens, mat, keys)
+            embedding = tokens2embedding(tokens, mat, keys)
+            if embedding.size == 0:
+                print('# No embeddings found for query {}'.format(query))
+                print()
             else:
-                print('The query is empty!')
-                return -1
+                print('# Ok, looking for similar embeddings...')
+                compute_similarity(embedding, mat, keys)
+        else:
+            print('# No file found in the directory starting with a number!')
+            return -1
 
 
 if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
     mat, keys = create_local_embedding(input_file)
-    create_query_embedding(input_file, mat, keys)
+    if create_query_embedding(input_file, mat, keys) == -1:
+        print('Ops! The function failed!')
