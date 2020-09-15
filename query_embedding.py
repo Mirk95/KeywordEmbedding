@@ -1,12 +1,14 @@
 import os
 import re
+import nltk
 import datetime
 import warnings
+import sklearn
 import pandas as pd
 import numpy as np
 
-import nltk
 from nltk.tokenize import RegexpTokenizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
@@ -23,12 +25,10 @@ def extract_query(file):
     <relevant result>
     ...
     '''
-    print('# Query extraction from {}'.format(file))
     f = open(file)
     lines = f.readlines()
     query = lines[2]                            # Take only the third line
     query = query.replace('# ', '')             # Remove the initial '# '
-    print('# Query extracted: {}'.format(query), end='')
     return query
 
 
@@ -38,12 +38,10 @@ def extract_tokens(df, query):
     df_columns = df.columns
     # Remove the names of df columns from the list of tokens
     list_tokens = [t for t in tokens if t not in df_columns]
-    print('# Tokens extracted: {}'.format(list_tokens))
     return list_tokens
 
 
 def tokens2embedding(tokens, mat, keys):
-    print ('# Embeddings extraction from matrix mat')
     tokens = [t.capitalize() for t in tokens]
     embeddings = []
     for token in tokens:
@@ -73,13 +71,16 @@ def tokens2embedding(tokens, mat, keys):
         return emb
 
 
-def compute_similarity(embedding, mat, keys):
-    pass
+def compute_similarity(embedding, mat):
+    embedding = embedding.reshape(-1, 1)
+    emb_transpose = np.transpose(embedding)
+    similarity = cosine_similarity(emb_transpose, mat)
+    return similarity
 
 
 def create_query_embedding(input_file, mat, keys):
     '''
-    input_file --> Dataset in fiembeddingsle csv.
+    input_file --> Dataset in file csv.
     mat --> NxM matrix, where N is the number of tokens that convert and M is 
     the feature vector size (the embedding).
     keys --> List of rows values.
@@ -94,18 +95,19 @@ def create_query_embedding(input_file, mat, keys):
     for file in query_dir:
         if re.match('^\d+', file):
             path_file = path + file
+            print('# Query extraction from {}'.format(file))
             query = extract_query(path_file)
+            print('# Query extracted: {}'.format(query), end='')
             tokens = extract_tokens(df, query)
+            print('# Tokens extracted: {}'.format(tokens))
+            print ('# Embeddings extraction from matrix mat')
             embedding = tokens2embedding(tokens, mat, keys)
             if embedding.size == 0:
                 print('# No embeddings found for query {}'.format(query))
-                print()
             else:
-                print('# Ok, looking for similar embeddings...')
-                compute_similarity(embedding, mat, keys)
-        else:
-            print('# No file found in the directory starting with a number!')
-            return -1
+                print('# Computing similarity vector')
+                sim = compute_similarity(embedding, mat)
+                print()
 
 
 if __name__ == '__main__':
