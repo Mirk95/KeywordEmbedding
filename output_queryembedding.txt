@@ -1,0 +1,403 @@
+Output of query_embedding.py with db name.csv (1/12 of instances):
+
+# Query extraction from 001.txt
+# Query extracted: denzel washington
+# Tokens extracted: ['denzel', 'washington']
+# Embeddings extraction from matrix mat
+# No embeddings found for query denzel washington
+
+# Query extraction from 002.txt
+# Query extracted: clint eastwood
+# Tokens extracted: ['clint', 'eastwood']
+# Embeddings extraction from matrix mat
+# No embeddings found for query clint eastwood
+
+# Query extraction from 003.txt
+# Query extracted: john wayne
+# Tokens extracted: ['john', 'wayne']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9785987116867124
+# Index for Max Value of Similarity: 9488
+# Corresponding Key: tn__39099227
+
+# Query extraction from 004.txt
+# Query extracted: will smith
+# Tokens extracted: ['will', 'smith']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9785987116867124
+# Index for Max Value of Similarity: 9488
+# Corresponding Key: tn__39099227
+
+# Query extraction from 005.txt
+# Query extracted: harrison ford
+# Tokens extracted: ['harrison', 'ford']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0000000000000004
+# Index for Max Value of Similarity: 1248
+# Corresponding Key: Harrison
+
+# Query extraction from 006.txt
+# Query extracted: julia roberts
+# Tokens extracted: ['julia', 'roberts']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9999999999999988
+# Index for Max Value of Similarity: 34
+# Corresponding Key: Julia
+
+# Query extraction from 007.txt
+# Query extracted: tom hanks
+# Tokens extracted: ['tom', 'hanks']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9999999999999992
+# Index for Max Value of Similarity: 13
+# Corresponding Key: Tom
+
+# Query extraction from 008.txt
+# Query extracted: johnny depp
+# Tokens extracted: ['johnny', 'depp']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0
+# Index for Max Value of Similarity: 2975
+# Corresponding Key: Johnny
+
+# Query extraction from 009.txt
+# Query extracted: angelina jolie
+# Tokens extracted: ['angelina', 'jolie']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0000000000000004
+# Index for Max Value of Similarity: 361
+# Corresponding Key: Angelina
+
+# Query extraction from 010.txt
+# Query extracted: morgan freeman
+# Tokens extracted: ['morgan', 'freeman']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9785987116867124
+# Index for Max Value of Similarity: 9488
+# Corresponding Key: tn__39099227
+
+# Query extraction from 011.txt
+# Query extracted: gone with the wind
+# Tokens extracted: ['gone', 'with', 'the', 'wind']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0
+# Index for Max Value of Similarity: 832
+# Corresponding Key: The
+
+# Query extraction from 012.txt
+# Query extracted: star wars
+# Tokens extracted: ['star', 'wars']
+# Embeddings extraction from matrix mat
+# No embeddings found for query star wars
+
+# Query extraction from 013.txt
+# Query extracted: casablanca
+# Tokens extracted: ['casablanca']
+# Embeddings extraction from matrix mat
+# No embeddings found for query casablanca
+
+# Query extraction from 014.txt
+# Query extracted: lord of the rings
+# Tokens extracted: ['lord', 'of', 'the', 'rings']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9785987116867124
+# Index for Max Value of Similarity: 9488
+# Corresponding Key: tn__39099227
+
+# Query extraction from 015.txt
+# Query extracted: the sound of music
+# Tokens extracted: ['the', 'sound', 'of', 'music']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0
+# Index for Max Value of Similarity: 832
+# Corresponding Key: The
+
+# Query extraction from 016.txt
+# Query extracted: wizard of oz
+# Tokens extracted: ['wizard', 'of', 'oz']
+# Embeddings extraction from matrix mat
+# No embeddings found for query wizard of oz
+
+# Query extraction from 017.txt
+# Query extracted: the notebook
+# Tokens extracted: ['the', 'notebook']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0
+# Index for Max Value of Similarity: 832
+# Corresponding Key: The
+
+# Query extraction from 018.txt
+# Query extracted: forrest gump
+# Tokens extracted: ['forrest', 'gump']
+# Embeddings extraction from matrix mat
+# No embeddings found for query forrest gump
+
+# Query extraction from 019.txt
+# Query extracted: the princess bride
+# Tokens extracted: ['the', 'princess', 'bride']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0
+# Index for Max Value of Similarity: 832
+# Corresponding Key: The
+
+# Query extraction from 020.txt
+# Query extracted: the godfather
+# Tokens extracted: ['the', 'godfather']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0
+# Index for Max Value of Similarity: 832
+# Corresponding Key: The
+
+# Query extraction from 021.txt
+# Query extracted: title atticus finch
+# Tokens extracted: ['title', 'atticus', 'finch']
+# Embeddings extraction from matrix mat
+# No embeddings found for query title atticus finch
+
+# Query extraction from 022.txt
+# Query extracted: title indiana jones
+# Tokens extracted: ['title', 'indiana', 'jones']
+# Embeddings extraction from matrix mat
+# No embeddings found for query title indiana jones
+
+# Query extraction from 023.txt
+# Query extracted: title james bond
+# Tokens extracted: ['title', 'james', 'bond']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9999999999999983
+# Index for Max Value of Similarity: 9
+# Corresponding Key: James
+
+# Query extraction from 024.txt
+# Query extracted: title rick blaine
+# Tokens extracted: ['title', 'rick', 'blaine']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0
+# Index for Max Value of Similarity: 35
+# Corresponding Key: Rick
+
+# Query extraction from 025.txt
+# Query extracted: title will kane
+# Tokens extracted: ['title', 'will', 'kane']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9999999999999999
+# Index for Max Value of Similarity: 576
+# Corresponding Key: Will
+
+# Query extraction from 026.txt
+# Query extracted: title dr. hannibal lecter
+# Tokens extracted: ['title', 'dr', 'hannibal', 'lecter']
+# Embeddings extraction from matrix mat
+# No embeddings found for query title dr. hannibal lecter
+
+# Query extraction from 027.txt
+# Query extracted: title norman bates
+# Tokens extracted: ['title', 'norman', 'bates']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0000000000000009
+# Index for Max Value of Similarity: 103
+# Corresponding Key: Norman
+
+# Query extraction from 028.txt
+# Query extracted: title darth vader
+# Tokens extracted: ['title', 'darth', 'vader']
+# Embeddings extraction from matrix mat
+# No embeddings found for query title darth vader
+
+# Query extraction from 029.txt
+# Query extracted: title the wicked witch of the west
+# Tokens extracted: ['title', 'the', 'wicked', 'witch', 'of', 'the', 'west']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9785987116867124
+# Index for Max Value of Similarity: 9488
+# Corresponding Key: tn__39099227
+
+# Query extraction from 030.txt
+# Query extracted: title nurse ratched
+# Tokens extracted: ['title', 'nurse', 'ratched']
+# Embeddings extraction from matrix mat
+# No embeddings found for query title nurse ratched
+
+# Query extraction from 031.txt
+# Query extracted: title frankly my dear i don't give a damn
+# Tokens extracted: ['title', 'frankly', 'my', 'dear', 'i', 'don', 't', 'give', 'a', 'damn']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.978479144918511
+# Index for Max Value of Similarity: 7301
+# Corresponding Key: tn__39862025
+
+# Query extraction from 032.txt
+# Query extracted: title i'm gonna make him an offer he won't refuse
+# Tokens extracted: ['title', 'i', 'm', 'gonna', 'make', 'him', 'an', 'offer', 'he', 'won', 't', 'refuse']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.987915806260609
+# Index for Max Value of Similarity: 7166
+# Corresponding Key: idx__19698
+
+# Query extraction from 033.txt
+# Query extracted: title you don't understand i coulda had class i coulda been a contender i coulda been somebody instead of a bum which is what i am
+# Tokens extracted: ['title', 'you', 'don', 't', 'understand', 'i', 'coulda', 'had', 'class', 'i', 'coulda', 'been', 'a', 'contender', 'i', 'coulda', 'been', 'somebody', 'instead', 'of', 'a', 'bum', 'which', 'is', 'what', 'i', 'am']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9932641164289355
+# Index for Max Value of Similarity: 9649
+# Corresponding Key: tn__39865982
+
+# Query extraction from 034.txt
+# Query extracted: title toto i've a feeling we're not in kansas any more
+# Tokens extracted: ['title', 'toto', 'i', 've', 'a', 'feeling', 'we', 're', 'not', 'in', 'kansas', 'any', 'more']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9785987116867124
+# Index for Max Value of Similarity: 9488
+# Corresponding Key: tn__39099227
+
+# Query extraction from 035.txt
+# Query extracted: title here's looking at you kid
+# Tokens extracted: ['title', 'here', 's', 'looking', 'at', 'you', 'kid']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0000000000000007
+# Index for Max Value of Similarity: 1001
+# Corresponding Key: tt__S
+
+# Query extraction from 036.txt
+# Query extracted: hamill skywalker
+# Tokens extracted: ['hamill', 'skywalker']
+# Embeddings extraction from matrix mat
+# No embeddings found for query hamill skywalker
+
+# Query extraction from 037.txt
+# Query extracted: hanks 2004
+# Tokens extracted: ['hanks', '2004']
+# Embeddings extraction from matrix mat
+# No embeddings found for query hanks 2004
+
+# Query extraction from 038.txt
+# Query extracted: henry fonda yours mine ours char name
+# Tokens extracted: ['henry', 'fonda', 'yours', 'mine', 'ours', 'char']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9999999999999999
+# Index for Max Value of Similarity: 26
+# Corresponding Key: Henry
+
+# Query extraction from 039.txt
+# Query extracted: russell crowe gladiator char name
+# Tokens extracted: ['russell', 'crowe', 'gladiator', 'char']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9999999999999997
+# Index for Max Value of Similarity: 61
+# Corresponding Key: Russell
+
+# Query extraction from 040.txt
+# Query extracted: brent spiner star trek
+# Tokens extracted: ['brent', 'spiner', 'star', 'trek']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0000000000000002
+# Index for Max Value of Similarity: 312
+# Corresponding Key: Brent
+
+# Query extraction from 041.txt
+# Query extracted: audrey hepburn 1951
+# Tokens extracted: ['audrey', 'hepburn', '1951']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9999999999999992
+# Index for Max Value of Similarity: 336
+# Corresponding Key: Audrey
+
+# Query extraction from 042.txt
+# Query extracted: name jacques clouseau
+# Tokens extracted: ['jacques', 'clouseau']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0
+# Index for Max Value of Similarity: 32
+# Corresponding Key: Jacques
+
+# Query extraction from 043.txt
+# Query extracted: name jack ryan
+# Tokens extracted: ['jack', 'ryan']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9785987116867124
+# Index for Max Value of Similarity: 9488
+# Corresponding Key: tn__39099227
+
+# Query extraction from 044.txt
+# Query extracted: rocky stallone
+# Tokens extracted: ['rocky', 'stallone']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0000000000000002
+# Index for Max Value of Similarity: 604
+# Corresponding Key: Rocky
+
+# Query extraction from 045.txt
+# Query extracted: name terminator
+# Tokens extracted: ['terminator']
+# Embeddings extraction from matrix mat
+# No embeddings found for query name terminator
+
+# Query extraction from 046.txt
+# Query extracted: harrison ford george lucas
+# Tokens extracted: ['harrison', 'ford', 'george', 'lucas']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.978479144918511
+# Index for Max Value of Similarity: 7301
+# Corresponding Key: tn__39862025
+
+# Query extraction from 047.txt
+# Query extracted: sean connery fleming
+# Tokens extracted: ['sean', 'connery', 'fleming']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 0.9999999999999998
+# Index for Max Value of Similarity: 24
+# Corresponding Key: Sean
+
+# Query extraction from 048.txt
+# Query extracted: reeves wachowski
+# Tokens extracted: ['reeves', 'wachowski']
+# Embeddings extraction from matrix mat
+# No embeddings found for query reeves wachowski
+
+# Query extraction from 049.txt
+# Query extracted: dean jones herbie
+# Tokens extracted: ['dean', 'jones', 'herbie']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Max Value of Similarity from sim array: 1.0
+# Index for Max Value of Similarity: 44
+# Corresponding Key: Dean
+
+# Query extraction from 050.txt
+# Query extracted: indiana jones last crusade lost ark
+# Tokens extracted: ['indiana', 'jones', 'last', 'crusade', 'lost', 'ark']
+# Embeddings extraction from matrix mat
+# No embeddings found for query indiana jones last crusade lost ark
