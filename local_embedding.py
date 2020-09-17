@@ -170,6 +170,7 @@ def create_local_embedding(input_file):
 
     os.makedirs('pipeline/walks', exist_ok=True)
     os.makedirs('pipeline/embeddings', exist_ok=True)
+    os.makedirs('pipeline/debuggings', exist_ok=True)
 
     print('#' * 80)
     print('# Configuration file: {}'.format(configuration['input_file']))
@@ -180,18 +181,26 @@ def create_local_embedding(input_file):
 
     df = pd.read_csv(configuration['input_file'])
 
-    # If the number of tuples is huge, we take the first N/4 tuples
-    if (df.shape[0] > 100000):
-        numrows = df.shape[0]
-        df = df[:int(numrows/12)]
+    '''
+    This code change was done to avoid too long waiting times for embedding 
+    execution due to huge datasets...
+    '''
+    # Remove the Dataframe columns containing all Nan values
+    df = df.dropna(how='all', axis=1)
+    # Create a new Dataframe from the previous one with only int64 columns
+    df_int64_cols = df.select_dtypes('int64')
+    # Save it in a file.csv for future ground truth testing
+    df_int64_cols.to_csv('pipeline/queries/IMDB/ground_truth_{}.csv'.format(output_file))
+    # And remove this columns from the initial Dataframe
+    int64_columns = df_int64_cols.columns.tolist()
+    df = df.drop(int64_columns, 1)
 
     prefixes = ['3#__tn', '3$__tt', '5$__idx', '1$__cid']
 
     el = EdgeList(df, prefixes)
-    # del el
-
-    # df = pd.read_csv(configuration['input_file'], dtype=str, index_col=False)
     df = el.get_df_edgelist()
+    # Save the edgelist dataframe in a file csv for debugging
+    df.to_csv('pipeline/debuggings/edgelist_{}.csv'.format(output_file), sep='\t')
     df = df[df.columns[:2]]
     df.dropna(inplace=True)
 
@@ -199,8 +208,6 @@ def create_local_embedding(input_file):
     configuration['run-tag'] = run_tag
 
     edgelist = el.get_edgelist()
-
-    # prefixes, edgelist = read_edgelist(configuration['input_file'])
 
     if configuration['compression']:  # Execute compression if required.
         df, dictionary = dict_compression_edgelist(df, prefixes=prefixes)
@@ -210,7 +217,6 @@ def create_local_embedding(input_file):
         el = edgelist
 
     graph = graph_generation(configuration, el, prefixes, dictionary)
-    # graph = Graph(el.get_edgelist(), prefixes=prefixes)
 
     if configuration['n_sentences'] == 'default':
         #  Compute the number of sentences according to the rule of thumb.
@@ -224,6 +230,12 @@ def create_local_embedding(input_file):
     configuration = embeddings_generation(walks, configuration, dictionary)
 
     mat, keys = prepare_emb_matrix(configuration['embeddings_file'])
+
+    # Save the list of keys in a txt file for debugging
+    f = open('pipeline/debuggings/keys_{}.txt'.format(output_file),'w')
+    for el in keys:
+        f.write(el+'\n')
+    f.close()
 
     t_end = datetime.datetime.now()
     print(OUTPUT_FORMAT.format('Ending run.', t_end))
@@ -243,5 +255,5 @@ def create_local_embedding(input_file):
 
 
 if __name__ == '__main__':
-    input_file = 'pipeline/datasets/name.csv'
+    input_file = 'pipeline/datasets/title.csv'
     mat, keys = create_local_embedding(input_file)

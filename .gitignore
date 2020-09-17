@@ -1,4 +1,5 @@
 .vscode/
+pipeline/debuggings/
 *.csv
 *.emb
 *.walks
