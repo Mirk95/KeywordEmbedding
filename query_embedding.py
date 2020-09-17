@@ -12,7 +12,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
-    from local_embedding import create_local_embedding
+    from local_embedding import create_local_embedding, clean_dataset
 
 
 def extract_query(file):
@@ -94,6 +94,8 @@ def create_query_embedding(input_file, mat, keys):
     keys --> List of rows values.
     '''
     df = pd.read_csv(input_file)
+    df = clean_dataset(df, saveGT=False)
+
     path = 'pipeline/queries/IMDB/'
     query_dir = sorted(os.listdir(path))
     if len(query_dir) == 0:

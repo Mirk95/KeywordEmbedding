@@ -13,6 +13,27 @@ with warnings.catch_warnings():
     from edgelist import EdgeList
 
 
+def clean_dataset(df, saveGT=True):
+    '''
+    This function is useful to clean the Dataframe in input and avoid too long 
+    waiting times for embedding execution due to huge datasets...
+    '''
+    output = os.path.basename(input_file).split('.')[0]
+
+    # Remove the Dataframe columns containing all Nan values
+    df = df.dropna(how='all', axis=1)
+    # Create a new Dataframe from the previous one with only int64 columns
+    df_int64 = df.select_dtypes('int64')
+    # Save it in a file.csv for future ground truth testing, if saveGT=True
+    if saveGT == True:
+        df_int64.to_csv('pipeline/queries/IMDB/ground_truth_{}.csv'.format(output))
+
+    # And remove this columns from the initial Dataframe
+    int64cols = df_int64.columns.tolist()
+    df = df.drop(int64cols, 1)
+    return df
+
+
 def prepare_emb_matrix(embeddings_file):
     # Reading the reduced file
     keys = []
@@ -180,20 +201,7 @@ def create_local_embedding(input_file):
     configuration = check_config_validity(configuration)
 
     df = pd.read_csv(configuration['input_file'])
-
-    '''
-    This code change was done to avoid too long waiting times for embedding 
-    execution due to huge datasets...
-    '''
-    # Remove the Dataframe columns containing all Nan values
-    df = df.dropna(how='all', axis=1)
-    # Create a new Dataframe from the previous one with only int64 columns
-    df_int64_cols = df.select_dtypes('int64')
-    # Save it in a file.csv for future ground truth testing
-    df_int64_cols.to_csv('pipeline/queries/IMDB/ground_truth_{}.csv'.format(output_file))
-    # And remove this columns from the initial Dataframe
-    int64_columns = df_int64_cols.columns.tolist()
-    df = df.drop(int64_columns, 1)
+    df = clean_dataset(df)
 
     prefixes = ['3#__tn', '3$__tt', '5$__idx', '1$__cid']
 
@@ -201,6 +209,7 @@ def create_local_embedding(input_file):
     df = el.get_df_edgelist()
     # Save the edgelist dataframe in a file csv for debugging
     df.to_csv('pipeline/debuggings/edgelist_{}.csv'.format(output_file), sep='\t')
+
     df = df[df.columns[:2]]
     df.dropna(inplace=True)
 
@@ -255,5 +264,5 @@ def create_local_embedding(input_file):
 
 
 if __name__ == '__main__':
-    input_file = 'pipeline/datasets/title.csv'
+    input_file = 'pipeline/datasets/name.csv'
     mat, keys = create_local_embedding(input_file)
