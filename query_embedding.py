@@ -32,27 +32,32 @@ def extract_query(file):
     return query
 
 
-def extract_tokens(df, query):
+def extract_tokens(query):
     tokenizer = RegexpTokenizer(r'\w+')         # Word Tokenizer
     tokens = tokenizer.tokenize(query)
-    df_columns = df.columns
-    # Remove the names of df columns from the list of tokens
-    list_tokens = [t for t in tokens if t not in df_columns]
-    return list_tokens
+    return tokens
 
 
 def tokens2embedding(tokens, mat, keys):
-    tokens = [t.capitalize() for t in tokens]
     embeddings = []
-    for token in tokens:
-        if token in keys:
-            idx = keys.index(token)
-            embeddings.append(mat[idx])
+    final_tokens = []
+
+    for t in tokens:
+        final_tokens.append(t)
+        final_tokens.append(t+',')
+        final_tokens.append('tt__'+t)
+        final_tokens.append('tt__'+t+',')
     
-    tokens_tt = ['tt__'+t for t in tokens]
-    for token_tt in tokens_tt:
-        if token_tt in keys:
-            idx = keys.index(token_tt)
+    tokens_capitalized = [t.capitalize() for t in tokens]
+    for tc in tokens_capitalized:
+        final_tokens.append(tc)
+        final_tokens.append(tc+',')
+        final_tokens.append('tt__'+tc)
+        final_tokens.append('tt__'+tc+',')
+
+    for token in final_tokens:
+        indices = [i for i, el in enumerate(keys) if el==token]
+        for idx in indices:
             embeddings.append(mat[idx])
 
     emb = np.array(embeddings)
@@ -78,12 +83,11 @@ def compute_similarity(embedding, mat):
     return similarity
 
 
-def get_idx_with_highest_sim(sim):
-    maxSim = np.amax(sim)
-    idxMaxSim = np.where(sim == maxSim)[1][0]
-    print('# Max Value of Similarity from sim array: {}'.format(maxSim))
-    print('# Index for Max Value of Similarity: {}'.format(idxMaxSim))
-    return idxMaxSim
+def get_top5_indices(sim):
+    sim_flat = sim.flatten()
+    indices = np.argpartition(sim_flat, -5)[-5:]
+    indices = indices[np.argsort(-sim_flat[indices])]
+    return indices.tolist()
 
 
 def create_query_embedding(input_file, mat, keys):
@@ -93,9 +97,6 @@ def create_query_embedding(input_file, mat, keys):
     the feature vector size (the embedding).
     keys --> List of rows values.
     '''
-    df = pd.read_csv(input_file)
-    df = clean_dataset(df, saveGT=False)
-
     path = 'pipeline/queries/IMDB/'
     query_dir = sorted(os.listdir(path))
     if len(query_dir) == 0:
@@ -108,17 +109,19 @@ def create_query_embedding(input_file, mat, keys):
             print('# Query extraction from {}'.format(file))
             query = extract_query(path_file)
             print('# Query extracted: {}'.format(query), end='')
-            tokens = extract_tokens(df, query)
+            tokens = extract_tokens(query)
             print('# Tokens extracted: {}'.format(tokens))
             print ('# Embeddings extraction from matrix mat')
             embedding = tokens2embedding(tokens, mat, keys)
             if embedding.size == 0:
-                print('# No embeddings found for query {}'.format(query))
+                print('# No embeddings found for query --> {}'.format(query))
             else:
                 print('# Computing similarity vector')
                 sim = compute_similarity(embedding, mat)
-                idx = get_idx_with_highest_sim(sim)
-                print('# Corresponding Key: {}'.format(keys[idx]))
+                print('# Getting the Top5 indices')
+                idxs = get_top5_indices(sim)
+                print('#    -->     keys[idx]')
+                [print('{}) -->     {}'.format(i+1, keys[idx])) for i, idx in enumerate(idxs)]
                 print()
 
 

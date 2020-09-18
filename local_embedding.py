@@ -13,13 +13,11 @@ with warnings.catch_warnings():
     from edgelist import EdgeList
 
 
-def clean_dataset(df, saveGT=True):
+def clean_dataset(df, output, saveGT=True):
     '''
     This function is useful to clean the Dataframe in input and avoid too long 
     waiting times for embedding execution due to huge datasets...
     '''
-    output = os.path.basename(input_file).split('.')[0]
-
     # Remove the Dataframe columns containing all Nan values
     df = df.dropna(how='all', axis=1)
     # Create a new Dataframe from the previous one with only int64 columns
@@ -201,7 +199,7 @@ def create_local_embedding(input_file):
     configuration = check_config_validity(configuration)
 
     df = pd.read_csv(configuration['input_file'])
-    df = clean_dataset(df)
+    df = clean_dataset(df, output_file)
 
     prefixes = ['3#__tn', '3$__tt', '5$__idx', '1$__cid']
 
