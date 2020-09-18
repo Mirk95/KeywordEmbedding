@@ -24,7 +24,7 @@ def clean_dataset(df, output, saveGT=True):
     df_int64 = df.select_dtypes('int64')
     # Save it in a file.csv for future ground truth testing, if saveGT=True
     if saveGT == True:
-        df_int64.to_csv('pipeline/queries/IMDB/ground_truth_{}.csv'.format(output))
+        df_int64.to_csv('pipeline/ground_truth/GT_{}.csv'.format(output))
 
     # And remove this columns from the initial Dataframe
     int64cols = df_int64.columns.tolist()
@@ -190,6 +190,7 @@ def create_local_embedding(input_file):
     os.makedirs('pipeline/walks', exist_ok=True)
     os.makedirs('pipeline/embeddings', exist_ok=True)
     os.makedirs('pipeline/debuggings', exist_ok=True)
+    os.makedirs('pipeline/ground_truth', exist_ok=True)
 
     print('#' * 80)
     print('# Configuration file: {}'.format(configuration['input_file']))

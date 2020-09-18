@@ -1,9 +1,6 @@
 import os
 import re
-import nltk
-import datetime
 import warnings
-import sklearn
 import pandas as pd
 import numpy as np
 
@@ -84,13 +81,12 @@ def compute_similarity(embedding, mat):
 
 
 def get_top5_indices(sim):
-    sim_flat = sim.flatten()
-    indices = np.argpartition(sim_flat, -5)[-5:]
-    indices = indices[np.argsort(-sim_flat[indices])]
+    indices = np.argpartition(sim, -5)[-5:]
+    indices = indices[np.argsort(-sim[indices])]
     return indices.tolist()
 
 
-def create_query_embedding(input_file, mat, keys):
+def create_query_embedding(mat, keys):
     '''
     input_file --> Dataset in file csv.
     mat --> NxM matrix, where N is the number of tokens that convert and M is 
@@ -102,6 +98,8 @@ def create_query_embedding(input_file, mat, keys):
     if len(query_dir) == 0:
         print('# The directory {} is empty!'.format(path))
         return -1
+    
+    output_df = pd.DataFrame(columns=('Query', 'Position', 'Similarity'))
 
     for file in query_dir:
         if re.match('^\d+', file):
@@ -119,14 +117,20 @@ def create_query_embedding(input_file, mat, keys):
                 print('# Computing similarity vector')
                 sim = compute_similarity(embedding, mat)
                 print('# Getting the Top5 indices')
+                sim = sim.flatten()
                 idxs = get_top5_indices(sim)
-                print('#    -->     keys[idx]')
-                [print('{}) -->     {}'.format(i+1, keys[idx])) for i, idx in enumerate(idxs)]
+                for i, idx in enumerate(idxs):
+                    print('{}) -->     {}'.format(i+1, keys[idx]))
+                    q = ' '.join(tokens)
+                    values_to_add = {'Query': q, 'Position': i+1, 'Similarity': sim[idx]}
+                    row_to_add = pd.Series(values_to_add)
+                    output_df = output_df.append(row_to_add, ignore_index=True)
                 print()
+    output_df.to_csv('pipeline/debuggings/final_output.csv')
 
 
 if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
     mat, keys = create_local_embedding(input_file)
-    if create_query_embedding(input_file, mat, keys) == -1:
+    if create_query_embedding(mat, keys) == -1:
         print('Ops! The function failed!')
