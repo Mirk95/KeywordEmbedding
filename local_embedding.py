@@ -16,7 +16,7 @@ with warnings.catch_warnings():
 def clean_dataset(df, output, saveGT=True):
     '''
     This function is useful to clean the Dataframe in input and avoid too long 
-    waiting times for embedding execution due to huge datasets...
+    waiting times for embeddings creation due to huge datasets...
     '''
     # Remove the Dataframe columns containing all Nan values
     df = df.dropna(how='all', axis=1)
@@ -26,7 +26,7 @@ def clean_dataset(df, output, saveGT=True):
     if saveGT == True:
         df_int64.to_csv('pipeline/ground_truth/GT_{}.csv'.format(output))
 
-    # And remove this columns from the initial Dataframe
+    # And remove these columns from the initial Dataframe
     int64cols = df_int64.columns.tolist()
     df = df.drop(int64cols, 1)
     return df

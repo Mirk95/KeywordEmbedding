@@ -1,0 +1,560 @@
+################################################################################
+# Configuration file: pipeline/datasets/title.csv
+# Starting run................................................ 2020-09-18 14:23:42.680129
+# 100.0 - 181706/181706 tuples
+# Starting graph construction................................. 2020-09-18 14:24:45
+# Expanding columns ['tt'].
+Loading edgelist_file.: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1098438/1098438 [00:10<00:00, 108804.45it/s]
+Prepare aliased randomizer for each node: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 361167/361167 [00:07<00:00, 50622.58it/s]
+
+# Graph construction complete................................. 2020-09-18 14:25:02
+# Time required to build graph:............................... 17.231466
+# Skipping search of overlapping values. 
+# Generating basic random walks............................... 2020-09-18 14:25:02
+Completing fraction of random walks: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 1000/1000 [00:03<00:00, 310.73it/s]
+# Generation of random walks completed........................ 2020-09-18 14:25:05
+# Training embeddings......................................... 2020-09-18 14:25:05.979599
+File: pipeline/embeddings/title.emb
+# Embeddings generation complete.............................. 2020-09-18 14:25:10
+# Ending run.................................................. 2020-09-18 14:25:16.448706
+# Time required: 93.768577
+
+Embedding Matrix shape: (12517, 300)
+Keys number: 12517
+
+File created:
+1. pipeline/walks/title.walks
+2. pipeline/embeddings/title.emb
+# Query extraction from 001.txt
+# Query extracted: denzel washington
+# Tokens extracted: ['denzel', 'washington']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Washington
+2) -->     Forbidden
+3) -->     tt__N5236
+4) -->     3:
+5) -->     tt__T3263
+
+# Query extraction from 002.txt
+# Query extracted: clint eastwood
+# Tokens extracted: ['clint', 'eastwood']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> clint eastwood
+
+# Query extraction from 003.txt
+# Query extracted: john wayne
+# Tokens extracted: ['john', 'wayne']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     Death
+3) -->     a
+4) -->     Last
+5) -->     Mystery
+
+# Query extraction from 004.txt
+# Query extracted: will smith
+# Tokens extracted: ['will', 'smith']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     a
+2) -->     The
+3) -->     in
+4) -->     War
+5) -->     and
+
+# Query extraction from 005.txt
+# Query extracted: harrison ford
+# Tokens extracted: ['harrison', 'ford']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Ford
+2) -->     idx__161409
+3) -->     idx__143425
+4) -->     tn__1900
+5) -->     tt__W5251
+
+# Query extraction from 006.txt
+# Query extracted: julia roberts
+# Tokens extracted: ['julia', 'roberts']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     Death
+3) -->     a
+4) -->     Last
+5) -->     Mystery
+
+# Query extraction from 007.txt
+# Query extracted: tom hanks
+# Tokens extracted: ['tom', 'hanks']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     Death
+3) -->     a
+4) -->     Last
+5) -->     Mystery
+
+# Query extraction from 008.txt
+# Query extracted: johnny depp
+# Tokens extracted: ['johnny', 'depp']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     Death
+3) -->     a
+4) -->     Last
+5) -->     Mystery
+
+# Query extraction from 009.txt
+# Query extracted: angelina jolie
+# Tokens extracted: ['angelina', 'jolie']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     jolie
+2) -->     tt__Tamara
+3) -->     sexe
+4) -->     tt__C5353
+5) -->     tt__Morte
+
+# Query extraction from 010.txt
+# Query extracted: morgan freeman
+# Tokens extracted: ['morgan', 'freeman']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Morgan
+2) -->     Stanley
+3) -->     Colorado
+4) -->     Hand
+5) -->     Letter
+
+# Query extraction from 011.txt
+# Query extracted: gone with the wind
+# Tokens extracted: ['gone', 'with', 'the', 'wind']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     World
+2) -->     and
+3) -->     War
+4) -->     Night
+5) -->     tt__The
+
+# Query extraction from 012.txt
+# Query extracted: star wars
+# Tokens extracted: ['star', 'wars']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     on
+3) -->     and
+4) -->     in
+5) -->     a
+
+# Query extraction from 013.txt
+# Query extracted: casablanca
+# Tokens extracted: ['casablanca']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> casablanca
+
+# Query extraction from 014.txt
+# Query extracted: lord of the rings
+# Tokens extracted: ['lord', 'of', 'the', 'rings']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     World
+2) -->     and
+3) -->     War
+4) -->     Night
+5) -->     tt__The
+
+# Query extraction from 015.txt
+# Query extracted: the sound of music
+# Tokens extracted: ['the', 'sound', 'of', 'music']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Story
+2) -->     tt__The
+3) -->     World
+4) -->     and
+5) -->     Journey
+
+# Query extraction from 016.txt
+# Query extracted: wizard of oz
+# Tokens extracted: ['wizard', 'of', 'oz']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     a
+2) -->     The
+3) -->     in
+4) -->     War
+5) -->     and
+
+# Query extraction from 017.txt
+# Query extracted: the notebook
+# Tokens extracted: ['the', 'notebook']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     a
+2) -->     The
+3) -->     in
+4) -->     War
+5) -->     and
+
+# Query extraction from 018.txt
+# Query extracted: forrest gump
+# Tokens extracted: ['forrest', 'gump']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> forrest gump
+
+# Query extraction from 019.txt
+# Query extracted: the princess bride
+# Tokens extracted: ['the', 'princess', 'bride']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     World
+2) -->     tt__The
+3) -->     Night
+4) -->     War
+5) -->     Mystery
+
+# Query extraction from 020.txt
+# Query extracted: the godfather
+# Tokens extracted: ['the', 'godfather']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     on
+3) -->     and
+4) -->     in
+5) -->     a
+
+# Query extraction from 021.txt
+# Query extracted: title atticus finch
+# Tokens extracted: ['title', 'atticus', 'finch']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> title atticus finch
+
+# Query extraction from 022.txt
+# Query extracted: title indiana jones
+# Tokens extracted: ['title', 'indiana', 'jones']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Jones
+2) -->     Chase
+3) -->     Inc.
+4) -->     Were
+5) -->     See
+
+# Query extraction from 023.txt
+# Query extracted: title james bond
+# Tokens extracted: ['title', 'james', 'bond']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     on
+3) -->     and
+4) -->     in
+5) -->     a
+
+# Query extraction from 024.txt
+# Query extracted: title rick blaine
+# Tokens extracted: ['title', 'rick', 'blaine']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> title rick blaine
+
+# Query extraction from 025.txt
+# Query extracted: title will kane
+# Tokens extracted: ['title', 'will', 'kane']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     a
+2) -->     The
+3) -->     in
+4) -->     War
+5) -->     and
+
+# Query extraction from 026.txt
+# Query extracted: title dr. hannibal lecter
+# Tokens extracted: ['title', 'dr', 'hannibal', 'lecter']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> title dr. hannibal lecter
+
+# Query extraction from 027.txt
+# Query extracted: title norman bates
+# Tokens extracted: ['title', 'norman', 'bates']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Norman
+2) -->     tt__Teenage
+3) -->     Print
+4) -->     tt__Smiling
+5) -->     Jumpin'
+
+# Query extraction from 028.txt
+# Query extracted: title darth vader
+# Tokens extracted: ['title', 'darth', 'vader']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> title darth vader
+
+# Query extraction from 029.txt
+# Query extracted: title the wicked witch of the west
+# Tokens extracted: ['title', 'the', 'wicked', 'witch', 'of', 'the', 'west']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Road
+2) -->     Sky
+3) -->     Night
+4) -->     Up
+5) -->     Mystery
+
+# Query extraction from 030.txt
+# Query extracted: title nurse ratched
+# Tokens extracted: ['title', 'nurse', 'ratched']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     Death
+3) -->     a
+4) -->     Last
+5) -->     Mystery
+
+# Query extraction from 031.txt
+# Query extracted: title frankly my dear i don't give a damn
+# Tokens extracted: ['title', 'frankly', 'my', 'dear', 'i', 'don', 't', 'give', 'a', 'damn']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     World
+2) -->     Up
+3) -->     Mystery
+4) -->     Night
+5) -->     Game
+
+# Query extraction from 032.txt
+# Query extracted: title i'm gonna make him an offer he won't refuse
+# Tokens extracted: ['title', 'i', 'm', 'gonna', 'make', 'him', 'an', 'offer', 'he', 'won', 't', 'refuse']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     World
+2) -->     Up
+3) -->     Mystery
+4) -->     Night
+5) -->     Game
+
+# Query extraction from 033.txt
+# Query extracted: title you don't understand i coulda had class i coulda been a contender i coulda been somebody instead of a bum which is what i am
+# Tokens extracted: ['title', 'you', 'don', 't', 'understand', 'i', 'coulda', 'had', 'class', 'i', 'coulda', 'been', 'a', 'contender', 'i', 'coulda', 'been', 'somebody', 'instead', 'of', 'a', 'bum', 'which', 'is', 'what', 'i', 'am']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     tt__An
+2) -->     Road
+3) -->     tt__Linlang
+4) -->     Lost
+5) -->     Voice
+
+# Query extraction from 034.txt
+# Query extracted: title toto i've a feeling we're not in kansas any more
+# Tokens extracted: ['title', 'toto', 'i', 've', 'a', 'feeling', 'we', 're', 'not', 'in', 'kansas', 'any', 'more']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Sky
+2) -->     tt__On
+3) -->     Up
+4) -->     Road
+5) -->     Honor
+
+# Query extraction from 035.txt
+# Query extracted: title here's looking at you kid
+# Tokens extracted: ['title', 'here', 's', 'looking', 'at', 'you', 'kid']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     World
+2) -->     Up
+3) -->     Night
+4) -->     Mystery
+5) -->     Game
+
+# Query extraction from 036.txt
+# Query extracted: hamill skywalker
+# Tokens extracted: ['hamill', 'skywalker']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> hamill skywalker
+
+# Query extraction from 037.txt
+# Query extracted: hanks 2004
+# Tokens extracted: ['hanks', '2004']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> hanks 2004
+
+# Query extraction from 038.txt
+# Query extracted: henry fonda yours mine ours char name
+# Tokens extracted: ['henry', 'fonda', 'yours', 'mine', 'ours', 'char', 'name']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     World
+2) -->     tt__The
+3) -->     Night
+4) -->     War
+5) -->     Mystery
+
+# Query extraction from 039.txt
+# Query extracted: russell crowe gladiator char name
+# Tokens extracted: ['russell', 'crowe', 'gladiator', 'char', 'name']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Name
+2) -->     Cave
+3) -->     Private
+4) -->     tt__Two
+5) -->     Eyes
+
+# Query extraction from 040.txt
+# Query extracted: brent spiner star trek
+# Tokens extracted: ['brent', 'spiner', 'star', 'trek']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     Death
+3) -->     a
+4) -->     Last
+5) -->     Mystery
+
+# Query extraction from 041.txt
+# Query extracted: audrey hepburn 1951
+# Tokens extracted: ['audrey', 'hepburn', '1951']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     tt__Audrey
+2) -->     idx__142088
+3) -->     tt__B6131
+4) -->     Bugle
+5) -->     idx__160073
+
+# Query extraction from 042.txt
+# Query extracted: name jacques clouseau
+# Tokens extracted: ['name', 'jacques', 'clouseau']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     on
+3) -->     and
+4) -->     in
+5) -->     a
+
+# Query extraction from 043.txt
+# Query extracted: name jack ryan
+# Tokens extracted: ['name', 'jack', 'ryan']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     on
+3) -->     and
+4) -->     in
+5) -->     a
+
+# Query extraction from 044.txt
+# Query extracted: rocky stallone
+# Tokens extracted: ['rocky', 'stallone']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Rocky
+2) -->     Broadway
+3) -->     Letter
+4) -->     There
+5) -->     Have
+
+# Query extraction from 045.txt
+# Query extracted: name terminator
+# Tokens extracted: ['name', 'terminator']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Name
+2) -->     Cave
+3) -->     Private
+4) -->     tt__Two
+5) -->     Eyes
+
+# Query extraction from 046.txt
+# Query extracted: harrison ford george lucas
+# Tokens extracted: ['harrison', 'ford', 'george', 'lucas']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     on
+3) -->     and
+4) -->     in
+5) -->     a
+
+# Query extraction from 047.txt
+# Query extracted: sean connery fleming
+# Tokens extracted: ['sean', 'connery', 'fleming']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> sean connery fleming
+
+# Query extraction from 048.txt
+# Query extracted: reeves wachowski
+# Tokens extracted: ['reeves', 'wachowski']
+# Embeddings extraction from matrix mat
+# No embeddings found for query --> reeves wachowski
+
+# Query extraction from 049.txt
+# Query extracted: dean jones herbie
+# Tokens extracted: ['dean', 'jones', 'herbie']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     War
+2) -->     Death
+3) -->     a
+4) -->     Last
+5) -->     Mystery
+
+# Query extraction from 050.txt
+# Query extracted: indiana jones last crusade lost ark
+# Tokens extracted: ['indiana', 'jones', 'last', 'crusade', 'lost', 'ark']
+# Embeddings extraction from matrix mat
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     World
+2) -->     tt__The
+3) -->     Mystery
+4) -->     War
+5) -->     Lady

@@ -1,26 +1,26 @@
 ################################################################################
 # Configuration file: pipeline/datasets/name.csv
-# Starting run................................................ 2020-09-18 10:22:40.481810
+# Starting run................................................ 2020-09-18 15:26:47.109574
 # 100.0 - 273034/273034 tuples
-# Starting graph construction................................. 2020-09-18 10:24:31
+# Starting graph construction................................. 2020-09-18 15:28:45
 # Expanding columns ['tt'].
-Loading edgelist_file.: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████| 2213142/2213142 [00:20<00:00, 107012.67it/s]
-Prepare aliased randomizer for each node: 100%|███████████████████████████████████████████████████████████████████████████████████████████| 538163/538163 [00:14<00:00, 36453.30it/s]
+Loading edgelist_file.: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2213142/2213142 [00:21<00:00, 103802.88it/s]
+Prepare aliased randomizer for each node: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 538163/538163 [00:11<00:00, 48920.33it/s]
 
-# Graph construction complete................................. 2020-09-18 10:25:06
-# Time required to build graph:............................... 35.445604
+# Graph construction complete................................. 2020-09-18 15:29:18
+# Time required to build graph:............................... 32.324616
 # Skipping search of overlapping values. 
-# Generating basic random walks............................... 2020-09-18 10:25:06
-Completing fraction of random walks: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████| 1000/1000 [00:04<00:00, 233.40it/s]
-# Generation of random walks completed........................ 2020-09-18 10:25:10
-# Training embeddings......................................... 2020-09-18 10:25:10.950424
+# Generating basic random walks............................... 2020-09-18 15:29:18
+Completing fraction of random walks: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 1000/1000 [00:04<00:00, 239.13it/s]
+# Generation of random walks completed........................ 2020-09-18 15:29:22
+# Training embeddings......................................... 2020-09-18 15:29:22.550674
 File: pipeline/embeddings/name.emb
-# Embeddings generation complete.............................. 2020-09-18 10:25:14
-# Ending run.................................................. 2020-09-18 10:25:20.102245
-# Time required: 159.620435
+# Embeddings generation complete.............................. 2020-09-18 15:29:26
+# Ending run.................................................. 2020-09-18 15:29:31.782875
+# Time required: 164.673301
 
-Embedding Matrix shape: (9874, 300)
-Keys number: 9874
+Embedding Matrix shape: (9886, 300)
+Keys number: 9886
 
 File created:
 1. pipeline/walks/name.walks
@@ -31,18 +31,23 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     tt__Washington,
-2)  -->     Tracy
-3)  -->     Leslie
-4)  -->     tt__Young,
-5)  -->     Erik
+1) -->     James
+2) -->     M.
+3) -->     Michael
+4) -->     A.
+5) -->     cid__name
 
 # Query extraction from 002.txt
 # Query extracted: clint eastwood
 # Tokens extracted: ['clint', 'eastwood']
 # Embeddings extraction from matrix mat
-# No embeddings found for query --> clint eastwood
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     Clint
+2) -->     tt__C6256
+3) -->     tt__B26
+4) -->     tt__R2621
+5) -->     tt__J5354
 
 # Query extraction from 003.txt
 # Query extracted: john wayne
@@ -50,12 +55,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     H.
-2)  -->     William
-3)  -->     F.
-4)  -->     tt__Lee,
-5)  -->     W.
+1) -->     W.
+2) -->     Richard
+3) -->     C.
+4) -->     William
+5) -->     A.
 
 # Query extraction from 004.txt
 # Query extracted: will smith
@@ -63,12 +67,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     H.
-2)  -->     William
-3)  -->     F.
-4)  -->     tt__Lee,
-5)  -->     W.
+1) -->     W.
+2) -->     Richard
+3) -->     C.
+4) -->     William
+5) -->     A.
 
 # Query extraction from 005.txt
 # Query extracted: harrison ford
@@ -76,12 +79,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Tom
-2)  -->     A.
-3)  -->     D.
-4)  -->     C.
-5)  -->     Dr.
+1) -->     W.
+2) -->     C.
+3) -->     Richard
+4) -->     A.
+5) -->     William
 
 # Query extraction from 006.txt
 # Query extracted: julia roberts
@@ -89,12 +91,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Tom
-2)  -->     A.
-3)  -->     D.
-4)  -->     C.
-5)  -->     Dr.
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 007.txt
 # Query extracted: tom hanks
@@ -102,12 +103,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     John
-2)  -->     C.
-3)  -->     Richard
-4)  -->     W.
-5)  -->     H.
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 008.txt
 # Query extracted: johnny depp
@@ -115,12 +115,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Johnny
-2)  -->     Max
-3)  -->     Ron
-4)  -->     Jose
-5)  -->     Emily
+1) -->     Johnny
+2) -->     tt__D54
+3) -->     tt__D13
+4) -->     Stan
+5) -->     Stacy
 
 # Query extraction from 009.txt
 # Query extracted: angelina jolie
@@ -128,12 +127,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     M.
-2)  -->     cid__name
-3)  -->     Jr.,
-4)  -->     Jack
-5)  -->     George
+1) -->     Angelina
+2) -->     Donald
+3) -->     Hal
+4) -->     tt__Carter,
+5) -->     tt__Simon,
 
 # Query extraction from 010.txt
 # Query extracted: morgan freeman
@@ -141,12 +139,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     John
-2)  -->     C.
-3)  -->     Richard
-4)  -->     W.
-5)  -->     H.
+1) -->     W.
+2) -->     C.
+3) -->     Richard
+4) -->     A.
+5) -->     William
 
 # Query extraction from 011.txt
 # Query extracted: gone with the wind
@@ -154,24 +151,35 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     The
-2)  -->     tt__Van
-3)  -->     Ronald
-4)  -->     Max
-5)  -->     Johnny
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 012.txt
 # Query extracted: star wars
 # Tokens extracted: ['star', 'wars']
 # Embeddings extraction from matrix mat
-# No embeddings found for query --> star wars
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     tt__Star,
+2) -->     tt__Jacques,
+3) -->     tt__Carter,
+4) -->     Anton
+5) -->     Ted
 
 # Query extraction from 013.txt
 # Query extracted: casablanca
 # Tokens extracted: ['casablanca']
 # Embeddings extraction from matrix mat
-# No embeddings found for query --> casablanca
+# Computing similarity vector
+# Getting the Top5 indices
+1) -->     tt__Casablanca,
+2) -->     idx__238264
+3) -->     tt__C432
+4) -->     tt__J5323
+5) -->     tt__W323
 
 # Query extraction from 014.txt
 # Query extracted: lord of the rings
@@ -179,12 +187,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     John
-2)  -->     C.
-3)  -->     Richard
-4)  -->     W.
-5)  -->     H.
+1) -->     W.
+2) -->     C.
+3) -->     Richard
+4) -->     A.
+5) -->     William
 
 # Query extraction from 015.txt
 # Query extracted: the sound of music
@@ -192,12 +199,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     M.
-2)  -->     cid__name
-3)  -->     Jr.,
-4)  -->     Jack
-5)  -->     George
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 016.txt
 # Query extracted: wizard of oz
@@ -211,12 +217,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     The
-2)  -->     tt__Van
-3)  -->     Ronald
-4)  -->     Max
-5)  -->     Johnny
+1) -->     James
+2) -->     M.
+3) -->     Michael
+4) -->     A.
+5) -->     cid__name
 
 # Query extraction from 018.txt
 # Query extracted: forrest gump
@@ -224,12 +229,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     M.
-2)  -->     cid__name
-3)  -->     Jr.,
-4)  -->     Jack
-5)  -->     George
+1) -->     James
+2) -->     M.
+3) -->     Michael
+4) -->     A.
+5) -->     cid__name
 
 # Query extraction from 019.txt
 # Query extracted: the princess bride
@@ -237,12 +241,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     The
-2)  -->     tt__Van
-3)  -->     Ronald
-4)  -->     Max
-5)  -->     Johnny
+1) -->     James
+2) -->     M.
+3) -->     Michael
+4) -->     A.
+5) -->     cid__name
 
 # Query extraction from 020.txt
 # Query extracted: the godfather
@@ -250,12 +253,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     The
-2)  -->     tt__Van
-3)  -->     Ronald
-4)  -->     Max
-5)  -->     Johnny
+1) -->     James
+2) -->     M.
+3) -->     Michael
+4) -->     A.
+5) -->     cid__name
 
 # Query extraction from 021.txt
 # Query extracted: title atticus finch
@@ -263,12 +265,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     tt__Finch,
-2)  -->     tt__C6216
-3)  -->     tt__D652
-4)  -->     tt__P3624
-5)  -->     Hilary
+1) -->     tt__Finch,
+2) -->     Jeremy
+3) -->     Lauren
+4) -->     Ed
+5) -->     Anne
 
 # Query extraction from 022.txt
 # Query extracted: title indiana jones
@@ -276,12 +277,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Tom
-2)  -->     A.
-3)  -->     D.
-4)  -->     C.
-5)  -->     Dr.
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 023.txt
 # Query extracted: title james bond
@@ -289,12 +289,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     John
-2)  -->     C.
-3)  -->     Richard
-4)  -->     W.
-5)  -->     H.
+1) -->     W.
+2) -->     C.
+3) -->     Richard
+4) -->     A.
+5) -->     William
 
 # Query extraction from 024.txt
 # Query extracted: title rick blaine
@@ -302,12 +301,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Tom
-2)  -->     A.
-3)  -->     D.
-4)  -->     C.
-5)  -->     Dr.
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 025.txt
 # Query extracted: title will kane
@@ -315,12 +313,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     John
-2)  -->     C.
-3)  -->     Richard
-4)  -->     W.
-5)  -->     H.
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 026.txt
 # Query extracted: title dr. hannibal lecter
@@ -334,12 +331,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     John
-2)  -->     C.
-3)  -->     Richard
-4)  -->     W.
-5)  -->     H.
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 028.txt
 # Query extracted: title darth vader
@@ -353,12 +349,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     John
-2)  -->     C.
-3)  -->     Richard
-4)  -->     W.
-5)  -->     H.
+1) -->     S.
+2) -->     Charles
+3) -->     tt__Jackson,
+4) -->     tt__Brown,
+5) -->     L.
 
 # Query extraction from 030.txt
 # Query extracted: title nurse ratched
@@ -366,12 +361,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     tt__Nurse,
-2)  -->     tt__T61
-3)  -->     tt__E3263
-4)  -->     tt__I5263
-5)  -->     tt__L56
+1) -->     tt__Nurse,
+2) -->     tt__Rogers,
+3) -->     tt__Di
+4) -->     Charlie
+5) -->     tt__Watson,
 
 # Query extraction from 031.txt
 # Query extracted: title frankly my dear i don't give a damn
@@ -379,12 +373,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     John
-2)  -->     C.
-3)  -->     Richard
-4)  -->     W.
-5)  -->     H.
+1) -->     James
+2) -->     M.
+3) -->     Michael
+4) -->     A.
+5) -->     cid__name
 
 # Query extraction from 032.txt
 # Query extracted: title i'm gonna make him an offer he won't refuse
@@ -392,12 +385,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     M.
-2)  -->     cid__name
-3)  -->     Jr.,
-4)  -->     Jack
-5)  -->     George
+1) -->     James
+2) -->     M.
+3) -->     Michael
+4) -->     A.
+5) -->     cid__name
 
 # Query extraction from 033.txt
 # Query extracted: title you don't understand i coulda had class i coulda been a contender i coulda been somebody instead of a bum which is what i am
@@ -405,12 +397,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     tt__Roberts,
-2)  -->     Lee
-3)  -->     W.
-4)  -->     tt__Lee,
-5)  -->     F.
+1) -->     W.
+2) -->     Richard
+3) -->     C.
+4) -->     William
+5) -->     A.
 
 # Query extraction from 034.txt
 # Query extracted: title toto i've a feeling we're not in kansas any more
@@ -418,12 +409,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     M.
-2)  -->     cid__name
-3)  -->     Jr.,
-4)  -->     Jack
-5)  -->     George
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 035.txt
 # Query extracted: title here's looking at you kid
@@ -431,12 +421,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     M.
-2)  -->     cid__name
-3)  -->     Jr.,
-4)  -->     Jack
-5)  -->     George
+1) -->     tt__S
+2) -->     tt__J5325
+3) -->     idx__251057
+4) -->     idx__61464
+5) -->     tt__S3125
 
 # Query extraction from 036.txt
 # Query extracted: hamill skywalker
@@ -450,12 +439,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     tt__Hanks,
-2)  -->     Charlotte
-3)  -->     tt__M2452
-4)  -->     tt__Carroll,
-5)  -->     Manuel
+1) -->     tt__Hanks,
+2) -->     tt__S26
+3) -->     tt__I3
+4) -->     idx__105143
+5) -->     tt__J5323
 
 # Query extraction from 038.txt
 # Query extracted: henry fonda yours mine ours char name
@@ -463,12 +451,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Tom
-2)  -->     A.
-3)  -->     D.
-4)  -->     C.
-5)  -->     Dr.
+1) -->     James
+2) -->     M.
+3) -->     Michael
+4) -->     A.
+5) -->     cid__name
 
 # Query extraction from 039.txt
 # Query extracted: russell crowe gladiator char name
@@ -476,12 +463,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Tom
-2)  -->     A.
-3)  -->     D.
-4)  -->     C.
-5)  -->     Dr.
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 040.txt
 # Query extracted: brent spiner star trek
@@ -489,12 +475,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     M.
-2)  -->     cid__name
-3)  -->     Jr.,
-4)  -->     Jack
-5)  -->     George
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 041.txt
 # Query extracted: audrey hepburn 1951
@@ -502,12 +487,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Audrey
-2)  -->     tt__de
-3)  -->     Walter
-4)  -->     tt__De
-5)  -->     Joshua
+1) -->     Audrey
+2) -->     Nicholas
+3) -->     Melissa
+4) -->     Jerry
+5) -->     tt__Morris,
 
 # Query extraction from 042.txt
 # Query extracted: name jacques clouseau
@@ -515,12 +499,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     M.
-2)  -->     cid__name
-3)  -->     Jr.,
-4)  -->     Jack
-5)  -->     George
+1) -->     James
+2) -->     M.
+3) -->     Michael
+4) -->     A.
+5) -->     cid__name
 
 # Query extraction from 043.txt
 # Query extracted: name jack ryan
@@ -528,12 +511,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Tom
-2)  -->     A.
-3)  -->     D.
-4)  -->     C.
-5)  -->     Dr.
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.
 
 # Query extraction from 044.txt
 # Query extracted: rocky stallone
@@ -541,12 +523,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Rocky
-2)  -->     Julie
-3)  -->     Anita
-4)  -->     Bruce
-5)  -->     Jan
+1) -->     Rocky
+2) -->     Victoria
+3) -->     Terry
+4) -->     Alice
+5) -->     tt__Gray,
 
 # Query extraction from 045.txt
 # Query extracted: name terminator
@@ -560,12 +541,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     H.
-2)  -->     W.
-3)  -->     F.
-4)  -->     William
-5)  -->     tt__Lee,
+1) -->     Charles
+2) -->     S.
+3) -->     tt__Jackson,
+4) -->     Peter
+5) -->     Harry
 
 # Query extraction from 047.txt
 # Query extracted: sean connery fleming
@@ -573,12 +553,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     M.
-2)  -->     cid__name
-3)  -->     Jr.,
-4)  -->     Jack
-5)  -->     George
+1) -->     James
+2) -->     M.
+3) -->     Michael
+4) -->     A.
+5) -->     cid__name
 
 # Query extraction from 048.txt
 # Query extracted: reeves wachowski
@@ -586,12 +565,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     tt__Reeves,
-2)  -->     Claire
-3)  -->     tt__Marshall,
-4)  -->     tt__Nelson,
-5)  -->     Emily
+1) -->     tt__Reeves,
+2) -->     Elizabeth
+3) -->     Jeremy
+4) -->     Jay
+5) -->     Jim
 
 # Query extraction from 049.txt
 # Query extracted: dean jones herbie
@@ -599,12 +577,11 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     tt__Roberts,
-2)  -->     Lee
-3)  -->     W.
-4)  -->     tt__Lee,
-5)  -->     F.
+1) -->     S.
+2) -->     C.
+3) -->     Joseph
+4) -->     L.
+5) -->     Charles
 
 # Query extraction from 050.txt
 # Query extracted: indiana jones last crusade lost ark
@@ -612,9 +589,8 @@ File created:
 # Embeddings extraction from matrix mat
 # Computing similarity vector
 # Getting the Top5 indices
-#    -->     keys[idx]
-1)  -->     Tom
-2)  -->     A.
-3)  -->     D.
-4)  -->     C.
-5)  -->     Dr.
+1) -->     C.
+2) -->     tt__Brown,
+3) -->     S.
+4) -->     Richard
+5) -->     W.

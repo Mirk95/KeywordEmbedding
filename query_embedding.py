@@ -35,10 +35,8 @@ def extract_tokens(query):
     return tokens
 
 
-def tokens2embedding(tokens, mat, keys):
-    embeddings = []
+def generate_tokens_combination(tokens):
     final_tokens = []
-
     for t in tokens:
         final_tokens.append(t)
         final_tokens.append(t+',')
@@ -52,6 +50,12 @@ def tokens2embedding(tokens, mat, keys):
         final_tokens.append('tt__'+tc)
         final_tokens.append('tt__'+tc+',')
 
+    return final_tokens
+
+
+def tokens2embedding(tokens, mat, keys):
+    embeddings = []
+    final_tokens = generate_tokens_combination(tokens)
     for token in final_tokens:
         indices = [i for i, el in enumerate(keys) if el==token]
         for idx in indices:
@@ -86,20 +90,21 @@ def get_top5_indices(sim):
     return indices.tolist()
 
 
-def create_query_embedding(mat, keys):
+def create_query_embedding(input_file, mat, keys):
     '''
     input_file --> Dataset in file csv.
     mat --> NxM matrix, where N is the number of tokens that convert and M is 
     the feature vector size (the embedding).
     keys --> List of rows values.
     '''
+    filename = os.path.basename(input_file).split('.')[0]
     path = 'pipeline/queries/IMDB/'
     query_dir = sorted(os.listdir(path))
     if len(query_dir) == 0:
         print('# The directory {} is empty!'.format(path))
         return -1
     
-    output_df = pd.DataFrame(columns=('Query', 'Position', 'Similarity'))
+    output_df = pd.DataFrame(columns=('File', 'Query', 'Pos', 'Sim', 'RID'))
 
     for file in query_dir:
         if re.match('^\d+', file):
@@ -122,15 +127,16 @@ def create_query_embedding(mat, keys):
                 for i, idx in enumerate(idxs):
                     print('{}) -->     {}'.format(i+1, keys[idx]))
                     q = ' '.join(tokens)
-                    values_to_add = {'Query': q, 'Position': i+1, 'Similarity': sim[idx]}
+                    values_to_add = {'File': file, 'Query': q, 'Pos': i+1, 
+                                    'Sim': sim[idx], 'RID': keys[idx]}
                     row_to_add = pd.Series(values_to_add)
                     output_df = output_df.append(row_to_add, ignore_index=True)
                 print()
-    output_df.to_csv('pipeline/debuggings/final_output.csv')
+    output_df.to_csv('pipeline/debuggings/output_{}.csv'.format(filename))
 
 
 if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
     mat, keys = create_local_embedding(input_file)
-    if create_query_embedding(mat, keys) == -1:
+    if create_query_embedding(input_file, mat, keys) == -1:
         print('Ops! The function failed!')
