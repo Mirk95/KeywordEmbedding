@@ -13,6 +13,12 @@ with warnings.catch_warnings():
     from edgelist import EdgeList
 
 
+def remove_punctuations(sentence):
+    translator = str.maketrans('', '', string.punctuation)
+    sentence = sentence.translate(translator)
+    return sentence
+
+
 def clean_dataset(df, output, saveGT=True):
     '''
     This function is useful to clean the Dataframe in input and avoid too long 
@@ -29,6 +35,10 @@ def clean_dataset(df, output, saveGT=True):
     # And remove these columns from the initial Dataframe
     int64cols = df_int64.columns.tolist()
     df = df.drop(int64cols, 1)
+    # Lowercase the Dataframe
+    df = df.applymap(lambda s:s.lower() if isinstance(s, str) else s)
+    # And remove the punctuation
+    df = df.applymap(lambda s:remove_punctuations(s) if isinstance(s, str) else s)
     return df
 
 
@@ -201,13 +211,14 @@ def create_local_embedding(input_file):
 
     df = pd.read_csv(configuration['input_file'])
     df = clean_dataset(df, output_file)
+    df.to_csv('df_cleaned.csv')
 
     prefixes = ['3#__tn', '3$__tt', '5$__idx', '1$__cid']
 
     el = EdgeList(df, prefixes)
     df = el.get_df_edgelist()
     # Save the edgelist dataframe in a file csv for debugging
-    df.to_csv('pipeline/debuggings/edgelist_{}.csv'.format(output_file), sep='\t')
+    df.to_csv('pipeline/debuggings/edgelist_{}.csv'.format(output_file))
 
     df = df[df.columns[:2]]
     df.dropna(inplace=True)
