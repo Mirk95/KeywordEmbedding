@@ -6,6 +6,8 @@ import numpy as np
 
 from nltk.tokenize import RegexpTokenizer
 from sklearn.metrics.pairwise import cosine_similarity
+from iteration_utilities import unique_everseen, duplicates
+from tables.atom import EnumAtom
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
@@ -35,59 +37,60 @@ def extract_tokens(query):
     return tokens
 
 
-def generate_tokens_combination(tokens):
-    final_tokens = []
-    for t in tokens:
-        final_tokens.append(t)
-        final_tokens.append(t+',')
-        final_tokens.append('tt__'+t)
-        final_tokens.append('tt__'+t+',')
-    
-    tokens_capitalized = [t.capitalize() for t in tokens]
-    for tc in tokens_capitalized:
-        final_tokens.append(tc)
-        final_tokens.append(tc+',')
-        final_tokens.append('tt__'+tc)
-        final_tokens.append('tt__'+tc+',')
-
-    return final_tokens
-
-
-def tokens2embedding(tokens, mat, keys):
+def tokens2embeddings(tokens, mat, keys):
     embeddings = []
-    final_tokens = generate_tokens_combination(tokens)
-    for token in final_tokens:
-        indices = [i for i, el in enumerate(keys) if el==token]
-        for idx in indices:
+    for token in tokens:
+        tt_token = 'tt__'+token
+        if  tt_token in keys:
+            idx = keys.index(tt_token)
             embeddings.append(mat[idx])
+            print('# Found embedding for token {} at idx {}'.format(tt_token, idx))
+        elif token in keys:
+            idx = keys.index(token)
+            embeddings.append(mat[idx])
+            print('# Found embedding for token {} at idx {}'.format(token, idx))
+        else:
+            print('# No embedding found for token {}'.format(token))
+    return embeddings
 
-    emb = np.array(embeddings)
-    if emb.shape[0] > 1:
-        # Apply Mean
-        mean_vec = np.zeros((emb.shape[1]))
-        for j in range(emb.shape[1]):
-            mean = 0.00
-            sum = 0.00
-            for i in range(emb.shape[0]):
-                sum += mat[i][j]
-            mean = float(sum / emb.shape[0])
-            mean_vec[j] = mean
-        return mean_vec
+
+def compute_similarity(embeddings, mat):
+    sims = []
+    for embedding in embeddings:
+        emb = np.array(embedding)
+        emb = emb.reshape(-1, 1)
+        emb_transpose = np.transpose(emb)
+        similarity = cosine_similarity(emb_transpose, mat)
+        sims.append(similarity)
+    return sims
+
+
+def get_max_indices(sim_array, keys):
+    counter_rid = 0
+    rids_indices = []
+    while counter_rid < int(sim_array.shape[0]/10):
+        max_idx = np.argmax(sim_array, axis=0)
+        if keys[max_idx].startswith("idx__"):
+            counter_rid += 1
+            rids_indices.append(max_idx)
+        sim_array[max_idx] = 0
+    return rids_indices
+
+
+def get_top5RID(similarities, keys):
+    if len(similarities) > 1:
+        rid_indices = []
+        for similarity in similarities:
+            sim = similarity.flatten()
+            rids = get_max_indices(sim, keys)
+            rid_indices += rids
+        ranking = list(unique_everseen(duplicates(rid_indices)))
     else:
-        return emb
-
-
-def compute_similarity(embedding, mat):
-    embedding = embedding.reshape(-1, 1)
-    emb_transpose = np.transpose(embedding)
-    similarity = cosine_similarity(emb_transpose, mat)
-    return similarity
-
-
-def get_top5_indices(sim):
-    indices = np.argpartition(sim, -5)[-5:]
-    indices = indices[np.argsort(-sim[indices])]
-    return indices.tolist()
+        sim = similarities[0].flatten()
+        rids = get_max_indices(sim, keys)
+        ranking = rids
+    ranking = ranking[:5]
+    return ranking
 
 
 def create_query_embedding(input_file, mat, keys):
@@ -114,25 +117,29 @@ def create_query_embedding(input_file, mat, keys):
             print('# Query extracted: {}'.format(query), end='')
             tokens = extract_tokens(query)
             print('# Tokens extracted: {}'.format(tokens))
-            print ('# Embeddings extraction from matrix mat')
-            embedding = tokens2embedding(tokens, mat, keys)
-            if embedding.size == 0:
+            print ('# Embeddings extraction...')
+            embeddings = tokens2embeddings(tokens, mat, keys)
+            if len(embeddings) == 0:
                 print('# No embeddings found for query --> {}'.format(query))
             else:
-                print('# Computing similarity vector')
-                sim = compute_similarity(embedding, mat)
-                print('# Getting the Top5 indices')
-                sim = sim.flatten()
-                idxs = get_top5_indices(sim)
-                for i, idx in enumerate(idxs):
-                    print('{}) -->     {}'.format(i+1, keys[idx]))
-                    q = ' '.join(tokens)
-                    values_to_add = {'File': file, 'Query': q, 'Pos': i+1, 
-                                    'Sim': sim[idx], 'RID': keys[idx]}
-                    row_to_add = pd.Series(values_to_add)
-                    output_df = output_df.append(row_to_add, ignore_index=True)
+                print('# Computing similarities...')
+                similarities = compute_similarity(embeddings, mat)
+                print('# Searching the top5 similar RIDs...')
+                top5rids = get_top5RID(similarities, keys)
+                for i, idx in enumerate(top5rids):
+                    print('{})  -->     {}'.format(i+1, keys[idx]))
                 print()
-    output_df.to_csv('pipeline/debuggings/output_{}.csv'.format(filename))
+
+            #    idxs = get_top5_indices(sim)
+            #    for i, idx in enumerate(idxs):
+            #        print('{}) -->     {}'.format(i+1, keys[idx]))
+            #        q = ' '.join(tokens)
+            #        values_to_add = {'File': file, 'Query': q, 'Pos': i+1, 
+            #                        'Sim': sim[idx], 'RID': keys[idx]}
+            #        row_to_add = pd.Series(values_to_add)
+            #        output_df = output_df.append(row_to_add, ignore_index=True)
+            #    print()
+    #output_df.to_csv('pipeline/debuggings/output_{}.csv'.format(filename))
 
 
 if __name__ == '__main__':
