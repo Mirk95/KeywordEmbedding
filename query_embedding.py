@@ -107,7 +107,8 @@ def create_query_embedding(input_file, mat, keys):
         print('# The directory {} is empty!'.format(path))
         return -1
     
-    output_df = pd.DataFrame(columns=('File', 'Query', 'Pos', 'Sim', 'RID'))
+    df = pd.read_csv(input_file)
+    output_df = pd.DataFrame(columns=('File', 'Query', 'Pos', 'RID', 'Name', 'SearchID'))
 
     for file in query_dir:
         if re.match('^\d+', file):
@@ -117,7 +118,7 @@ def create_query_embedding(input_file, mat, keys):
             print('# Query extracted: {}'.format(query), end='')
             tokens = extract_tokens(query)
             print('# Tokens extracted: {}'.format(tokens))
-            print ('# Embeddings extraction...')
+            print('# Embeddings extraction...')
             embeddings = tokens2embeddings(tokens, mat, keys)
             if len(embeddings) == 0:
                 print('# No embeddings found for query --> {}'.format(query))
@@ -127,19 +128,19 @@ def create_query_embedding(input_file, mat, keys):
                 print('# Searching the top5 similar RIDs...')
                 top5rids = get_top5RID(similarities, keys)
                 for i, idx in enumerate(top5rids):
-                    print('{})  -->     {}'.format(i+1, keys[idx]))
+                    index = int(keys[idx].replace('idx__', ''))
+                    name = df.iloc[index-2]['name']
+                    searchID = df.iloc[index-2]['__search_id']
+                    print(f'{i+1}) --> {keys[idx]} --> {name} --> {searchID}')
+                    q = ' '.join(tokens)
+                    values_to_add = {'File': file, 'Query': q, 'Pos': i+1, 
+                                    'RID': keys[idx], 'Name': name, 
+                                    'SearchID': searchID}
+                    row_to_add = pd.Series(values_to_add)
+                    output_df = output_df.append(row_to_add, ignore_index=True)
                 print()
-
-            #    idxs = get_top5_indices(sim)
-            #    for i, idx in enumerate(idxs):
-            #        print('{}) -->     {}'.format(i+1, keys[idx]))
-            #        q = ' '.join(tokens)
-            #        values_to_add = {'File': file, 'Query': q, 'Pos': i+1, 
-            #                        'Sim': sim[idx], 'RID': keys[idx]}
-            #        row_to_add = pd.Series(values_to_add)
-            #        output_df = output_df.append(row_to_add, ignore_index=True)
-            #    print()
-    #output_df.to_csv('pipeline/debuggings/output_{}.csv'.format(filename))
+    output_df.to_csv('pipeline/debuggings/output_{}.csv'.format(filename))
+    return 0
 
 
 if __name__ == '__main__':

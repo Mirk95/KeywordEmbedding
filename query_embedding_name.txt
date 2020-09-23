@@ -1,26 +1,26 @@
 ################################################################################
 # Configuration file: pipeline/datasets/name.csv
-# Starting run................................................ 2020-09-18 15:26:47.109574
+# Starting run................................................ 2020-09-23 10:47:55.991396
 # 100.0 - 273034/273034 tuples
-# Starting graph construction................................. 2020-09-18 15:28:45
+# Starting graph construction................................. 2020-09-23 10:49:42
 # Expanding columns ['tt'].
-Loading edgelist_file.: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2213142/2213142 [00:21<00:00, 103802.88it/s]
-Prepare aliased randomizer for each node: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 538163/538163 [00:11<00:00, 48920.33it/s]
+Loading edgelist_file.: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2213142/2213142 [00:21<00:00, 102587.73it/s]
+Prepare aliased randomizer for each node: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 538092/538092 [00:11<00:00, 48611.26it/s]
 
-# Graph construction complete................................. 2020-09-18 15:29:18
-# Time required to build graph:............................... 32.324616
+# Graph construction complete................................. 2020-09-23 10:50:15
+# Time required to build graph:............................... 32.643855
 # Skipping search of overlapping values. 
-# Generating basic random walks............................... 2020-09-18 15:29:18
-Completing fraction of random walks: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 1000/1000 [00:04<00:00, 239.13it/s]
-# Generation of random walks completed........................ 2020-09-18 15:29:22
-# Training embeddings......................................... 2020-09-18 15:29:22.550674
+# Generating basic random walks............................... 2020-09-23 10:50:15
+Completing fraction of random walks: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 1000/1000 [00:05<00:00, 188.89it/s]
+# Generation of random walks completed........................ 2020-09-23 10:50:20
+# Training embeddings......................................... 2020-09-23 10:50:21.020100
 File: pipeline/embeddings/name.emb
-# Embeddings generation complete.............................. 2020-09-18 15:29:26
-# Ending run.................................................. 2020-09-18 15:29:31.782875
-# Time required: 164.673301
+# Embeddings generation complete.............................. 2020-09-23 10:50:24
+# Ending run.................................................. 2020-09-23 10:50:26.228355
+# Time required: 150.236959
 
-Embedding Matrix shape: (9886, 300)
-Keys number: 9886
+Embedding Matrix shape: (9890, 300)
+Keys number: 9890
 
 File created:
 1. pipeline/walks/name.walks
@@ -28,569 +28,771 @@ File created:
 # Query extraction from 001.txt
 # Query extracted: denzel washington
 # Tokens extracted: ['denzel', 'washington']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     James
-2) -->     M.
-3) -->     Michael
-4) -->     A.
-5) -->     cid__name
+# Embeddings extraction...
+# No embedding found for token denzel
+# Found embedding for token tt__washington at idx 312
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__70683 --> Oger, John --> 39619555
+2) --> idx__90887 --> Zagar, Julia --> 40610825
+3) --> idx__168892 --> Amos, Tom --> 41166588
+4) --> idx__35400 --> Sisson, George --> 39796594
+5) --> idx__22810 --> Legrand, Robert --> 40972583
 
 # Query extraction from 002.txt
 # Query extracted: clint eastwood
 # Tokens extracted: ['clint', 'eastwood']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     Clint
-2) -->     tt__C6256
-3) -->     tt__B26
-4) -->     tt__R2621
-5) -->     tt__J5354
+# Embeddings extraction...
+# No embedding found for token clint
+# No embedding found for token eastwood
+# No embeddings found for query --> clint eastwood
 
 # Query extraction from 003.txt
 # Query extracted: john wayne
 # Tokens extracted: ['john', 'wayne']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     W.
-2) -->     Richard
-3) -->     C.
-4) -->     William
-5) -->     A.
+# Embeddings extraction...
+# Found embedding for token tt__john at idx 1165
+# Found embedding for token tt__wayne at idx 225
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__175203 --> Woodard, M. Nicole --> 40603949
+2) --> idx__233470 --> Lowe, Georgina --> 40729241
+3) --> idx__168892 --> Amos, Tom --> 41166588
+4) --> idx__246860 --> Gupta-Smith, Vismita --> 41091499
+5) --> idx__245984 --> Wisniewski, Tom --> 39953231
 
 # Query extraction from 004.txt
 # Query extracted: will smith
 # Tokens extracted: ['will', 'smith']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     W.
-2) -->     Richard
-3) -->     C.
-4) -->     William
-5) -->     A.
+# Embeddings extraction...
+# Found embedding for token will at idx 660
+# Found embedding for token tt__smith at idx 11
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__104988 --> Quiroga, Victor --> 41386827
+2) --> idx__245984 --> Wisniewski, Tom --> 39953231
+3) --> idx__184583 --> Robert, Cristea George --> 39717501
+4) --> idx__121576 --> Marshall, Georg --> 39514071
+5) --> idx__266430 --> Kozeluh, John --> 39423748
 
 # Query extraction from 005.txt
 # Query extracted: harrison ford
 # Tokens extracted: ['harrison', 'ford']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     W.
-2) -->     C.
-3) -->     Richard
-4) -->     A.
-5) -->     William
+# Embeddings extraction...
+# Found embedding for token tt__harrison at idx 63
+# Found embedding for token tt__ford at idx 140
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__233470 --> Lowe, Georgina --> 40729241
+2) --> idx__175203 --> Woodard, M. Nicole --> 40603949
+3) --> idx__168892 --> Amos, Tom --> 41166588
+4) --> idx__177975 --> Frank, Vanessa --> 40169106
+5) --> idx__266883 --> Melvin, James --> 41033400
 
 # Query extraction from 006.txt
 # Query extracted: julia roberts
 # Tokens extracted: ['julia', 'roberts']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# Found embedding for token tt__julia at idx 3056
+# Found embedding for token tt__roberts at idx 45
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__22810 --> Legrand, Robert --> 40972583
+2) --> idx__198634 --> de Boer, Julia --> 40659696
+3) --> idx__84378 --> Moncada, Mike --> 41101026
+4) --> idx__96200 --> Rushton, John --> 41149629
+5) --> idx__52079 --> Merkel, John --> 39547166
 
 # Query extraction from 007.txt
 # Query extracted: tom hanks
 # Tokens extracted: ['tom', 'hanks']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# Found embedding for token tom at idx 10
+# Found embedding for token tt__hanks at idx 6380
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__229303 --> Crabbe, John --> 39103850
+2) --> idx__265693 --> Tanaka, Yukio --> 40540987
+3) --> idx__271426 --> Iscove, Robert --> 40704743
+4) --> idx__255864 --> Anderson, James --> 38928852
+5) --> idx__199019 --> Freeman, Chris --> 39224518
 
 # Query extraction from 008.txt
 # Query extracted: johnny depp
 # Tokens extracted: ['johnny', 'depp']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     Johnny
-2) -->     tt__D54
-3) -->     tt__D13
-4) -->     Stan
-5) -->     Stacy
+# Embeddings extraction...
+# Found embedding for token johnny at idx 560
+# No embedding found for token depp
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__50466 --> Nyznik, Bruce --> 39611340
+2) --> idx__191403 --> Walker, Giles --> 40810796
+3) --> idx__246655 --> Doyle, Thomas A. --> 39163944
+4) --> idx__137501 --> Vargas, Josh --> 39900026
+5) --> idx__198634 --> de Boer, Julia --> 40659696
 
 # Query extraction from 009.txt
 # Query extracted: angelina jolie
 # Tokens extracted: ['angelina', 'jolie']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     Angelina
-2) -->     Donald
-3) -->     Hal
-4) -->     tt__Carter,
-5) -->     tt__Simon,
+# Embeddings extraction...
+# Found embedding for token angelina at idx 1426
+# No embedding found for token jolie
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__50466 --> Nyznik, Bruce --> 39611340
+2) --> idx__245174 --> Smith, Samuel Chris --> 39808047
+3) --> idx__96200 --> Rushton, John --> 41149629
+4) --> idx__80811 --> Hagerty, Henry --> 39289865
+5) --> idx__137205 --> Senn, Rick --> 39778721
 
 # Query extraction from 010.txt
 # Query extracted: morgan freeman
 # Tokens extracted: ['morgan', 'freeman']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     W.
-2) -->     C.
-3) -->     Richard
-4) -->     A.
-5) -->     William
+# Embeddings extraction...
+# Found embedding for token tt__morgan at idx 48
+# Found embedding for token tt__freeman at idx 100
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__175203 --> Woodard, M. Nicole --> 40603949
+2) --> idx__233470 --> Lowe, Georgina --> 40729241
+3) --> idx__168892 --> Amos, Tom --> 41166588
+4) --> idx__266883 --> Melvin, James --> 41033400
+5) --> idx__246860 --> Gupta-Smith, Vismita --> 41091499
 
 # Query extraction from 011.txt
 # Query extracted: gone with the wind
 # Tokens extracted: ['gone', 'with', 'the', 'wind']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# No embedding found for token gone
+# No embedding found for token with
+# Found embedding for token the at idx 89
+# Found embedding for token tt__wind at idx 2356
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__183121 --> Cookson, Shawn Holly --> 41060937
+2) --> idx__142001 --> Road, Mike --> 39717656
+3) --> idx__85070 --> Yorke, Augustus --> 39966331
+4) --> idx__199635 --> Ring, George --> 39715811
+5) --> idx__114942 --> Krenteras, Nick --> 40717889
 
 # Query extraction from 012.txt
 # Query extracted: star wars
 # Tokens extracted: ['star', 'wars']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     tt__Star,
-2) -->     tt__Jacques,
-3) -->     tt__Carter,
-4) -->     Anton
-5) -->     Ted
+# Embeddings extraction...
+# Found embedding for token tt__star at idx 7779
+# No embedding found for token wars
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__68498 --> Kelley, Sean --> 39397695
+2) --> idx__125471 --> Softley, Wayne --> 41421834
+3) --> idx__174634 --> Stone, Milburn --> 39831140
+4) --> idx__110801 --> Hiltzik, Robert --> 39324757
+5) --> idx__145715 --> Van Kirk, Scott --> 39898044
 
 # Query extraction from 013.txt
 # Query extracted: casablanca
 # Tokens extracted: ['casablanca']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     tt__Casablanca,
-2) -->     idx__238264
-3) -->     tt__C432
-4) -->     tt__J5323
-5) -->     tt__W323
+# Embeddings extraction...
+# No embedding found for token casablanca
+# No embeddings found for query --> casablanca
 
 # Query extraction from 014.txt
 # Query extracted: lord of the rings
 # Tokens extracted: ['lord', 'of', 'the', 'rings']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     W.
-2) -->     C.
-3) -->     Richard
-4) -->     A.
-5) -->     William
+# Embeddings extraction...
+# Found embedding for token tt__lord at idx 1804
+# Found embedding for token of at idx 7650
+# Found embedding for token the at idx 89
+# Found embedding for token tt__rings at idx 9087
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__45737 --> Vanier, Denis --> 39901629
+2) --> idx__163313 --> Deas, Henry --> 39134800
+3) --> idx__14915 --> Tager, Aron --> 39846180
+4) --> idx__93651 --> Hall, Rick --> 39293293
+5) --> idx__84616 --> Sánchez, Jorge --> 40800156
 
 # Query extraction from 015.txt
 # Query extracted: the sound of music
 # Tokens extracted: ['the', 'sound', 'of', 'music']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# Found embedding for token the at idx 89
+# No embedding found for token sound
+# Found embedding for token of at idx 7650
+# Found embedding for token music at idx 1141
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__221429 --> Purvis, Robert --> 39682743
+2) --> idx__256812 --> Pigeon, Mara --> 40433189
+3) --> idx__249595 --> Griffin, Russell --> 39276131
+4) --> idx__220601 --> Norman, Brett --> 39608644
+5) --> idx__35020 --> de Andres, Nonong --> 39130521
 
 # Query extraction from 016.txt
 # Query extracted: wizard of oz
 # Tokens extracted: ['wizard', 'of', 'oz']
-# Embeddings extraction from matrix mat
-# No embeddings found for query --> wizard of oz
+# Embeddings extraction...
+# No embedding found for token wizard
+# Found embedding for token of at idx 7650
+# Found embedding for token oz at idx 2819
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__100481 --> Kohlhaase, Wolfgang --> 39415923
+2) --> idx__186807 --> Li, Fung --> 40312438
+3) --> idx__200787 --> Kellar, Steven --> 40710762
+4) --> idx__20103 --> Morriss, Ann --> 40381295
+5) --> idx__101940 --> Roberts, Chris --> 40772599
 
 # Query extraction from 017.txt
 # Query extracted: the notebook
 # Tokens extracted: ['the', 'notebook']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     James
-2) -->     M.
-3) -->     Michael
-4) -->     A.
-5) -->     cid__name
+# Embeddings extraction...
+# Found embedding for token the at idx 89
+# No embedding found for token notebook
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__175203 --> Woodard, M. Nicole --> 40603949
+2) --> idx__233470 --> Lowe, Georgina --> 40729241
+3) --> idx__266883 --> Melvin, James --> 41033400
+4) --> idx__168892 --> Amos, Tom --> 41166588
+5) --> idx__245984 --> Wisniewski, Tom --> 39953231
 
 # Query extraction from 018.txt
 # Query extracted: forrest gump
 # Tokens extracted: ['forrest', 'gump']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     James
-2) -->     M.
-3) -->     Michael
-4) -->     A.
-5) -->     cid__name
+# Embeddings extraction...
+# Found embedding for token tt__forrest at idx 280
+# No embedding found for token gump
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__175203 --> Woodard, M. Nicole --> 40603949
+2) --> idx__233470 --> Lowe, Georgina --> 40729241
+3) --> idx__168892 --> Amos, Tom --> 41166588
+4) --> idx__85526 --> Livingston, Ron --> 39474779
+5) --> idx__246860 --> Gupta-Smith, Vismita --> 41091499
 
 # Query extraction from 019.txt
 # Query extracted: the princess bride
 # Tokens extracted: ['the', 'princess', 'bride']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     James
-2) -->     M.
-3) -->     Michael
-4) -->     A.
-5) -->     cid__name
+# Embeddings extraction...
+# Found embedding for token the at idx 89
+# No embedding found for token princess
+# No embedding found for token bride
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__175203 --> Woodard, M. Nicole --> 40603949
+2) --> idx__233470 --> Lowe, Georgina --> 40729241
+3) --> idx__266883 --> Melvin, James --> 41033400
+4) --> idx__168892 --> Amos, Tom --> 41166588
+5) --> idx__245984 --> Wisniewski, Tom --> 39953231
 
 # Query extraction from 020.txt
 # Query extracted: the godfather
 # Tokens extracted: ['the', 'godfather']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     James
-2) -->     M.
-3) -->     Michael
-4) -->     A.
-5) -->     cid__name
+# Embeddings extraction...
+# Found embedding for token the at idx 89
+# No embedding found for token godfather
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__175203 --> Woodard, M. Nicole --> 40603949
+2) --> idx__233470 --> Lowe, Georgina --> 40729241
+3) --> idx__266883 --> Melvin, James --> 41033400
+4) --> idx__168892 --> Amos, Tom --> 41166588
+5) --> idx__245984 --> Wisniewski, Tom --> 39953231
 
 # Query extraction from 021.txt
 # Query extracted: title atticus finch
 # Tokens extracted: ['title', 'atticus', 'finch']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     tt__Finch,
-2) -->     Jeremy
-3) -->     Lauren
-4) -->     Ed
-5) -->     Anne
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token atticus
+# Found embedding for token tt__finch at idx 1481
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__198634 --> de Boer, Julia --> 40659696
+2) --> idx__22810 --> Legrand, Robert --> 40972583
+3) --> idx__52079 --> Merkel, John --> 39547166
+4) --> idx__157918 --> Strenge, Walter --> 40991149
+5) --> idx__108974 --> Starr, Chris --> 39821741
 
 # Query extraction from 022.txt
 # Query extracted: title indiana jones
 # Tokens extracted: ['title', 'indiana', 'jones']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token indiana
+# Found embedding for token tt__jones at idx 16
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__139575 --> Jones, Christian --> 39375479
+2) --> idx__259416 --> Jack, Black --> 39354705
+3) --> idx__151113 --> Harrison, Sydney --> 40215060
+4) --> idx__15680 --> Jaxa, Piotr --> 39364871
+5) --> idx__155928 --> Ishikura, Saburô --> 39354749
 
 # Query extraction from 023.txt
 # Query extracted: title james bond
 # Tokens extracted: ['title', 'james', 'bond']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     W.
-2) -->     C.
-3) -->     Richard
-4) -->     A.
-5) -->     William
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token tt__james at idx 55
+# Found embedding for token tt__bond at idx 534
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__166096 --> Magy --> 39499476
+2) --> idx__50466 --> Nyznik, Bruce --> 39611340
+3) --> idx__246860 --> Gupta-Smith, Vismita --> 41091499
+4) --> idx__130206 --> Quintero, Frank --> 39686655
+5) --> idx__245174 --> Smith, Samuel Chris --> 39808047
 
 # Query extraction from 024.txt
 # Query extracted: title rick blaine
 # Tokens extracted: ['title', 'rick', 'blaine']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token tt__rick at idx 2112
+# Found embedding for token tt__blaine at idx 4834
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__101321 --> Trintignant, Jean-Louis --> 39880433
+2) --> idx__264480 --> Dean, Jacey --> 39134662
+3) --> idx__221429 --> Purvis, Robert --> 39682743
+4) --> idx__63393 --> Rieger, Robert --> 39712615
+5) --> idx__110293 --> Peters, Clarke --> 39656730
 
 # Query extraction from 025.txt
 # Query extracted: title will kane
 # Tokens extracted: ['title', 'will', 'kane']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token will at idx 660
+# Found embedding for token tt__kane at idx 134
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__245984 --> Wisniewski, Tom --> 39953231
+2) --> idx__246860 --> Gupta-Smith, Vismita --> 41091499
+3) --> idx__223687 --> Malinealu, Henri --> 41032043
+4) --> idx__30584 --> Warren, Wade --> 40938703
+5) --> idx__22810 --> Legrand, Robert --> 40972583
 
 # Query extraction from 026.txt
 # Query extracted: title dr. hannibal lecter
 # Tokens extracted: ['title', 'dr', 'hannibal', 'lecter']
-# Embeddings extraction from matrix mat
-# No embeddings found for query --> title dr. hannibal lecter
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token tt__dr at idx 3349
+# No embedding found for token hannibal
+# No embedding found for token lecter
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__160613 --> Dhamija, Himman --> 40663957
+2) --> idx__45076 --> Frauenholz, Diane --> 41248655
+3) --> idx__208716 --> Flores, M. Laurence --> 41246999
+4) --> idx__180229 --> Jones, Michael --> 41294947
+5) --> idx__115044 --> Duke, Big --> 39166093
 
 # Query extraction from 027.txt
 # Query extracted: title norman bates
 # Tokens extracted: ['title', 'norman', 'bates']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token tt__norman at idx 461
+# Found embedding for token tt__bates at idx 182
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__175203 --> Woodard, M. Nicole --> 40603949
+2) --> idx__233470 --> Lowe, Georgina --> 40729241
+3) --> idx__168892 --> Amos, Tom --> 41166588
+4) --> idx__266883 --> Melvin, James --> 41033400
+5) --> idx__245984 --> Wisniewski, Tom --> 39953231
 
 # Query extraction from 028.txt
 # Query extracted: title darth vader
 # Tokens extracted: ['title', 'darth', 'vader']
-# Embeddings extraction from matrix mat
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token darth
+# No embedding found for token vader
 # No embeddings found for query --> title darth vader
 
 # Query extraction from 029.txt
 # Query extracted: title the wicked witch of the west
 # Tokens extracted: ['title', 'the', 'wicked', 'witch', 'of', 'the', 'west']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     S.
-2) -->     Charles
-3) -->     tt__Jackson,
-4) -->     tt__Brown,
-5) -->     L.
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token the at idx 89
+# No embedding found for token wicked
+# No embedding found for token witch
+# Found embedding for token of at idx 7650
+# Found embedding for token the at idx 89
+# Found embedding for token tt__west at idx 59
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__221429 --> Purvis, Robert --> 39682743
+2) --> idx__256812 --> Pigeon, Mara --> 40433189
+3) --> idx__249595 --> Griffin, Russell --> 39276131
+4) --> idx__220601 --> Norman, Brett --> 39608644
+5) --> idx__35020 --> de Andres, Nonong --> 39130521
 
 # Query extraction from 030.txt
 # Query extracted: title nurse ratched
 # Tokens extracted: ['title', 'nurse', 'ratched']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     tt__Nurse,
-2) -->     tt__Rogers,
-3) -->     tt__Di
-4) -->     Charlie
-5) -->     tt__Watson,
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token nurse
+# No embedding found for token ratched
+# No embeddings found for query --> title nurse ratched
 
 # Query extraction from 031.txt
 # Query extracted: title frankly my dear i don't give a damn
 # Tokens extracted: ['title', 'frankly', 'my', 'dear', 'i', 'don', 't', 'give', 'a', 'damn']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     James
-2) -->     M.
-3) -->     Michael
-4) -->     A.
-5) -->     cid__name
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token frankly
+# No embedding found for token my
+# No embedding found for token dear
+# Found embedding for token tt__i at idx 2
+# Found embedding for token tt__don at idx 9089
+# Found embedding for token tt__t at idx 2294
+# No embedding found for token give
+# Found embedding for token a at idx 36
+# No embedding found for token damn
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__45080 --> Hartel, James --> 41272902
+2) --> idx__98091 --> Lessard, Jacques --> 39463505
+3) --> idx__108974 --> Starr, Chris --> 39821741
+4) --> idx__32231 --> Pluim, Caroline --> 41072000
+5) --> idx__7629 --> Moccia, Jodi --> 40372359
 
 # Query extraction from 032.txt
 # Query extracted: title i'm gonna make him an offer he won't refuse
 # Tokens extracted: ['title', 'i', 'm', 'gonna', 'make', 'him', 'an', 'offer', 'he', 'won', 't', 'refuse']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     James
-2) -->     M.
-3) -->     Michael
-4) -->     A.
-5) -->     cid__name
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token tt__i at idx 2
+# Found embedding for token tt__m at idx 652
+# No embedding found for token gonna
+# No embedding found for token make
+# No embedding found for token him
+# No embedding found for token an
+# No embedding found for token offer
+# No embedding found for token he
+# No embedding found for token won
+# Found embedding for token tt__t at idx 2294
+# No embedding found for token refuse
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__121370 --> Jones, Judith --> 40257808
+2) --> idx__265713 --> Le May, David --> 40724153
+3) --> idx__172728 --> Lintz, Richard --> 39470891
+4) --> idx__68618 --> Wilbanks, Paige --> 40594830
+5) --> idx__199019 --> Freeman, Chris --> 39224518
 
 # Query extraction from 033.txt
 # Query extracted: title you don't understand i coulda had class i coulda been a contender i coulda been somebody instead of a bum which is what i am
 # Tokens extracted: ['title', 'you', 'don', 't', 'understand', 'i', 'coulda', 'had', 'class', 'i', 'coulda', 'been', 'a', 'contender', 'i', 'coulda', 'been', 'somebody', 'instead', 'of', 'a', 'bum', 'which', 'is', 'what', 'i', 'am']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     W.
-2) -->     Richard
-3) -->     C.
-4) -->     William
-5) -->     A.
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token you
+# Found embedding for token tt__don at idx 9089
+# Found embedding for token tt__t at idx 2294
+# No embedding found for token understand
+# Found embedding for token tt__i at idx 2
+# No embedding found for token coulda
+# No embedding found for token had
+# No embedding found for token class
+# Found embedding for token tt__i at idx 2
+# No embedding found for token coulda
+# No embedding found for token been
+# Found embedding for token a at idx 36
+# No embedding found for token contender
+# Found embedding for token tt__i at idx 2
+# No embedding found for token coulda
+# No embedding found for token been
+# No embedding found for token somebody
+# No embedding found for token instead
+# Found embedding for token of at idx 7650
+# Found embedding for token a at idx 36
+# No embedding found for token bum
+# No embedding found for token which
+# No embedding found for token is
+# No embedding found for token what
+# Found embedding for token tt__i at idx 2
+# No embedding found for token am
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__93651 --> Hall, Rick --> 39293293
+2) --> idx__43889 --> Finglass, Kelli --> 40160250
+3) --> idx__83168 --> Douking, Georges --> 39160394
+4) --> idx__5207 --> Tykwer, Tom --> 39887333
+5) --> idx__98367 --> Kaawa, Sean --> 39380255
 
 # Query extraction from 034.txt
 # Query extracted: title toto i've a feeling we're not in kansas any more
 # Tokens extracted: ['title', 'toto', 'i', 've', 'a', 'feeling', 'we', 're', 'not', 'in', 'kansas', 'any', 'more']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token tt__toto at idx 6089
+# Found embedding for token tt__i at idx 2
+# No embedding found for token ve
+# Found embedding for token a at idx 36
+# No embedding found for token feeling
+# No embedding found for token we
+# Found embedding for token tt__re at idx 7969
+# No embedding found for token not
+# No embedding found for token in
+# No embedding found for token kansas
+# No embedding found for token any
+# No embedding found for token more
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__267022 --> Sams, Coke --> 39752624
+2) --> idx__82635 --> Durham, John --> 39168058
+3) --> idx__220506 --> Stoloff, Gretchen Faith --> 41428865
+4) --> idx__242891 --> Ouellette, Daniel --> 41482895
+5) --> idx__201136 --> Nowak, Christopher --> 41483139
 
 # Query extraction from 035.txt
 # Query extracted: title here's looking at you kid
 # Tokens extracted: ['title', 'here', 's', 'looking', 'at', 'you', 'kid']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     tt__S
-2) -->     tt__J5325
-3) -->     idx__251057
-4) -->     idx__61464
-5) -->     tt__S3125
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token here
+# Found embedding for token tt__s at idx 291
+# No embedding found for token looking
+# No embedding found for token at
+# No embedding found for token you
+# Found embedding for token tt__kid at idx 2086
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__139910 --> Yates, Tom --> 39965282
+2) --> idx__89203 --> Rainmakers, The --> 39691090
+3) --> idx__31387 --> Kinkead, Eleanor Talbot --> 40879719
+4) --> idx__13100 --> Rose, Helen --> 40472535
+5) --> idx__32231 --> Pluim, Caroline --> 41072000
 
 # Query extraction from 036.txt
 # Query extracted: hamill skywalker
 # Tokens extracted: ['hamill', 'skywalker']
-# Embeddings extraction from matrix mat
-# No embeddings found for query --> hamill skywalker
+# Embeddings extraction...
+# Found embedding for token tt__hamill at idx 8656
+# No embedding found for token skywalker
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__250413 --> Veilleux, Tom --> 39902271
+2) --> idx__157918 --> Strenge, Walter --> 40991149
+3) --> idx__84378 --> Moncada, Mike --> 41101026
+4) --> idx__96200 --> Rushton, John --> 41149629
+5) --> idx__41606 --> Fuller, Drew --> 39230233
 
 # Query extraction from 037.txt
 # Query extracted: hanks 2004
 # Tokens extracted: ['hanks', '2004']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     tt__Hanks,
-2) -->     tt__S26
-3) -->     tt__I3
-4) -->     idx__105143
-5) -->     tt__J5323
+# Embeddings extraction...
+# Found embedding for token tt__hanks at idx 6380
+# No embedding found for token 2004
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__229303 --> Crabbe, John --> 39103850
+2) --> idx__265693 --> Tanaka, Yukio --> 40540987
+3) --> idx__271426 --> Iscove, Robert --> 40704743
+4) --> idx__255864 --> Anderson, James --> 38928852
+5) --> idx__199019 --> Freeman, Chris --> 39224518
 
 # Query extraction from 038.txt
 # Query extracted: henry fonda yours mine ours char name
 # Tokens extracted: ['henry', 'fonda', 'yours', 'mine', 'ours', 'char', 'name']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     James
-2) -->     M.
-3) -->     Michael
-4) -->     A.
-5) -->     cid__name
+# Embeddings extraction...
+# Found embedding for token tt__henry at idx 176
+# No embedding found for token fonda
+# No embedding found for token yours
+# No embedding found for token mine
+# No embedding found for token ours
+# No embedding found for token char
+# No embedding found for token name
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__198634 --> de Boer, Julia --> 40659696
+2) --> idx__22810 --> Legrand, Robert --> 40972583
+3) --> idx__137501 --> Vargas, Josh --> 39900026
+4) --> idx__191403 --> Walker, Giles --> 40810796
+5) --> idx__246860 --> Gupta-Smith, Vismita --> 41091499
 
 # Query extraction from 039.txt
 # Query extracted: russell crowe gladiator char name
 # Tokens extracted: ['russell', 'crowe', 'gladiator', 'char', 'name']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# Found embedding for token tt__russell at idx 61
+# Found embedding for token tt__crowe at idx 827
+# No embedding found for token gladiator
+# No embedding found for token char
+# No embedding found for token name
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__249861 --> McCaffrey, Tom --> 39528243
+2) --> idx__175313 --> Dale, Greg --> 39118766
+3) --> idx__163265 --> Lucas, Nancy --> 41327359
+4) --> idx__163785 --> MacIntyre, Malcolm --> 41329449
+5) --> idx__65635 --> Trinidad, Arimah --> 40558696
 
 # Query extraction from 040.txt
 # Query extracted: brent spiner star trek
 # Tokens extracted: ['brent', 'spiner', 'star', 'trek']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# Found embedding for token brent at idx 83
+# Found embedding for token tt__spiner at idx 9318
+# Found embedding for token tt__star at idx 7779
+# No embedding found for token trek
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__110293 --> Peters, Clarke --> 39656730
+2) --> idx__235046 --> Maybach, Christiane --> 40351883
+3) --> idx__264480 --> Dean, Jacey --> 39134662
+4) --> idx__93839 --> Acker, Erin --> 41160830
+5) --> idx__105164 --> Smith, Kim --> 40514554
 
 # Query extraction from 041.txt
 # Query extracted: audrey hepburn 1951
 # Tokens extracted: ['audrey', 'hepburn', '1951']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     Audrey
-2) -->     Nicholas
-3) -->     Melissa
-4) -->     Jerry
-5) -->     tt__Morris,
+# Embeddings extraction...
+# Found embedding for token audrey at idx 254
+# Found embedding for token tt__hepburn at idx 5791
+# No embedding found for token 1951
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__256382 --> Mateos, Julián --> 41481458
+2) --> idx__223978 --> Johns, Kirk --> 41294026
+3) --> idx__155043 --> Falls, Robert --> 41241242
+4) --> idx__23598 --> Maras, Anthony --> 40732857
+5) --> idx__201907 --> Olin, Riikka --> 41367363
 
 # Query extraction from 042.txt
 # Query extracted: name jacques clouseau
 # Tokens extracted: ['name', 'jacques', 'clouseau']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     James
-2) -->     M.
-3) -->     Michael
-4) -->     A.
-5) -->     cid__name
+# Embeddings extraction...
+# No embedding found for token name
+# Found embedding for token tt__jacques at idx 1094
+# No embedding found for token clouseau
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__22810 --> Legrand, Robert --> 40972583
+2) --> idx__108974 --> Starr, Chris --> 39821741
+3) --> idx__171558 --> Cala, Greg --> 39044067
+4) --> idx__198634 --> de Boer, Julia --> 40659696
+5) --> idx__205986 --> Serhant, Ryan --> 39777464
 
 # Query extraction from 043.txt
 # Query extracted: name jack ryan
 # Tokens extracted: ['name', 'jack', 'ryan']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# No embedding found for token name
+# Found embedding for token tt__jack at idx 2735
+# Found embedding for token tt__ryan at idx 47
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__171558 --> Cala, Greg --> 39044067
+2) --> idx__9232 --> Seals, Robert --> 39773820
+3) --> idx__43501 --> Goodwin, John --> 39263781
+4) --> idx__22810 --> Legrand, Robert --> 40972583
+5) --> idx__90887 --> Zagar, Julia --> 40610825
 
 # Query extraction from 044.txt
 # Query extracted: rocky stallone
 # Tokens extracted: ['rocky', 'stallone']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     Rocky
-2) -->     Victoria
-3) -->     Terry
-4) -->     Alice
-5) -->     tt__Gray,
+# Embeddings extraction...
+# Found embedding for token rocky at idx 544
+# No embedding found for token stallone
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__102086 --> Old, John B. --> 39620417
+2) --> idx__153766 --> Nadal, Alan --> 39589464
+3) --> idx__165809 --> Hecht, Harold --> 39310978
+4) --> idx__46970 --> Bereczky, Csaba --> 38983101
+5) --> idx__86361 --> Perillo, Robert --> 39654609
 
 # Query extraction from 045.txt
 # Query extracted: name terminator
 # Tokens extracted: ['name', 'terminator']
-# Embeddings extraction from matrix mat
+# Embeddings extraction...
+# No embedding found for token name
+# No embedding found for token terminator
 # No embeddings found for query --> name terminator
 
 # Query extraction from 046.txt
 # Query extracted: harrison ford george lucas
 # Tokens extracted: ['harrison', 'ford', 'george', 'lucas']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     Charles
-2) -->     S.
-3) -->     tt__Jackson,
-4) -->     Peter
-5) -->     Harry
+# Embeddings extraction...
+# Found embedding for token tt__harrison at idx 63
+# Found embedding for token tt__ford at idx 140
+# Found embedding for token tt__george at idx 251
+# Found embedding for token tt__lucas at idx 141
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__233470 --> Lowe, Georgina --> 40729241
+2) --> idx__175203 --> Woodard, M. Nicole --> 40603949
+3) --> idx__168892 --> Amos, Tom --> 41166588
+4) --> idx__177975 --> Frank, Vanessa --> 40169106
+5) --> idx__266883 --> Melvin, James --> 41033400
 
 # Query extraction from 047.txt
 # Query extracted: sean connery fleming
 # Tokens extracted: ['sean', 'connery', 'fleming']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     James
-2) -->     M.
-3) -->     Michael
-4) -->     A.
-5) -->     cid__name
+# Embeddings extraction...
+# Found embedding for token tt__sean at idx 1391
+# No embedding found for token connery
+# Found embedding for token tt__fleming at idx 305
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__163785 --> MacIntyre, Malcolm --> 41329449
+2) --> idx__65635 --> Trinidad, Arimah --> 40558696
+3) --> idx__249861 --> McCaffrey, Tom --> 39528243
+4) --> idx__175313 --> Dale, Greg --> 39118766
+5) --> idx__97553 --> Golightly, Norman --> 39262022
 
 # Query extraction from 048.txt
 # Query extracted: reeves wachowski
 # Tokens extracted: ['reeves', 'wachowski']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     tt__Reeves,
-2) -->     Elizabeth
-3) -->     Jeremy
-4) -->     Jay
-5) -->     Jim
+# Embeddings extraction...
+# Found embedding for token tt__reeves at idx 466
+# No embedding found for token wachowski
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__165809 --> Hecht, Harold --> 39310978
+2) --> idx__86361 --> Perillo, Robert --> 39654609
+3) --> idx__31387 --> Kinkead, Eleanor Talbot --> 40879719
+4) --> idx__153766 --> Nadal, Alan --> 39589464
+5) --> idx__14230 --> Rodriguez, Robert --> 40772372
 
 # Query extraction from 049.txt
 # Query extracted: dean jones herbie
 # Tokens extracted: ['dean', 'jones', 'herbie']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     S.
-2) -->     C.
-3) -->     Joseph
-4) -->     L.
-5) -->     Charles
+# Embeddings extraction...
+# Found embedding for token tt__dean at idx 270
+# Found embedding for token tt__jones at idx 16
+# Found embedding for token herbie at idx 2087
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__233470 --> Lowe, Georgina --> 40729241
+2) --> idx__31656 --> Hartman, Carl --> 40694119
+3) --> idx__71857 --> Haft, Marilyn --> 40689769
+4) --> idx__168892 --> Amos, Tom --> 41166588
+5) --> idx__104787 --> John Glenn High School Eagle Band --> 39370773
 
 # Query extraction from 050.txt
 # Query extracted: indiana jones last crusade lost ark
 # Tokens extracted: ['indiana', 'jones', 'last', 'crusade', 'lost', 'ark']
-# Embeddings extraction from matrix mat
-# Computing similarity vector
-# Getting the Top5 indices
-1) -->     C.
-2) -->     tt__Brown,
-3) -->     S.
-4) -->     Richard
-5) -->     W.
+# Embeddings extraction...
+# No embedding found for token indiana
+# Found embedding for token tt__jones at idx 16
+# Found embedding for token tt__last at idx 9705
+# No embedding found for token crusade
+# No embedding found for token lost
+# No embedding found for token ark
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__139910 --> Yates, Tom --> 39965282
+2) --> idx__37221 --> Sua, Raymond S. --> 39835753
+3) --> idx__256382 --> Mateos, Julián --> 41481458
+4) --> idx__161012 --> Law, Henry --> 39449406
+5) --> idx__38157 --> Connel, Lucas --> 41212728
