@@ -7,7 +7,6 @@ import numpy as np
 from nltk.tokenize import RegexpTokenizer
 from sklearn.metrics.pairwise import cosine_similarity
 from iteration_utilities import unique_everseen, duplicates
-from tables.atom import EnumAtom
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
@@ -31,6 +30,21 @@ def extract_query(file):
     return query
 
 
+def extract_gt(file):
+    f = open(file)
+    lines = f.readlines()
+    ground_truth = lines[3:]
+    gt_list = []
+    for line in ground_truth:
+        line = line.split("#", 1)[0]            # Remove comment in line
+        line = re.sub("[()]", "", line)         # Remove parenthesis () in gt
+        tuples = line.split("],")[0]
+        tuples = tuples.replace("[", "")
+        tuples = list(tuples.replace(" ", "").split(","))
+        gt_list += tuples
+    return gt_list
+
+
 def extract_tokens(query):
     tokenizer = RegexpTokenizer(r'\w+')         # Word Tokenizer
     tokens = tokenizer.tokenize(query)
@@ -44,13 +58,13 @@ def tokens2embeddings(tokens, mat, keys):
         if  tt_token in keys:
             idx = keys.index(tt_token)
             embeddings.append(mat[idx])
-            print('# Found embedding for token {} at idx {}'.format(tt_token, idx))
+            print(f'# Found embedding for token {tt_token} at idx {idx}')
         elif token in keys:
             idx = keys.index(token)
             embeddings.append(mat[idx])
-            print('# Found embedding for token {} at idx {}'.format(token, idx))
+            print(f'# Found embedding for token {token} at idx {idx}')
         else:
-            print('# No embedding found for token {}'.format(token))
+            print(f'# No embedding found for token {token}')
     return embeddings
 
 
@@ -104,24 +118,26 @@ def create_query_embedding(input_file, mat, keys):
     path = 'pipeline/queries/IMDB/'
     query_dir = sorted(os.listdir(path))
     if len(query_dir) == 0:
-        print('# The directory {} is empty!'.format(path))
+        print(f'# The directory {path} is empty!')
         return -1
     
     df = pd.read_csv(input_file)
-    output_df = pd.DataFrame(columns=('File', 'Query', 'Pos', 'RID', 'Name', 'SearchID'))
+    out_df = pd.DataFrame(columns=('Query', '#', 'RID', 'Name', 'SearchID', 'GT'))
 
     for file in query_dir:
         if re.match('^\d+', file):
             path_file = path + file
-            print('# Query extraction from {}'.format(file))
+            print(f'# Query extraction from {file}')
             query = extract_query(path_file)
-            print('# Query extracted: {}'.format(query), end='')
+            print(f'# Query extracted: {query}', end='')
+            print(f'# Ground_Truth extraction from {file}')
+            gt = extract_gt(path_file)
             tokens = extract_tokens(query)
-            print('# Tokens extracted: {}'.format(tokens))
+            print(f'# Tokens extracted: {tokens}')
             print('# Embeddings extraction...')
             embeddings = tokens2embeddings(tokens, mat, keys)
             if len(embeddings) == 0:
-                print('# No embeddings found for query --> {}'.format(query))
+                print(f'# No embeddings found for query --> {query}')
             else:
                 print('# Computing similarities...')
                 similarities = compute_similarity(embeddings, mat)
@@ -132,19 +148,19 @@ def create_query_embedding(input_file, mat, keys):
                     name = df.iloc[index-2]['name']
                     searchID = df.iloc[index-2]['__search_id']
                     print(f'{i+1}) --> {keys[idx]} --> {name} --> {searchID}')
-                    q = ' '.join(tokens)
-                    values_to_add = {'File': file, 'Query': q, 'Pos': i+1, 
+                    values_to_add = {'Query': ' '.join(tokens), '#': i+1, 
                                     'RID': keys[idx], 'Name': name, 
-                                    'SearchID': searchID}
+                                    'SearchID': searchID, 'GT': ' '.join(gt)}
                     row_to_add = pd.Series(values_to_add)
-                    output_df = output_df.append(row_to_add, ignore_index=True)
+                    out_df = out_df.append(row_to_add, ignore_index=True)
                 print()
-    output_df.to_csv('pipeline/debuggings/output_{}.csv'.format(filename))
+    out_df.to_csv(f'pipeline/debuggings/output_{filename}.csv')
     return 0
 
 
 if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
     mat, keys = create_local_embedding(input_file)
+    print()
     if create_query_embedding(input_file, mat, keys) == -1:
         print('Ops! The function failed!')
