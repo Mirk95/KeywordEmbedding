@@ -211,7 +211,6 @@ def create_local_embedding(input_file):
 
     df = pd.read_csv(configuration['input_file'])
     df = clean_dataset(df, output_file)
-    df.to_csv('df_cleaned.csv')
 
     prefixes = ['3#__tn', '3$__tt', '5$__idx', '1$__cid']
 
