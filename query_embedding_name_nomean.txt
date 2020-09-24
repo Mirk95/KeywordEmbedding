@@ -1,0 +1,842 @@
+################################################################################
+# Configuration file: pipeline/datasets/name.csv
+# Starting run................................................ 2020-09-24 12:36:55.897561
+# 100.0 - 273034/273034 tuples
+# Starting graph construction................................. 2020-09-24 12:38:52
+# Expanding columns ['tt'].
+Loading edgelist_file.: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2213142/2213142 [00:23<00:00, 94152.66it/s]
+Prepare aliased randomizer for each node: 100%|█████████████████████████████████████████████████████████████████████████████████████████████| 538092/538092 [00:10<00:00, 50678.63it/s]
+
+# Graph construction complete................................. 2020-09-24 12:39:26
+# Time required to build graph:............................... 34.126659
+# Skipping search of overlapping values. 
+# Generating basic random walks............................... 2020-09-24 12:39:26
+Completing fraction of random walks: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████| 1000/1000 [00:04<00:00, 214.66it/s]
+# Generation of random walks completed........................ 2020-09-24 12:39:30
+# Training embeddings......................................... 2020-09-24 12:39:30.992870
+File: pipeline/embeddings/name.emb
+# Embeddings generation complete.............................. 2020-09-24 12:39:35
+# Ending run.................................................. 2020-09-24 12:39:36.713702
+# Time required: 160.816141
+
+Embedding Matrix shape: (9855, 300)
+Keys number: 9855
+
+File created:
+1. pipeline/walks/name.walks
+2. pipeline/embeddings/name.emb
+
+# Query extraction from 001.txt
+# Query extracted: denzel washington
+# Ground_Truth extraction from 001.txt
+# Tokens extracted: ['denzel', 'washington']
+# Embeddings extraction...
+# Found embedding for token denzel at idx 7204
+# Found embedding for token tt__washington at idx 149
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__221370 --> Gledhill, James William --> 39255791
+2) --> idx__160972 --> Collins, Jack --> 39089792
+3) --> idx__125749 --> Ankrum, David --> 38933412
+
+# Query extraction from 002.txt
+# Query extracted: clint eastwood
+# Ground_Truth extraction from 002.txt
+# Tokens extracted: ['clint', 'eastwood']
+# Embeddings extraction...
+# Found embedding for token clint at idx 2132
+# No embedding found for token eastwood
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__119341 --> Hurley, Michael --> 39344496
+2) --> idx__13081 --> Lish, Becca --> 40318201
+3) --> idx__245192 --> Walters, Robert --> 39926165
+4) --> idx__47879 --> Weatherly, Michael --> 39929445
+5) --> idx__161965 --> Rojas, Jaime --> 40984861
+
+# Query extraction from 003.txt
+# Query extracted: john wayne
+# Ground_Truth extraction from 003.txt
+# Tokens extracted: ['john', 'wayne']
+# Embeddings extraction...
+# Found embedding for token tt__john at idx 984
+# Found embedding for token tt__wayne at idx 344
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__168880 --> Maleh, Maher --> 40973584
+2) --> idx__24237 --> Donadio, Francisco Pablo --> 39157815
+3) --> idx__106019 --> Bunston, Herbert --> 39033025
+4) --> idx__101285 --> Madlock, Bill --> 39495168
+5) --> idx__71071 --> Acheson, Ryan --> 41161479
+
+# Query extraction from 004.txt
+# Query extracted: will smith
+# Ground_Truth extraction from 004.txt
+# Tokens extracted: ['will', 'smith']
+# Embeddings extraction...
+# Found embedding for token will at idx 1115
+# Found embedding for token tt__smith at idx 12
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__140158 --> Searcy, James --> 39774731
+2) --> idx__233913 --> Schneider, René --> 39767637
+3) --> idx__102111 --> Smith, Scott --> 39806561
+4) --> idx__176046 --> Merkel, Tina --> 40364187
+5) --> idx__269252 --> Shelton, Deborah --> 40503673
+
+# Query extraction from 005.txt
+# Query extracted: harrison ford
+# Ground_Truth extraction from 005.txt
+# Tokens extracted: ['harrison', 'ford']
+# Embeddings extraction...
+# Found embedding for token tt__harrison at idx 52
+# Found embedding for token tt__ford at idx 73
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__24626 --> Turhan, Kerem --> 39885811
+2) --> idx__55061 --> Eastman, John --> 41235704
+3) --> idx__118036 --> Gardiner, Robert --> 39236373
+4) --> idx__179809 --> Rohrbach, George --> 39726256
+5) --> idx__235619 --> Zaleski, George --> 40821847
+
+# Query extraction from 006.txt
+# Query extracted: julia roberts
+# Ground_Truth extraction from 006.txt
+# Tokens extracted: ['julia', 'roberts']
+# Embeddings extraction...
+# Found embedding for token julia at idx 30
+# Found embedding for token tt__roberts at idx 32
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__205619 --> Strauss, Helen M. --> 41428489
+2) --> idx__220434 --> Doudna, Erica Lyn --> 40664955
+3) --> idx__172491 --> Unruh, John --> 39888606
+4) --> idx__82361 --> Adanto, Robert --> 38908208
+5) --> idx__118206 --> Sippy, Raj N. --> 40789812
+
+# Query extraction from 007.txt
+# Query extracted: tom hanks
+# Ground_Truth extraction from 007.txt
+# Tokens extracted: ['tom', 'hanks']
+# Embeddings extraction...
+# Found embedding for token tt__tom at idx 4765
+# Found embedding for token tt__hanks at idx 2942
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__129955 --> Sauk, Stefan --> 39757635
+2) --> idx__125749 --> Ankrum, David --> 38933412
+3) --> idx__160972 --> Collins, Jack --> 39089792
+4) --> idx__128598 --> Kilburn, George --> 39404592
+5) --> idx__34689 --> Cervena, Iona --> 41205381
+
+# Query extraction from 008.txt
+# Query extracted: johnny depp
+# Ground_Truth extraction from 008.txt
+# Tokens extracted: ['johnny', 'depp']
+# Embeddings extraction...
+# Found embedding for token johnny at idx 716
+# No embedding found for token depp
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__77866 --> Glass, Tom --> 39253999
+2) --> idx__12548 --> Williams, Kathlyn --> 40598459
+3) --> idx__21980 --> Harney, Lisa --> 40695039
+4) --> idx__63950 --> Sherman, Alan M. --> 39786132
+5) --> idx__88430 --> Vernon, Ian --> 39907587
+
+# Query extraction from 009.txt
+# Query extracted: angelina jolie
+# Ground_Truth extraction from 009.txt
+# Tokens extracted: ['angelina', 'jolie']
+# Embeddings extraction...
+# Found embedding for token angelina at idx 609
+# No embedding found for token jolie
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__10326 --> Mizrahi, Togo --> 40743073
+2) --> idx__124184 --> Derrida, Jacques --> 39144091
+3) --> idx__177768 --> Zanderbrock, Jack --> 40998262
+4) --> idx__61866 --> Tumeo, Vincent --> 39885501
+5) --> idx__22053 --> Loughlin, Ryan --> 41325951
+
+# Query extraction from 010.txt
+# Query extracted: morgan freeman
+# Ground_Truth extraction from 010.txt
+# Tokens extracted: ['morgan', 'freeman']
+# Embeddings extraction...
+# Found embedding for token tt__morgan at idx 36
+# Found embedding for token tt__freeman at idx 263
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__24626 --> Turhan, Kerem --> 39885811
+2) --> idx__179809 --> Rohrbach, George --> 39726256
+3) --> idx__118036 --> Gardiner, Robert --> 39236373
+4) --> idx__149486 --> Tezuka, Macoto --> 39861274
+5) --> idx__55061 --> Eastman, John --> 41235704
+
+# Query extraction from 011.txt
+# Query extracted: gone with the wind
+# Ground_Truth extraction from 011.txt
+# Tokens extracted: ['gone', 'with', 'the', 'wind']
+# Embeddings extraction...
+# No embedding found for token gone
+# No embedding found for token with
+# Found embedding for token the at idx 257
+# No embedding found for token wind
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__149486 --> Tezuka, Macoto --> 39861274
+2) --> idx__235619 --> Zaleski, George --> 40821847
+3) --> idx__118036 --> Gardiner, Robert --> 39236373
+4) --> idx__179809 --> Rohrbach, George --> 39726256
+5) --> idx__55061 --> Eastman, John --> 41235704
+
+# Query extraction from 012.txt
+# Query extracted: star wars
+# Ground_Truth extraction from 012.txt
+# Tokens extracted: ['star', 'wars']
+# Embeddings extraction...
+# Found embedding for token tt__star at idx 6981
+# No embedding found for token wars
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__229915 --> Satiacum, Robert --> 39756607
+2) --> idx__165423 --> Cervin, Neil --> 40952768
+3) --> idx__189570 --> Shannon, Kalina --> 40500929
+4) --> idx__66358 --> Turkel, Joe --> 39886457
+5) --> idx__42581 --> Booth, Charles G. --> 40836984
+
+# Query extraction from 013.txt
+# Query extracted: casablanca
+# Ground_Truth extraction from 013.txt
+# Tokens extracted: ['casablanca']
+# Embeddings extraction...
+# No embedding found for token casablanca
+# No embeddings found for query --> casablanca
+
+# Query extraction from 014.txt
+# Query extracted: lord of the rings
+# Ground_Truth extraction from 014.txt
+# Tokens extracted: ['lord', 'of', 'the', 'rings']
+# Embeddings extraction...
+# Found embedding for token tt__lord at idx 629
+# Found embedding for token of at idx 6318
+# Found embedding for token the at idx 257
+# No embedding found for token rings
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__128598 --> Kilburn, George --> 39404592
+2) --> idx__232038 --> Svenzer, John --> 39843340
+3) --> idx__34689 --> Cervena, Iona --> 41205381
+4) --> idx__8202 --> Ryan, Mark David --> 40778613
+5) --> idx__27304 --> Smith-Diaz, Cesar --> 39808124
+
+# Query extraction from 015.txt
+# Query extracted: the sound of music
+# Ground_Truth extraction from 015.txt
+# Tokens extracted: ['the', 'sound', 'of', 'music']
+# Embeddings extraction...
+# Found embedding for token the at idx 257
+# Found embedding for token sound at idx 7929
+# Found embedding for token of at idx 6318
+# No embedding found for token music
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__77866 --> Glass, Tom --> 39253999
+2) --> idx__63950 --> Sherman, Alan M. --> 39786132
+3) --> idx__268091 --> Murphy, Tom P. --> 39581961
+4) --> idx__7025 --> Marsh, James --> 39512961
+5) --> idx__32033 --> Elliott, Brent --> 39179821
+
+# Query extraction from 016.txt
+# Query extracted: wizard of oz
+# Ground_Truth extraction from 016.txt
+# Tokens extracted: ['wizard', 'of', 'oz']
+# Embeddings extraction...
+# No embedding found for token wizard
+# Found embedding for token of at idx 6318
+# Found embedding for token oz at idx 9529
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__2764 --> Morie, Ruby --> 40382586
+2) --> idx__4940 --> Bush, Blanche --> 40058003
+3) --> idx__180895 --> Warburton, Patrick --> 39925300
+4) --> idx__144223 --> Spencer, John --> 41109651
+5) --> idx__33808 --> Rusnak, Louise --> 40478195
+
+# Query extraction from 017.txt
+# Query extracted: the notebook
+# Ground_Truth extraction from 017.txt
+# Tokens extracted: ['the', 'notebook']
+# Embeddings extraction...
+# Found embedding for token the at idx 257
+# No embedding found for token notebook
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__149486 --> Tezuka, Macoto --> 39861274
+2) --> idx__235619 --> Zaleski, George --> 40821847
+3) --> idx__118036 --> Gardiner, Robert --> 39236373
+4) --> idx__179809 --> Rohrbach, George --> 39726256
+5) --> idx__55061 --> Eastman, John --> 41235704
+
+# Query extraction from 018.txt
+# Query extracted: forrest gump
+# Ground_Truth extraction from 018.txt
+# Tokens extracted: ['forrest', 'gump']
+# Embeddings extraction...
+# Found embedding for token tt__forrest at idx 779
+# No embedding found for token gump
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__71071 --> Acheson, Ryan --> 41161479
+2) --> idx__22053 --> Loughlin, Ryan --> 41325951
+3) --> idx__46363 --> Penny, Ryan --> 40984123
+4) --> idx__168880 --> Maleh, Maher --> 40973584
+5) --> idx__106019 --> Bunston, Herbert --> 39033025
+
+# Query extraction from 019.txt
+# Query extracted: the princess bride
+# Ground_Truth extraction from 019.txt
+# Tokens extracted: ['the', 'princess', 'bride']
+# Embeddings extraction...
+# Found embedding for token the at idx 257
+# No embedding found for token princess
+# No embedding found for token bride
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__149486 --> Tezuka, Macoto --> 39861274
+2) --> idx__235619 --> Zaleski, George --> 40821847
+3) --> idx__118036 --> Gardiner, Robert --> 39236373
+4) --> idx__179809 --> Rohrbach, George --> 39726256
+5) --> idx__55061 --> Eastman, John --> 41235704
+
+# Query extraction from 020.txt
+# Query extracted: the godfather
+# Ground_Truth extraction from 020.txt
+# Tokens extracted: ['the', 'godfather']
+# Embeddings extraction...
+# Found embedding for token the at idx 257
+# No embedding found for token godfather
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__149486 --> Tezuka, Macoto --> 39861274
+2) --> idx__235619 --> Zaleski, George --> 40821847
+3) --> idx__118036 --> Gardiner, Robert --> 39236373
+4) --> idx__179809 --> Rohrbach, George --> 39726256
+5) --> idx__55061 --> Eastman, John --> 41235704
+
+# Query extraction from 021.txt
+# Query extracted: title atticus finch
+# Ground_Truth extraction from 021.txt
+# Tokens extracted: ['title', 'atticus', 'finch']
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token atticus at idx 6098
+# Found embedding for token tt__finch at idx 2201
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__149804 --> Hay, Laura Forrest --> 40216319
+2) --> idx__145534 --> Coquatrix, Paulette --> 41060181
+3) --> idx__227042 --> Racinskas, Jon --> 39688145
+4) --> idx__172962 --> Gerron, Kurt --> 39245094
+5) --> idx__66813 --> Doonan, Tony --> 39158203
+
+# Query extraction from 022.txt
+# Query extracted: title indiana jones
+# Ground_Truth extraction from 022.txt
+# Tokens extracted: ['title', 'indiana', 'jones']
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token indiana
+# Found embedding for token tt__jones at idx 20
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__63997 --> Jones, LaZora --> 40256023
+2) --> idx__38751 --> Melandri, Luciano --> 39543712
+3) --> idx__188444 --> Garrison, Julia --> 40181290
+4) --> idx__189453 --> James, Horace --> 39360511
+5) --> idx__38911 --> Hicks, Wayne Douglas --> 41278669
+
+# Query extraction from 023.txt
+# Query extracted: title james bond
+# Ground_Truth extraction from 023.txt
+# Tokens extracted: ['title', 'james', 'bond']
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token tt__james at idx 41
+# Found embedding for token tt__bond at idx 640
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__162064 --> Hughes, Russell --> 39341975
+2) --> idx__106019 --> Bunston, Herbert --> 39033025
+3) --> idx__135314 --> Vitaly, Georges --> 39910696
+4) --> idx__203393 --> Dominic, Heather Rose --> 40130098
+5) --> idx__48825 --> Curtis, Alan --> 39114329
+
+# Query extraction from 024.txt
+# Query extracted: title rick blaine
+# Ground_Truth extraction from 024.txt
+# Tokens extracted: ['title', 'rick', 'blaine']
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token rick at idx 24
+# Found embedding for token tt__blaine at idx 1855
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__221370 --> Gledhill, James William --> 39255791
+2) --> idx__138422 --> Gilpin, Ryan --> 41258153
+3) --> idx__118669 --> Wright, Earl --> 39956625
+4) --> idx__197073 --> Rogers, Robert --> 41398001
+5) --> idx__153440 --> Brothers, Nace --> 39024228
+
+# Query extraction from 025.txt
+# Query extracted: title will kane
+# Ground_Truth extraction from 025.txt
+# Tokens extracted: ['title', 'will', 'kane']
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token will at idx 1115
+# Found embedding for token tt__kane at idx 280
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__149486 --> Tezuka, Macoto --> 39861274
+2) --> idx__179809 --> Rohrbach, George --> 39726256
+3) --> idx__118036 --> Gardiner, Robert --> 39236373
+4) --> idx__235619 --> Zaleski, George --> 40821847
+5) --> idx__189096 --> Logan, Mark --> 41324447
+
+# Query extraction from 026.txt
+# Query extracted: title dr. hannibal lecter
+# Ground_Truth extraction from 026.txt
+# Tokens extracted: ['title', 'dr', 'hannibal', 'lecter']
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token dr at idx 37
+# No embedding found for token hannibal
+# No embedding found for token lecter
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__172491 --> Unruh, John --> 39888606
+2) --> idx__102098 --> Read, John --> 39698237
+3) --> idx__24626 --> Turhan, Kerem --> 39885811
+4) --> idx__118036 --> Gardiner, Robert --> 39236373
+5) --> idx__76414 --> Stokvis, Robert --> 40797773
+
+# Query extraction from 027.txt
+# Query extracted: title norman bates
+# Ground_Truth extraction from 027.txt
+# Tokens extracted: ['title', 'norman', 'bates']
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token tt__norman at idx 363
+# Found embedding for token tt__bates at idx 463
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__235619 --> Zaleski, George --> 40821847
+2) --> idx__179809 --> Rohrbach, George --> 39726256
+3) --> idx__149486 --> Tezuka, Macoto --> 39861274
+4) --> idx__55061 --> Eastman, John --> 41235704
+5) --> idx__118036 --> Gardiner, Robert --> 39236373
+
+# Query extraction from 028.txt
+# Query extracted: title darth vader
+# Ground_Truth extraction from 028.txt
+# Tokens extracted: ['title', 'darth', 'vader']
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token darth
+# No embedding found for token vader
+# No embeddings found for query --> title darth vader
+
+# Query extraction from 029.txt
+# Query extracted: title the wicked witch of the west
+# Ground_Truth extraction from 029.txt
+# Tokens extracted: ['title', 'the', 'wicked', 'witch', 'of', 'the', 'west']
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token the at idx 257
+# No embedding found for token wicked
+# No embedding found for token witch
+# Found embedding for token of at idx 6318
+# Found embedding for token the at idx 257
+# Found embedding for token tt__west at idx 77
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__223585 --> Warren, Lee --> 39926608
+2) --> idx__20819 --> McBrayer, Jack --> 39529546
+3) --> idx__34870 --> Dunphy, Catherine --> 40135405
+4) --> idx__111740 --> Georges, Andy --> 41016658
+5) --> idx__218235 --> Becknell, Leslie --> 40023869
+
+# Query extraction from 030.txt
+# Query extracted: title nurse ratched
+# Ground_Truth extraction from 030.txt
+# Tokens extracted: ['title', 'nurse', 'ratched']
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token nurse
+# No embedding found for token ratched
+# No embeddings found for query --> title nurse ratched
+
+# Query extraction from 031.txt
+# Query extracted: title frankly my dear i don't give a damn
+# Ground_Truth extraction from 031.txt
+# Tokens extracted: ['title', 'frankly', 'my', 'dear', 'i', 'don', 't', 'give', 'a', 'damn']
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token frankly
+# No embedding found for token my
+# No embedding found for token dear
+# Found embedding for token tt__i at idx 2
+# Found embedding for token don at idx 115
+# Found embedding for token tt__t at idx 2658
+# No embedding found for token give
+# Found embedding for token a at idx 45
+# No embedding found for token damn
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__61866 --> Tumeo, Vincent --> 39885501
+2) --> idx__177768 --> Zanderbrock, Jack --> 40998262
+3) --> idx__10326 --> Mizrahi, Togo --> 40743073
+4) --> idx__124184 --> Derrida, Jacques --> 39144091
+5) --> idx__84962 --> Chávez, José --> 39079629
+
+# Query extraction from 032.txt
+# Query extracted: title i'm gonna make him an offer he won't refuse
+# Ground_Truth extraction from 032.txt
+# Tokens extracted: ['title', 'i', 'm', 'gonna', 'make', 'him', 'an', 'offer', 'he', 'won', 't', 'refuse']
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token tt__i at idx 2
+# Found embedding for token tt__m at idx 739
+# No embedding found for token gonna
+# No embedding found for token make
+# No embedding found for token him
+# No embedding found for token an
+# No embedding found for token offer
+# No embedding found for token he
+# No embedding found for token won
+# Found embedding for token tt__t at idx 2658
+# No embedding found for token refuse
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__66358 --> Turkel, Joe --> 39886457
+2) --> idx__6708 --> Caraba, Lucas --> 39049877
+3) --> idx__195309 --> Leymarie, Jean --> 39465332
+4) --> idx__38497 --> Martins, Prince --> 39517329
+5) --> idx__189570 --> Shannon, Kalina --> 40500929
+
+# Query extraction from 033.txt
+# Query extracted: title you don't understand i coulda had class i coulda been a contender i coulda been somebody instead of a bum which is what i am
+# Ground_Truth extraction from 033.txt
+# Tokens extracted: ['title', 'you', 'don', 't', 'understand', 'i', 'coulda', 'had', 'class', 'i', 'coulda', 'been', 'a', 'contender', 'i', 'coulda', 'been', 'somebody', 'instead', 'of', 'a', 'bum', 'which', 'is', 'what', 'i', 'am']
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token you
+# Found embedding for token don at idx 115
+# Found embedding for token tt__t at idx 2658
+# No embedding found for token understand
+# Found embedding for token tt__i at idx 2
+# No embedding found for token coulda
+# No embedding found for token had
+# Found embedding for token tt__class at idx 7301
+# Found embedding for token tt__i at idx 2
+# No embedding found for token coulda
+# No embedding found for token been
+# Found embedding for token a at idx 45
+# No embedding found for token contender
+# Found embedding for token tt__i at idx 2
+# No embedding found for token coulda
+# No embedding found for token been
+# No embedding found for token somebody
+# No embedding found for token instead
+# Found embedding for token of at idx 6318
+# Found embedding for token a at idx 45
+# No embedding found for token bum
+# No embedding found for token which
+# No embedding found for token is
+# No embedding found for token what
+# Found embedding for token tt__i at idx 2
+# No embedding found for token am
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__245192 --> Walters, Robert --> 39926165
+2) --> idx__36033 --> Grant, Daniel --> 41264184
+3) --> idx__77866 --> Glass, Tom --> 39253999
+4) --> idx__63950 --> Sherman, Alan M. --> 39786132
+5) --> idx__52925 --> Lewis, C. James --> 40309534
+
+# Query extraction from 034.txt
+# Query extracted: title toto i've a feeling we're not in kansas any more
+# Ground_Truth extraction from 034.txt
+# Tokens extracted: ['title', 'toto', 'i', 've', 'a', 'feeling', 'we', 're', 'not', 'in', 'kansas', 'any', 'more']
+# Embeddings extraction...
+# No embedding found for token title
+# Found embedding for token tt__toto at idx 4874
+# Found embedding for token tt__i at idx 2
+# No embedding found for token ve
+# Found embedding for token a at idx 45
+# No embedding found for token feeling
+# No embedding found for token we
+# Found embedding for token re at idx 6513
+# No embedding found for token not
+# No embedding found for token in
+# No embedding found for token kansas
+# No embedding found for token any
+# No embedding found for token more
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__130094 --> Held, Sean --> 41275882
+2) --> idx__248140 --> Smith, Fred --> 40792141
+3) --> idx__221531 --> VanderBurgh, Clive --> 40808693
+4) --> idx__117809 --> Plander, John --> 39666709
+5) --> idx__184400 --> Richards, Peggy --> 40462232
+
+# Query extraction from 035.txt
+# Query extracted: title here's looking at you kid
+# Ground_Truth extraction from 035.txt
+# Tokens extracted: ['title', 'here', 's', 'looking', 'at', 'you', 'kid']
+# Embeddings extraction...
+# No embedding found for token title
+# No embedding found for token here
+# Found embedding for token tt__s at idx 256
+# No embedding found for token looking
+# No embedding found for token at
+# No embedding found for token you
+# No embedding found for token kid
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__195873 --> Loussier, Jacques --> 39479089
+2) --> idx__64566 --> Hurley, Harold --> 40703194
+3) --> idx__77187 --> Potthast, John --> 40767442
+4) --> idx__248806 --> Hearn, Frank --> 39309410
+5) --> idx__40566 --> Collier, Damian --> 39090843
+
+# Query extraction from 036.txt
+# Query extracted: hamill skywalker
+# Ground_Truth extraction from 036.txt
+# Tokens extracted: ['hamill', 'skywalker']
+# Embeddings extraction...
+# No embedding found for token hamill
+# No embedding found for token skywalker
+# No embeddings found for query --> hamill skywalker
+
+# Query extraction from 037.txt
+# Query extracted: hanks 2004
+# Ground_Truth extraction from 037.txt
+# Tokens extracted: ['hanks', '2004']
+# Embeddings extraction...
+# Found embedding for token tt__hanks at idx 2942
+# No embedding found for token 2004
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__129955 --> Sauk, Stefan --> 39757635
+2) --> idx__125749 --> Ankrum, David --> 38933412
+3) --> idx__160972 --> Collins, Jack --> 39089792
+4) --> idx__128598 --> Kilburn, George --> 39404592
+5) --> idx__34689 --> Cervena, Iona --> 41205381
+
+# Query extraction from 038.txt
+# Query extracted: henry fonda yours mine ours char name
+# Ground_Truth extraction from 038.txt
+# Tokens extracted: ['henry', 'fonda', 'yours', 'mine', 'ours', 'char', 'name']
+# Embeddings extraction...
+# Found embedding for token tt__henry at idx 220
+# No embedding found for token fonda
+# No embedding found for token yours
+# No embedding found for token mine
+# No embedding found for token ours
+# No embedding found for token char
+# No embedding found for token name
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__162064 --> Hughes, Russell --> 39341975
+2) --> idx__106019 --> Bunston, Herbert --> 39033025
+3) --> idx__18439 --> Maloney, Ryan --> 39500269
+4) --> idx__203393 --> Dominic, Heather Rose --> 40130098
+5) --> idx__93993 --> Soule, Jason --> 39814425
+
+# Query extraction from 039.txt
+# Query extracted: russell crowe gladiator char name
+# Ground_Truth extraction from 039.txt
+# Tokens extracted: ['russell', 'crowe', 'gladiator', 'char', 'name']
+# Embeddings extraction...
+# Found embedding for token tt__russell at idx 128
+# Found embedding for token tt__crowe at idx 1685
+# No embedding found for token gladiator
+# No embedding found for token char
+# No embedding found for token name
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__172551 --> Yasui, Yuko --> 40608125
+2) --> idx__14123 --> Schwartz, Scot --> 39768110
+3) --> idx__203393 --> Dominic, Heather Rose --> 40130098
+4) --> idx__81112 --> Picasso, M. --> 39661127
+5) --> idx__75909 --> Bates, Héctor --> 40831635
+
+# Query extraction from 040.txt
+# Query extracted: brent spiner star trek
+# Ground_Truth extraction from 040.txt
+# Tokens extracted: ['brent', 'spiner', 'star', 'trek']
+# Embeddings extraction...
+# Found embedding for token brent at idx 223
+# No embedding found for token spiner
+# Found embedding for token tt__star at idx 6981
+# No embedding found for token trek
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__229915 --> Satiacum, Robert --> 39756607
+2) --> idx__165423 --> Cervin, Neil --> 40952768
+3) --> idx__189570 --> Shannon, Kalina --> 40500929
+4) --> idx__66358 --> Turkel, Joe --> 39886457
+5) --> idx__42581 --> Booth, Charles G. --> 40836984
+
+# Query extraction from 041.txt
+# Query extracted: audrey hepburn 1951
+# Ground_Truth extraction from 041.txt
+# Tokens extracted: ['audrey', 'hepburn', '1951']
+# Embeddings extraction...
+# Found embedding for token audrey at idx 261
+# Found embedding for token tt__hepburn at idx 4209
+# No embedding found for token 1951
+# Computing similarities...
+# Searching the top5 similar RIDs...
+
+# Query extraction from 042.txt
+# Query extracted: name jacques clouseau
+# Ground_Truth extraction from 042.txt
+# Tokens extracted: ['name', 'jacques', 'clouseau']
+# Embeddings extraction...
+# No embedding found for token name
+# Found embedding for token tt__jacques at idx 511
+# No embedding found for token clouseau
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__235619 --> Zaleski, George --> 40821847
+2) --> idx__179809 --> Rohrbach, George --> 39726256
+3) --> idx__149486 --> Tezuka, Macoto --> 39861274
+4) --> idx__118036 --> Gardiner, Robert --> 39236373
+5) --> idx__55061 --> Eastman, John --> 41235704
+
+# Query extraction from 043.txt
+# Query extracted: name jack ryan
+# Ground_Truth extraction from 043.txt
+# Tokens extracted: ['name', 'jack', 'ryan']
+# Embeddings extraction...
+# No embedding found for token name
+# Found embedding for token tt__jack at idx 1368
+# Found embedding for token tt__ryan at idx 91
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__179809 --> Rohrbach, George --> 39726256
+2) --> idx__235619 --> Zaleski, George --> 40821847
+3) --> idx__149486 --> Tezuka, Macoto --> 39861274
+4) --> idx__55061 --> Eastman, John --> 41235704
+5) --> idx__271885 --> Wierick, Frank --> 39942411
+
+# Query extraction from 044.txt
+# Query extracted: rocky stallone
+# Ground_Truth extraction from 044.txt
+# Tokens extracted: ['rocky', 'stallone']
+# Embeddings extraction...
+# Found embedding for token rocky at idx 620
+# Found embedding for token tt__stallone at idx 1963
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__109408 --> Blackburn, Jeff --> 38994884
+2) --> idx__245192 --> Walters, Robert --> 39926165
+3) --> idx__133467 --> Slater, Barbara --> 40514118
+4) --> idx__42856 --> Wittuhn, Georg --> 40819368
+5) --> idx__36033 --> Grant, Daniel --> 41264184
+
+# Query extraction from 045.txt
+# Query extracted: name terminator
+# Ground_Truth extraction from 045.txt
+# Tokens extracted: ['name', 'terminator']
+# Embeddings extraction...
+# No embedding found for token name
+# No embedding found for token terminator
+# No embeddings found for query --> name terminator
+
+# Query extraction from 046.txt
+# Query extracted: harrison ford george lucas
+# Ground_Truth extraction from 046.txt
+# Tokens extracted: ['harrison', 'ford', 'george', 'lucas']
+# Embeddings extraction...
+# Found embedding for token tt__harrison at idx 52
+# Found embedding for token tt__ford at idx 73
+# Found embedding for token tt__george at idx 169
+# Found embedding for token tt__lucas at idx 218
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__24626 --> Turhan, Kerem --> 39885811
+2) --> idx__55061 --> Eastman, John --> 41235704
+3) --> idx__118036 --> Gardiner, Robert --> 39236373
+4) --> idx__179809 --> Rohrbach, George --> 39726256
+5) --> idx__235619 --> Zaleski, George --> 40821847
+
+# Query extraction from 047.txt
+# Query extracted: sean connery fleming
+# Ground_Truth extraction from 047.txt
+# Tokens extracted: ['sean', 'connery', 'fleming']
+# Embeddings extraction...
+# Found embedding for token sean at idx 22
+# No embedding found for token connery
+# Found embedding for token tt__fleming at idx 602
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__149486 --> Tezuka, Macoto --> 39861274
+2) --> idx__235619 --> Zaleski, George --> 40821847
+3) --> idx__179809 --> Rohrbach, George --> 39726256
+4) --> idx__55061 --> Eastman, John --> 41235704
+5) --> idx__271885 --> Wierick, Frank --> 39942411
+
+# Query extraction from 048.txt
+# Query extracted: reeves wachowski
+# Ground_Truth extraction from 048.txt
+# Tokens extracted: ['reeves', 'wachowski']
+# Embeddings extraction...
+# Found embedding for token tt__reeves at idx 385
+# No embedding found for token wachowski
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__93993 --> Soule, Jason --> 39814425
+2) --> idx__14123 --> Schwartz, Scot --> 39768110
+3) --> idx__113725 --> Grove, Rick --> 39278251
+4) --> idx__172551 --> Yasui, Yuko --> 40608125
+5) --> idx__191928 --> Wright, Kristy --> 40605948
+
+# Query extraction from 049.txt
+# Query extracted: dean jones herbie
+# Ground_Truth extraction from 049.txt
+# Tokens extracted: ['dean', 'jones', 'herbie']
+# Embeddings extraction...
+# Found embedding for token tt__dean at idx 244
+# Found embedding for token tt__jones at idx 20
+# No embedding found for token herbie
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__26987 --> Lloyd, George --> 39474965
+2) --> idx__156205 --> Koch, Robert M. --> 39418340
+3) --> idx__195873 --> Loussier, Jacques --> 39479089
+4) --> idx__10326 --> Mizrahi, Togo --> 40743073
+5) --> idx__48269 --> Simbari, Lucilla --> 41417699
+
+# Query extraction from 050.txt
+# Query extracted: indiana jones last crusade lost ark
+# Ground_Truth extraction from 050.txt
+# Tokens extracted: ['indiana', 'jones', 'last', 'crusade', 'lost', 'ark']
+# Embeddings extraction...
+# No embedding found for token indiana
+# Found embedding for token tt__jones at idx 20
+# No embedding found for token last
+# No embedding found for token crusade
+# No embedding found for token lost
+# No embedding found for token ark
+# Computing similarities...
+# Searching the top5 similar RIDs...
+1) --> idx__63997 --> Jones, LaZora --> 40256023
+2) --> idx__38751 --> Melandri, Luciano --> 39543712
+3) --> idx__188444 --> Garrison, Julia --> 40181290
+4) --> idx__189453 --> James, Horace --> 39360511
+5) --> idx__38911 --> Hicks, Wayne Douglas --> 41278669

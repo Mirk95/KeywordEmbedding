@@ -51,11 +51,11 @@ def extract_tokens(query):
     return tokens
 
 
-def tokens2embeddings(tokens, mat, keys):
+def tokens2embeddings_nomean(tokens, mat, keys):
     embeddings = []
     for token in tokens:
         tt_token = 'tt__'+token
-        if  tt_token in keys:
+        if tt_token in keys:
             idx = keys.index(tt_token)
             embeddings.append(mat[idx])
             print(f'# Found embedding for token {tt_token} at idx {idx}')
@@ -68,7 +68,22 @@ def tokens2embeddings(tokens, mat, keys):
     return embeddings
 
 
-def compute_similarity(embeddings, mat):
+def tokens2embeddings_withmean(tokens, mat, keys):
+    embeddings = []
+    for token in tokens:
+        tt_token = 'tt__'+token
+        if token in keys:
+            idx = keys.index(token)
+            embeddings.append(mat[idx])
+            print(f'# Found embedding for token {token} at idx {idx}')
+        if tt_token in keys:
+            idx = keys.index(tt_token)
+            embeddings.append(mat[idx])
+            print(f'# Found embedding for token {tt_token} at idx {idx}')
+    return embeddings
+
+
+def compute_similarity_nomean(embeddings, mat):
     sims = []
     for embedding in embeddings:
         emb = np.array(embedding)
@@ -76,6 +91,26 @@ def compute_similarity(embeddings, mat):
         emb_transpose = np.transpose(emb)
         similarity = cosine_similarity(emb_transpose, mat)
         sims.append(similarity)
+    return sims
+
+
+def compute_similarity_withmean(embeddings, mat):
+    sims = []
+    emb = np.array(embeddings)
+    if emb.shape[0] > 1:
+        # Apply Mean
+        mean_vec = np.zeros((emb.shape[1]))
+        for j in range(emb.shape[1]):
+            mean = 0.00
+            sum = 0.00
+            for i in range(emb.shape[0]):
+                sum += mat[i][j]
+            mean = float(sum / emb.shape[0])
+            mean_vec[j] = mean
+        emb = mean_vec
+    emb = emb.reshape(1, -1)
+    similarity = cosine_similarity(emb, mat)
+    sims.append(similarity)
     return sims
 
 
@@ -107,7 +142,7 @@ def get_top5RID(similarities, keys):
     return ranking
 
 
-def create_query_embedding(input_file, mat, keys):
+def create_query_embedding(input_file, mat, keys, mean_emb=False):
     '''
     input_file --> Dataset in file csv.
     mat --> NxM matrix, where N is the number of tokens that convert and M is 
@@ -136,12 +171,18 @@ def create_query_embedding(input_file, mat, keys):
             tokens = extract_tokens(query)
             print(f'# Tokens extracted: {tokens}')
             print('# Embeddings extraction...')
-            embeddings = tokens2embeddings(tokens, mat, keys)
+            if mean_emb == False:
+                embeddings = tokens2embeddings_nomean(tokens, mat, keys)
+            else:
+                embeddings = tokens2embeddings_withmean(tokens, mat, keys)
             if len(embeddings) == 0:
                 print(f'# No embeddings found for query --> {query}')
             else:
                 print('# Computing similarities...')
-                similarities = compute_similarity(embeddings, mat)
+                if mean_emb == False:
+                    similarities = compute_similarity_nomean(embeddings, mat)
+                else:
+                    similarities = compute_similarity_withmean(embeddings, mat)
                 print('# Searching the top5 similar RIDs...')
                 top5rids = get_top5RID(similarities, keys)
                 for i, idx in enumerate(top5rids):
@@ -164,5 +205,5 @@ if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
     mat, keys = create_local_embedding(input_file)
     print()
-    if create_query_embedding(input_file, mat, keys) == -1:
+    if create_query_embedding(input_file, mat, keys, mean_emb=False) == -1:
         print('Ops! The function failed!')
