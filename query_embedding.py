@@ -122,7 +122,8 @@ def create_query_embedding(input_file, mat, keys):
         return -1
     
     df = pd.read_csv(input_file)
-    out_df = pd.DataFrame(columns=('Query', '#', 'RID', 'Name', 'SearchID', 'GT'))
+    out_df = pd.DataFrame(columns=('File', 'Query', 'Position', 'RID', 'Name', 
+                                    'SearchID', 'GT'))
 
     for file in query_dir:
         if re.match('^\d+', file):
@@ -148,9 +149,10 @@ def create_query_embedding(input_file, mat, keys):
                     name = df.iloc[index-2]['name']
                     searchID = df.iloc[index-2]['__search_id']
                     print(f'{i+1}) --> {keys[idx]} --> {name} --> {searchID}')
-                    values_to_add = {'Query': ' '.join(tokens), '#': i+1, 
-                                    'RID': keys[idx], 'Name': name, 
-                                    'SearchID': searchID, 'GT': ' '.join(gt)}
+                    values_to_add = {'File': file, 'Query': ' '.join(tokens), 
+                                    'Position': i+1, 'RID': keys[idx], 
+                                    'Name': name, 'SearchID': searchID, 
+                                    'GT': 1 if searchID in gt else 0}
                     row_to_add = pd.Series(values_to_add)
                     out_df = out_df.append(row_to_add, ignore_index=True)
                 print()
