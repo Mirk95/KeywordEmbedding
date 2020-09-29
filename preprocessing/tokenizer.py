@@ -35,7 +35,7 @@ def tokenize_dataset(input_file, stemming=False):
     df = df.applymap(lambda s:s.lower() if isinstance(s, str) else s)
     # Remove the punctuation
     df = df.applymap(lambda s:remove_punctuations(s) if isinstance(s, str) else s)
-    with stemming == True:
+    if stemming == True:
         df = df.applymap(lambda s:stemSentence(s) if isinstance(s, str) else s)
     return df
 
@@ -50,4 +50,4 @@ def tokenize_word():
 
 if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
-    df = tokenize_dataset(input_file)
+    df = tokenize_dataset(input_file, stemming=False)
