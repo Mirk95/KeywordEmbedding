@@ -13,35 +13,6 @@ with warnings.catch_warnings():
     from edgelist import EdgeList
 
 
-def remove_punctuations(sentence):
-    translator = str.maketrans('', '', string.punctuation)
-    sentence = sentence.translate(translator)
-    return sentence
-
-
-def clean_dataset(df, output, saveGT=True):
-    '''
-    This function is useful to clean the Dataframe in input and avoid too long 
-    waiting times for embeddings creation due to huge datasets...
-    '''
-    # Remove the Dataframe columns containing all Nan values
-    df = df.dropna(how='all', axis=1)
-    # Create a new Dataframe from the previous one with only int64 columns
-    df_int64 = df.select_dtypes('int64')
-    # Save it in a file.csv for future ground truth testing, if saveGT=True
-    if saveGT == True:
-        df_int64.to_csv('pipeline/ground_truth/GT_{}.csv'.format(output))
-
-    # And remove these columns from the initial Dataframe
-    int64cols = df_int64.columns.tolist()
-    df = df.drop(int64cols, 1)
-    # Lowercase the Dataframe
-    df = df.applymap(lambda s:s.lower() if isinstance(s, str) else s)
-    # And remove the punctuation
-    df = df.applymap(lambda s:remove_punctuations(s) if isinstance(s, str) else s)
-    return df
-
-
 def prepare_emb_matrix(embeddings_file):
     # Reading the reduced file
     keys = []
@@ -176,7 +147,13 @@ def embeddings_generation(walks, configuration, dictionary):
     return configuration
 
 
-def create_local_embedding(input_file):
+def create_local_embedding(input_file,
+                           n_dimensions=300,
+                           window_size=3,
+                           n_sentences='default',
+                           training_algorithm='word2vec',
+                           learning_method='skipgram',
+                           ):
     output_file = os.path.basename(input_file).split('.')[0]
     configuration = {
         'task': 'train',
@@ -193,32 +170,34 @@ def create_local_embedding(input_file):
         'repl_numbers': False,
 
         'embeddings_file': output_file,
-        'n_sentences': 1000,
+        'n_sentences': n_sentences,
         'write_walks': True,
+
+        'n_dimensions': n_dimensions,
+        'window_size': window_size,
+        'training_algorithm': training_algorithm,
+        'learning_method': learning_method,
     }
 
     os.makedirs('pipeline/walks', exist_ok=True)
     os.makedirs('pipeline/embeddings', exist_ok=True)
-    os.makedirs('pipeline/debuggings', exist_ok=True)
-    os.makedirs('pipeline/ground_truth', exist_ok=True)
 
     print('#' * 80)
-    print('# Configuration file: {}'.format(configuration['input_file']))
+    # print('# Configuration file: {}'.format(configuration['input_file']))
     t_start = datetime.datetime.now()
     print(OUTPUT_FORMAT.format('Starting run.', t_start))
 
     configuration = check_config_validity(configuration)
 
     df = pd.read_csv(configuration['input_file'])
-    df = clean_dataset(df, output_file)
-
+    df = df.head(100)
     prefixes = ['3#__tn', '3$__tt', '5$__idx', '1$__cid']
 
     el = EdgeList(df, prefixes)
-    df = el.get_df_edgelist()
-    # Save the edgelist dataframe in a file csv for debugging
-    df.to_csv('pipeline/debuggings/edgelist_{}.csv'.format(output_file))
+    # del el
 
+    # df = pd.read_csv(configuration['input_file'], dtype=str, index_col=False)
+    df = el.get_df_edgelist()
     df = df[df.columns[:2]]
     df.dropna(inplace=True)
 
@@ -226,6 +205,8 @@ def create_local_embedding(input_file):
     configuration['run-tag'] = run_tag
 
     edgelist = el.get_edgelist()
+
+    # prefixes, edgelist = read_edgelist(configuration['input_file'])
 
     if configuration['compression']:  # Execute compression if required.
         df, dictionary = dict_compression_edgelist(df, prefixes=prefixes)
@@ -235,6 +216,7 @@ def create_local_embedding(input_file):
         el = edgelist
 
     graph = graph_generation(configuration, el, prefixes, dictionary)
+    # graph = Graph(el.get_edgelist(), prefixes=prefixes)
 
     if configuration['n_sentences'] == 'default':
         #  Compute the number of sentences according to the rule of thumb.
@@ -248,12 +230,6 @@ def create_local_embedding(input_file):
     configuration = embeddings_generation(walks, configuration, dictionary)
 
     mat, keys = prepare_emb_matrix(configuration['embeddings_file'])
-
-    # Save the list of keys in a txt file for debugging
-    f = open('pipeline/debuggings/keys_{}.txt'.format(output_file),'w')
-    for el in keys:
-        f.write(el+'\n')
-    f.close()
 
     t_end = datetime.datetime.now()
     print(OUTPUT_FORMAT.format('Ending run.', t_end))
@@ -272,6 +248,20 @@ def create_local_embedding(input_file):
     return mat, keys
 
 
+def get_token_embedding(token, mat, keys):
+    vec = None
+    if isrid(token, int):
+        token = 'tn__' + token
+    else:
+        token = 'tt__' + token
+
+    if token in keys:
+        vec = mat[keys.index(token)]
+
+    return vec
+
+
 if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
+    # df = pd.read_csv(input_file)
     mat, keys = create_local_embedding(input_file)
