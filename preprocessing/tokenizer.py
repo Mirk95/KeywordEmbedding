@@ -21,10 +21,18 @@ def stemSentence(sentence):
     return "".join(stem_sentence).rstrip()
 
 
+def tokenize_word(word):
+    # Lowercase
+    word = word.lower()
+    # Don't remove punctuation because in a single word it's not useful...
+    # Don't apply stemming because in a single word it's not useful...
+    return word
+
+
 def tokenize_sentence(sentence, stem=False):
-    # Lowercase:
+    # Lowercase
     sentence = sentence.lower()
-    # Remove punctuation:
+    # Remove punctuation
     sentence = remove_punctuations(sentence)
     if stem:
         # Apply stemming
@@ -48,13 +56,11 @@ def tokenize_dataset(input_file, stem=False):
     return df
 
 
-def tokenize_word():
-    pass
-
-
 if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
     df = tokenize_dataset(input_file, stem=False)
-    s = tokenize_sentence("Hello!!!! Let's programming!!!", stem=False)
+    s = tokenize_sentence("Hello!!!! Let's programming!!!", stem=True)
+    w = tokenize_word("Word")
     print(df.head(10))
     print(s)
+    print(w)
