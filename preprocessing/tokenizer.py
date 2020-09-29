@@ -1,4 +1,4 @@
-Comimport pandas as pd
+import pandas as pd
 import string
 
 from nltk.tokenize import word_tokenize
