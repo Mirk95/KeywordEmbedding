@@ -6,7 +6,6 @@ import numpy as np
 
 from nltk.tokenize import RegexpTokenizer
 from sklearn.metrics.pairwise import cosine_similarity
-from iteration_utilities import unique_everseen, duplicates
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
@@ -203,7 +202,13 @@ def create_query_embedding(input_file, mat, keys, mean_emb=False):
 
 if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
+    # ToDo: Preprocess dataset
+    #   dataset_preprocess(input_file, output_file)
+
+    # Create Embedding Matrix
     mat, keys = create_local_embedding(input_file)
     print()
+
+    # Keyword Search
     if create_query_embedding(input_file, mat, keys, mean_emb=False) == -1:
         print('Ops! The function failed!')

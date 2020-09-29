@@ -150,7 +150,7 @@ def embeddings_generation(walks, configuration, dictionary):
 def create_local_embedding(input_file,
                            n_dimensions=300,
                            window_size=3,
-                           n_sentences='default',
+                           n_sentences=1000,
                            training_algorithm='word2vec',
                            learning_method='skipgram',
                            ):
@@ -190,7 +190,7 @@ def create_local_embedding(input_file,
     configuration = check_config_validity(configuration)
 
     df = pd.read_csv(configuration['input_file'])
-    df = df.head(100)
+    # df = df.head(100)
     prefixes = ['3#__tn', '3$__tt', '5$__idx', '1$__cid']
 
     el = EdgeList(df, prefixes)
