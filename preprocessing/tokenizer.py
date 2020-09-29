@@ -11,16 +11,28 @@ def remove_punctuations(sentence):
     sentence = sentence.translate(translator)
     return sentence
 
+
 def stemSentence(sentence):
     token_words = word_tokenize(sentence)
     stem_sentence = []
     for word in token_words:
         stem_sentence.append(porter.stem(word))
         stem_sentence.append(" ")
-    return "".join(stem_sentence)
+    return "".join(stem_sentence).rstrip()
 
 
-def tokenize_dataset(input_file, stemming=False):
+def tokenize_sentence(sentence, stem=False):
+    # Lowercase:
+    sentence = sentence.lower()
+    # Remove punctuation:
+    sentence = remove_punctuations(sentence)
+    if stem:
+        # Apply stemming
+        sentence = stemSentence(sentence)
+    return sentence
+
+
+def tokenize_dataset(input_file, stem=False):
     '''
     Dataset tokenization:
     - lowercase
@@ -31,17 +43,9 @@ def tokenize_dataset(input_file, stemming=False):
     df = pd.read_csv(input_file)
     # Remove the Dataframe columns containing all Nan values
     df = df.dropna(how='all', axis=1)
-    # Lowercase the Dataframe
-    df = df.applymap(lambda s:s.lower() if isinstance(s, str) else s)
-    # Remove the punctuation
-    df = df.applymap(lambda s:remove_punctuations(s) if isinstance(s, str) else s)
-    if stemming == True:
-        df = df.applymap(lambda s:stemSentence(s) if isinstance(s, str) else s)
+    # Apply tokenize_sentence
+    df = df.applymap(lambda s:tokenize_sentence(s, stem=stem) if isinstance(s, str) else s)
     return df
-
-
-def tokenize_sentence():
-    pass
 
 
 def tokenize_word():
@@ -50,4 +54,7 @@ def tokenize_word():
 
 if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
-    df = tokenize_dataset(input_file, stemming=False)
+    df = tokenize_dataset(input_file, stem=False)
+    s = tokenize_sentence("Hello!!!! Let's programming!!!", stem=False)
+    print(df.head(10))
+    print(s)
