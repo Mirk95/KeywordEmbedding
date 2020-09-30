@@ -5,7 +5,6 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 porter = PorterStemmer()
 
-
 def remove_punctuations(sentence):
     translator = str.maketrans('', '', string.punctuation)
     sentence = sentence.translate(translator)
@@ -62,7 +61,7 @@ def tokenize_dataset(input_file, stem=False):
 if __name__ == '__main__':
     input_file = 'pipeline/datasets/name.csv'
     df = tokenize_dataset(input_file, stem=False)
-    s = tokenize_sentence("Hello!!!! Let's programming!!!", stem=True)
+    s = tokenize_sentence("A Study in Red: The Secret Journal of Jack the Ripper", stem=True)
     w = tokenize_word("Word", stem=True)
     print(df.head(10))
     print(s)
