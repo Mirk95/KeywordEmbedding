@@ -9,7 +9,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
-    from local_embedding import create_local_embedding
+    from wrapper.embdi_wrapper import create_local_embedding
 
 
 def extract_query(file):

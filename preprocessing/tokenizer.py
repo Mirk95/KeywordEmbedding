@@ -3,6 +3,7 @@ import string
 
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
+
 porter = PorterStemmer()
 
 
@@ -43,7 +44,7 @@ def tokenize_sentence(sentence, stem=False):
     return sentence
 
 
-def tokenize_dataset(input_file, stem=False):
+def tokenize_dataset(df, stem=False):
     '''
     Dataset tokenization:
     - lowercase
@@ -51,11 +52,13 @@ def tokenize_dataset(input_file, stem=False):
     - remove puntuation
     - (optional) stemming
     '''
-    df = pd.read_csv(input_file)
+    # df = pd.read_csv(input_file)
     # Remove the Dataframe columns containing all Nan values
     df = df.dropna(how='all', axis=1)
+
     # Apply tokenize_sentence
-    df = df.applymap(lambda s:tokenize_sentence(s, stem=stem) if isinstance(s, str) else s)
+    df = df.applymap(lambda s: tokenize_sentence(s, stem=stem) if isinstance(s, str) else s)
+
     return df
 
 

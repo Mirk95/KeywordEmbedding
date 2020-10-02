@@ -136,7 +136,8 @@ class EdgeList:
             except ValueError:
                 pass
 
-        # values, counts = np.unique(df.values.ravel(), return_counts=True)  # Count unique values to find word frequency.
+        # values, counts = np.unique(df.values.ravel(), return_counts=True)
+        # Count unique values to find word frequency.
         if flatten:
             split_values = []
             for val in df.values.ravel().tolist():
@@ -228,6 +229,12 @@ class EdgeList:
 
     def get_df_edgelist(self):
         return pd.DataFrame(self.edgelist, dtype=str, columns=self.prefixes)
+
+    def update_edgelist(self):
+        pass
+
+    def load_edgelist(self, new_edgelist):
+        self.edgelist = new_edgelist
 
 
 if __name__ == '__main__':

@@ -584,7 +584,8 @@ def check_config_validity(config):
 
     #### Path checks
     if not os.path.exists(config['input_file']):
-        raise IOError('Input file {} not found.'.format(config['input_file']))
+        # raise IOError('Input file {} not found.'.format(config['input_file']))
+        pass
     if 'dataset_info' in config and not os.path.exists(config['dataset_info']):
         raise IOError('Info file {} not found.'.format(config['dataset_info']))
     if config['walks_strategy'] == 'replacement' and not os.path.exists(config['similarity_file']):
