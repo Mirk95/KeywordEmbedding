@@ -1,7 +1,10 @@
 .__pycache__/
 .idea/
 .vscode/
+__pycache__/
 pipeline/debuggings/
+RETRO/output/
+RETRO/vectors/
 *.csv
 *.emb
 *.walks
