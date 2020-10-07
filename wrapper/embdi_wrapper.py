@@ -4,7 +4,7 @@ import datetime
 import warnings
 from sklearn.metrics.pairwise import euclidean_distances, cosine_distances
 
-from preprocessing.tokenizer import tokenize_dataset
+from preprocessing.tokenizer import tokenize_dataset, tokenize_sentence
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
@@ -17,16 +17,16 @@ with warnings.catch_warnings():
     from wrapper.edgelist import EdgeList
 
 
-def update_edgelist(rename, edgelist, filter='idx__'):
-    rename = '{}{}__'.format(filter, rename)
-    pattern = '^{}'.format(filter)
+def update_edgelist(rename, edgelist, pref='idx__'):
+    rename = '{}{}__'.format(pref, rename)
+    pattern = '^{}'.format(pref)
     for i, line in enumerate(edgelist):
         n1 = line[0]
-        if line[0].startswith(rename):
+        if line[0].startswith(pref):
             n1 = re.sub(pattern, rename, line[0])
 
         n2 = line[1]
-        if line[1].startswith(rename):
+        if line[1].startswith(pref):
             n2 = re.sub(pattern, rename, line[1])
 
         if n1 != line[0] or n2 != line[1]:
@@ -174,17 +174,23 @@ class EmbDIWrapper(object):
                  window_size=3,
                  n_sentences='default',
                  training_algorithm='word2vec',
-                 learning_method='skipgram'
+                 learning_method='skipgram',
+                 with_tokenization=True,
                  ):
 
+        # embedding values
         self.mat = np.array([])
         self.keys = []
 
+        # emebedding model parameters
         self.n_dimensions = n_dimensions
         self.window_size = window_size
         self.n_sentences = n_sentences
         self.training_algorithm = training_algorithm
         self.learning_method = learning_method
+
+        # preprocessing data values
+        self.with_tokenization = with_tokenization
 
     def fit(self, df, name='test_name'):
         configuration = {
@@ -216,6 +222,9 @@ class EmbDIWrapper(object):
         print(OUTPUT_FORMAT.format('Starting run.', t_start))
 
         configuration = check_config_validity(configuration)
+
+        if self.with_tokenization:
+            df = tokenize_dataset(df, stem=True)
 
         # replace space with underscore
         df = df.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
@@ -278,11 +287,14 @@ class EmbDIWrapper(object):
         if not os.path.isdir(input_dir):
             raise ValueError('Input dir does not exists: {}'.format(input_dir))
 
+        # extract dataset name
         dir_name = os.path.normpath(input_dir)
         dir_name = dir_name.split(os.sep)[-1]
 
-        file_list = [f for f in os.listdir(input_dir)]
+        # get list of table name
+        file_list = [f for f in os.listdir(input_dir) if f.endswith('.csv')]
 
+        # configuration dictionary
         configuration = {
             'task': 'train',
             'input_file': dir_name,
@@ -304,6 +316,7 @@ class EmbDIWrapper(object):
             'learning_method': self.learning_method,
         }
 
+        # EmbDI directory
         os.makedirs('pipeline/walks', exist_ok=True)
         os.makedirs('pipeline/embeddings', exist_ok=True)
 
@@ -316,8 +329,20 @@ class EmbDIWrapper(object):
         db_edgelist = []
         prefixes = ['3#__tn', '3$__tt', '5$__idx', '1$__cid']
 
+        run_tag = configuration['output_file']
+        configuration['run-tag'] = run_tag
+
+        # for each dataset we compute edgelist file
         for filename in file_list:
-            df = pd.read_csv(filename)
+            # read dataset
+            print('\n filename: {}'.format(filename))
+
+            df = pd.read_csv(os.path.join(input_dir, filename), quotechar='"', error_bad_lines=False)
+            # df = df.head(100)
+
+            # tokenize dataset
+            if self.with_tokenization:
+                df = tokenize_dataset(df, stem=True)
 
             # replace space with underscore
             df = df.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
@@ -325,21 +350,28 @@ class EmbDIWrapper(object):
             # create edge list
             el = EdgeList(df, prefixes)
 
-            df = el.get_df_edgelist()
-            df = df[df.columns[:2]]
-            df.dropna(inplace=True)
-
-            run_tag = configuration['output_file']
-            configuration['run-tag'] = run_tag
-
+            # extract edge list
             edgelist = el.get_edgelist()
 
-            update_edgelist(file_list, edgelist)
+            # rename edge list idx name
+            update_edgelist(filename, edgelist, pref='idx__')
 
+            # add edge list to db_edgelist
             db_edgelist += edgelist
 
-        el = EdgeList(pd.DataFrame, prefixes)
+        # create an empty edgelist model
+        el = EdgeList(pd.DataFrame(), prefixes)
+
+        # load db_edgelist into el
         el.load_edgelist(db_edgelist)
+
+        # extract dataframe edge list
+        df = el.get_df_edgelist()
+        df = df[df.columns[:2]]
+        df.dropna(inplace=True)
+
+        # extract edge list
+        edgelist = el.get_edgelist()
 
         # preprocess compression
         if configuration['compression']:  # Execute compression if required.
@@ -385,6 +417,12 @@ class EmbDIWrapper(object):
     def load_emebedding(self, embedding_file):
         self.mat, self.keys = prepare_emb_matrix(embedding_file)
 
+    def preprocess_sentence(self, sentence):
+        if self.with_tokenization:
+            sentence = tokenize_sentence(sentence, stem=True)
+
+        return sentence
+
     def get_token_embedding(self, token):
         vec = None
         if 'tn__{}'.format(token) in self.keys:
@@ -412,6 +450,8 @@ class EmbDIWrapper(object):
         cond = [True if x.startswith(pref) else False for x in self.keys]
 
         emb_sentence = self.get_sentence_embedding(sentence)
+        if not emb_sentence:
+            return []
         emb_sentence = np.array(emb_sentence)
 
         if withMean:
@@ -437,15 +477,20 @@ class EmbDIWrapper(object):
 
 
 if __name__ == '__main__':
+    testing = False
 
     # Add nltk data directory
     nltk.data.path.append('/Users/francesco/Development')
 
+    # Option 1
     # Read input dataset
     input_file = 'pipeline/datasets/name.csv'
     df = pd.read_csv(input_file)
-    df = df.head(100)
     file_name = str(os.path.basename(input_file).split('.')[0])
+
+    # Option 2
+    # Use db foldder
+    input_dir = 'pipeline/datasets/'
 
     # tokenize dataset
     new_df = tokenize_dataset(df, stem=True)
@@ -455,33 +500,35 @@ if __name__ == '__main__':
 
     # generate embedding
     wrapper.fit(new_df, name=file_name)
+    # wrapper.fit_db(input_dir=input_dir)
     print(':)')
 
-    print('#' * 60)
-    print('Start Testing')
+    if testing:
+        print('#' * 60)
+        print('Start Testing')
 
-    # emb = get_token_embedding('Robert', mat, keys)
+        # emb = get_token_embedding('Robert', mat, keys)
 
-    # Select records for testing
-    max_record = 5
-    selected_record = []
-    for idx, val in new_df.iterrows():
-        res = val['name'].split(' ')
-        if len(res) >= 2 and len(res[0]) > 4 and len(res[1]) > 4:
-            selected_record.append(idx)
+        # Select records for testing
+        max_record = 5
+        selected_record = []
+        for idx, val in new_df.iterrows():
+            res = val['name'].split(' ')
+            if len(res) >= 2 and len(res[0]) > 4 and len(res[1]) > 4:
+                selected_record.append(idx)
 
-        if len(selected_record) >= max_record:
-            break
+            if len(selected_record) >= max_record:
+                break
 
-    print('Selected {} records'.format(len(selected_record)))
+        print('Selected {} records'.format(len(selected_record)))
 
-    # Evaluate neighbour for each record
-    for idx in selected_record:
-        sentence = new_df.loc[idx, 'name']
-        print('\nidx {} sentence: {}'.format(idx, sentence))
+        # Evaluate neighbour for each record
+        for idx in selected_record:
+            sentence = new_df.loc[idx, 'name']
+            print('\nidx {} sentence: {}'.format(idx, sentence))
 
-        neighbours = wrapper.get_k_nearest_token(sentence, k=5, distance='cosine', pref='idx', withMean=False)
-        neighbours = [int(x.replace('idx__', '')) for x in neighbours]
-        print(new_df.loc[neighbours, 'name'])
+            neighbours = wrapper.get_k_nearest_token(sentence, k=5, distance='cosine', pref='idx', withMean=False)
+            neighbours = [int(x.replace('idx__', '')) for x in neighbours]
+            print(new_df.loc[neighbours, 'name'])
 
-    print('End :(')
+        print('End :(')

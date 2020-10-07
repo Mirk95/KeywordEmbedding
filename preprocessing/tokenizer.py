@@ -33,6 +33,7 @@ def tokenize_word(word, stem=False):
 
 
 def tokenize_sentence(sentence, stem=False):
+    sentence = sentence.strip()
     # Lowercase
     sentence = sentence.lower()
     # Remove punctuation
