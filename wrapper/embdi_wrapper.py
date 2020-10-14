@@ -351,7 +351,7 @@ class EmbDIWrapper(object):
             print('\n filename: {}'.format(filename))
 
             df = pd.read_csv(os.path.join(input_dir, filename), quotechar='"', error_bad_lines=False)
-            df = df.head(10)
+            # df = df.head(10)
 
             # ignore selected columns
             if self.ignore_columns is not None:
