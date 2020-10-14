@@ -15,7 +15,6 @@ OUTPUT_FORMAT = '# {:.<60} {}'
 
 POSSIBLE_TASKS = ['train', 'test', 'match', 'refinement', 'train-test', 'train-match', 'debug']
 
-
 digs = string.digits + string.ascii_uppercase
 
 
@@ -101,6 +100,7 @@ def remove_prefixes(prefixes, model_file):
                     fo.write(line)
     return newf
 
+
 def read_similarities(sim_file):
     sims = pd.read_csv(sim_file)
     if len(sims.columns) == 2:
@@ -157,7 +157,7 @@ def split_embeddings(embeddings_file, dataset_info, n_dimensions, configuration)
         uniques = new
         for val in uniques:
             common_values.add(val)
-        temp_name = os.path.basename(configuration['output_file']) + '_split{}'.format(idx+1)
+        temp_name = os.path.basename(configuration['output_file']) + '_split{}'.format(idx + 1)
         fname = 'pipeline/dump/{}.emb'.format(temp_name)
         print('Writing on file {}'.format(fname))
         fp = open(fname, 'w')
@@ -299,7 +299,7 @@ def find_intersection_flatten(df, info_file):
 def compute_n_tokens(df_file):
     df = pd.read_csv(df_file, dtype=str)
     n_rows = len(df)
-#    n_values = len(set(df.values.ravel().tolist()))
+    #    n_values = len(set(df.values.ravel().tolist()))
     uniques = []
     n_col = len(df.columns)
     for col in df.columns:
@@ -337,7 +337,6 @@ def int2base(x, base):
     return ''.join(digits)
 
 
-
 def dict_compression_edgelist(edgelist, prefixes):
     uniques = sorted(list(set(edgelist.values.ravel().tolist())))
 
@@ -359,14 +358,15 @@ def dict_compression_edgelist(edgelist, prefixes):
         s = []
         for idx, val in enumerate(line.split('_')):
             if val in prefixes:
-                s.append(val+'_')
+                s.append(val + '_')
             elif val in dictionary:
                 s.append(dictionary[val])
         return '_'.join(s)
 
     for col in edgelist.columns:
         edgelist[col] = edgelist[col].apply(replace, dictionary=dictionary, prefixes=prefixes)
-    return edgelist, {v:k for k,v in dictionary.items()}
+    return edgelist, {v: k for k, v in dictionary.items()}
+
 
 def dict_decompression_flatten(df, dictionary):
     def replace(line, dictionary):
@@ -443,13 +443,14 @@ def return_default_values(config):
         'mlflow': False,
         'repl_numbers': False,
         'repl_strings': False,
-        'sampling_factor':0.001
+        'sampling_factor': 0.001
     }
 
     for k in default_values:
         if k not in config:
             config[k] = default_values[k]
     return config
+
 
 def _convert_to_bool(config, key):
     if config[key] in [True, False]:
@@ -479,6 +480,7 @@ def read_edgelist(edgelist_path):
                         l1.append(w1)
                 edgelist.append(l1)
     return node_types, edgelist
+
 
 def check_config_validity(config):
     #### Set default values
@@ -559,7 +561,7 @@ def check_config_validity(config):
         raise ValueError('Unknown walks strategy {}.'.format(config['walks_strategy']))
     if config['numeric'] not in ['no', 'only', 'all']:
         raise ValueError('Unknown numeric strategy {}.'.format(config['numeric']))
-    if config['training_algorithm'] not in  ['word2vec', 'fasttext']:
+    if config['training_algorithm'] not in ['word2vec', 'fasttext']:
         raise ValueError('Unknown training algorithm {}.'.format(config['training_algorithm']))
     if config['learning_method'] not in ['skipgram', 'CBOW']:
         raise ValueError('Unknown learning method {}'.format(config['learning_method']))
@@ -580,7 +582,6 @@ def check_config_validity(config):
         except ValueError:
             print('Epsilon must be a float.')
             raise ValueError
-
 
     #### Path checks
     if not os.path.exists(config['input_file']):
@@ -604,7 +605,6 @@ def check_config_validity(config):
 
 
 def check_args_validity(args):
-
     if not args.n_dimensions > 0:
         raise ValueError('Number of dimensions must be > 0.')
     if not args.n_sentences > 0:
@@ -643,4 +643,3 @@ def find_frequencies(configuration):
             path, length = line.strip().split(',')
             df = pd.read_csv(path)
             values, counts = np.unique(df.values.ravel(), return_counts=True)
-

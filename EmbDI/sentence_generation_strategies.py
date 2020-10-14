@@ -29,7 +29,7 @@ class RandomWalk:
             if repl_numbers:
                 current_node_name = self.replace_numeric_value(current_node_name, G.nodes)
             if repl_strings:
-                current_node_name, replaced_node= self.replace_string_value(G.nodes[current_node_name])
+                current_node_name, replaced_node = self.replace_string_value(G.nodes[current_node_name])
             else:
                 replaced_node = current_node_name
             if not backtrack and current_node_name == self.walk[-1]:
@@ -83,7 +83,8 @@ class RandomWalk:
                 new_val = int(new_val)
             except OverflowError:
                 return str(value)
-            while new_val not in nodes.keys() and str(new_val) not in nodes.keys() and float(new_val) not in nodes.keys():
+            while new_val not in nodes.keys() and str(new_val) not in nodes.keys() and float(
+                    new_val) not in nodes.keys():
                 if cc > 1:
                     return str(value)
                 new_val = np.around(np.random.normal(loc=value, scale=1))
@@ -131,7 +132,7 @@ def generate_walks(parameters, graph, intersection=None):
         n_cells = len(intersection)
     else:
         n_cells = len(intersection)
-    random_walks_per_node = n_sentences//n_cells
+    random_walks_per_node = n_sentences // n_cells
 
     sentence_distribution = dict(zip([strat for strat in strategies], [0 for _ in range(len(strategies))]))
 
@@ -152,7 +153,7 @@ def generate_walks(parameters, graph, intersection=None):
     count_cells = 0
     if random_walks_per_node > 0:
 
-        pbar = tqdm(desc='Sentence generation progress', total=len(graph.cell_list)*random_walks_per_node)
+        pbar = tqdm(desc='Sentence generation progress', total=len(graph.cell_list) * random_walks_per_node)
         # for cell in tqdm(graph.cell_list):
 
         for cell in graph.cell_list:
@@ -171,7 +172,8 @@ def generate_walks(parameters, graph, intersection=None):
                         ws = [' '.join(_) for _ in r]
                         s = '\n'.join(ws) + '\n'
                         fp_walks.write(s)
-                    else: pass
+                    else:
+                        pass
                 else:
                     sentences += r
                 sentence_counter += random_walks_per_node
@@ -184,7 +186,7 @@ def generate_walks(parameters, graph, intersection=None):
     if needed > 0:
         with tqdm(total=needed, desc='Completing fraction of random walks') as pbar:
             for count_cells in range(needed):
-        # while needed > count_cells:
+                # while needed > count_cells:
                 cell = random.choice(graph.cell_list)
                 if cell in intersection:
                     w = RandomWalk(graph, cell, sentence_length, backtrack,
@@ -199,7 +201,7 @@ def generate_walks(parameters, graph, intersection=None):
                     for r in sen:
                         if parameters['write_walks']:
                             ws = ' '.join(r)
-                            s = ws  + '\n'
+                            s = ws + '\n'
                             fp_walks.write(s)
                         else:
                             sentences += r

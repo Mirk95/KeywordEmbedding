@@ -5,6 +5,7 @@ import warnings
 from sklearn.metrics.pairwise import euclidean_distances, cosine_distances
 
 from preprocessing.tokenizer import tokenize_dataset, tokenize_sentence
+from preprocessing.utils import check_nltk_library, add_nltk_path, get_wrapper_arguments
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
@@ -176,6 +177,7 @@ class EmbDIWrapper(object):
                  training_algorithm='word2vec',
                  learning_method='skipgram',
                  with_tokenization=True,
+                 ignore_columns=None,
                  ):
 
         # embedding values
@@ -191,6 +193,7 @@ class EmbDIWrapper(object):
 
         # preprocessing data values
         self.with_tokenization = with_tokenization
+        self.ignore_columns = ignore_columns if ignore_columns else []
 
     def fit(self, df, name='test_name'):
         configuration = {
@@ -223,6 +226,16 @@ class EmbDIWrapper(object):
 
         configuration = check_config_validity(configuration)
 
+        # create a copy of the input dataset
+        df = df.copy()
+
+        # ignore selected columns
+        if self.ignore_columns is not None:
+            for col in self.ignore_columns:
+                if col in df:
+                    df.drop(col, axis=1, inplace=True)
+
+        # tokenize input dataset
         if self.with_tokenization:
             df = tokenize_dataset(df, stem=True)
 
@@ -338,7 +351,13 @@ class EmbDIWrapper(object):
             print('\n filename: {}'.format(filename))
 
             df = pd.read_csv(os.path.join(input_dir, filename), quotechar='"', error_bad_lines=False)
-            # df = df.head(100)
+            df = df.head(10)
+
+            # ignore selected columns
+            if self.ignore_columns is not None:
+                for col in self.ignore_columns:
+                    if col in df:
+                        df.drop(col, axis=1, inplace=True)
 
             # tokenize dataset
             if self.with_tokenization:
@@ -476,59 +495,64 @@ class EmbDIWrapper(object):
         return new_keys
 
 
+def test_record_id_embedding(wrapper, df):
+    print('#' * 60)
+    print('Start Testing')
+
+    # emb = get_token_embedding('Robert', mat, keys)
+
+    # Select records for testing
+    max_record = 5
+    selected_record = []
+    for idx, val in df.iterrows():
+        res = val['name'].split(' ')
+        if len(res) >= 2 and len(res[0]) > 4 and len(res[1]) > 4:
+            selected_record.append(idx)
+
+        if len(selected_record) >= max_record:
+            break
+
+    print('Selected {} records'.format(len(selected_record)))
+
+    # Evaluate neighbour for each record
+    for idx in selected_record:
+        sentence = df.loc[idx, 'name']
+        print('\nidx {} sentence: {}'.format(idx, sentence))
+
+        neighbours = wrapper.get_k_nearest_token(sentence, k=5, distance='cosine', pref='idx', withMean=False)
+        neighbours = [int(x.replace('idx__', '')) for x in neighbours]
+        print(df.loc[neighbours, 'name'])
+
+    print('End :(')
+
+
 if __name__ == '__main__':
-    testing = False
-
     # Add nltk data directory
-    nltk.data.path.append('/Users/francesco/Development')
+    add_nltk_path('/Users/francesco/Development')
 
-    # Option 1
-    # Read input dataset
-    input_file = 'pipeline/datasets/name.csv'
-    df = pd.read_csv(input_file)
-    file_name = str(os.path.basename(input_file).split('.')[0])
+    # check nltk library dependency
+    check_nltk_library()
 
-    # Option 2
-    # Use db foldder
-    input_dir = 'pipeline/datasets/'
-
-    # tokenize dataset
-    new_df = tokenize_dataset(df, stem=True)
+    args = get_wrapper_arguments()
 
     # define model
-    wrapper = EmbDIWrapper()
+    wrapper = EmbDIWrapper(ignore_columns=['__search_id'])
 
-    # generate embedding
-    wrapper.fit(new_df, name=file_name)
-    # wrapper.fit_db(input_dir=input_dir)
+    if args.dbms:
+        # generate dbms embedding
+        wrapper.fit_db(args.file)
+
+    else:
+        # Read input dataset
+        input_file = args.file
+        df = pd.read_csv(input_file)
+        # df = df.head(50)
+        file_name = str(os.path.basename(input_file).split('.')[0])
+
+        # tokenize dataset
+        new_df = tokenize_dataset(df, stem=True)
+
+        # generate embedding
+        wrapper.fit(new_df, name=file_name)
+
     print(':)')
-
-    if testing:
-        print('#' * 60)
-        print('Start Testing')
-
-        # emb = get_token_embedding('Robert', mat, keys)
-
-        # Select records for testing
-        max_record = 5
-        selected_record = []
-        for idx, val in new_df.iterrows():
-            res = val['name'].split(' ')
-            if len(res) >= 2 and len(res[0]) > 4 and len(res[1]) > 4:
-                selected_record.append(idx)
-
-            if len(selected_record) >= max_record:
-                break
-
-        print('Selected {} records'.format(len(selected_record)))
-
-        # Evaluate neighbour for each record
-        for idx in selected_record:
-            sentence = new_df.loc[idx, 'name']
-            print('\nidx {} sentence: {}'.format(idx, sentence))
-
-            neighbours = wrapper.get_k_nearest_token(sentence, k=5, distance='cosine', pref='idx', withMean=False)
-            neighbours = [int(x.replace('idx__', '')) for x in neighbours]
-            print(new_df.loc[neighbours, 'name'])
-
-        print('End :(')
