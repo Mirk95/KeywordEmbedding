@@ -7,7 +7,7 @@ def check_nltk_library():
         nltk.data.find('tokenizers/punkt')
     except LookupError:
         nltk.download('punkt', download_dir='pipeline/nlp/')
-
+        add_nltk_path('pipeline/nlp/')
 
 def add_nltk_path(path):
     nltk.data.path.append(path)

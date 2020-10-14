@@ -529,6 +529,7 @@ def test_record_id_embedding(wrapper, df):
 if __name__ == '__main__':
     # Add nltk data directory
     add_nltk_path('/Users/francesco/Development')
+    add_nltk_path('pipeline/nlp/')
 
     # check nltk library dependency
     check_nltk_library()

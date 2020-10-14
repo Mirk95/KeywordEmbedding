@@ -4,6 +4,7 @@
 __pycache__/
 venv/
 pipeline/debuggings/
+pipeline/nlp/tokenizers/
 RETRO/output/
 RETRO/vectors/
 *.csv
