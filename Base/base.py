@@ -4,12 +4,17 @@ import multiprocessing as mp
 
 
 class BaseEmbedding(object):
-    def __init__(self, model_type, ):
-        self.model_type = model_type
+    def __init__(self, model_type, n_dimensions=300, window_size=3, ):
+        self.model_type = self._check_model(model_type)
         self.model = None
 
-    def _check_model(self):
-        pass
+        # embedding model parameters
+        self.n_dimensions = n_dimensions
+        self.window_size = window_size
+
+
+    def _check_model(self, model_type):
+        return model_type
 
     def fit(self, sentences):
         if self.model_type == 'word2vec_CBOW':

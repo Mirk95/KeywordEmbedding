@@ -454,13 +454,13 @@ class EmbDIWrapper(object):
 
         return vec
 
-    def get_sentence_embedding(self, sentence, keepNone=False):
+    def get_sentence_embedding(self, sentence, keep_none=False):
         vecs = []
         sentence = sentence.split(' ')
         for word in sentence:
             vec = self.get_token_embedding(word)
 
-            if vec is not None or keepNone:
+            if vec is not None or keep_none:
                 vecs.append(vec)
 
         return vecs
