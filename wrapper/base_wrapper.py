@@ -12,12 +12,29 @@ TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 OUTPUT_FORMAT = '# {:.<60} {}'
 
 
+def sentence_permutation(sentences, permutation_rate):
+    new_sentences = []
+    # new_length = permutation_rate * 100 * len(sentences)
+    permutation_rate = np.floor(permutation_rate)
+
+    for sentence in sentences:
+        new_sentences.append(sentence)
+
+        sentence = sentence.split(' ')
+
+        for _ in range(permutation_rate):
+            np.shuffle(sentence)
+            new_sentences.append(' '.join(sentence))
+
+    return new_sentences
+
+
 class BaseWrapper(object):
 
     def __init__(self, training_algorithm='word2vec_CBOW',
                  n_dimensions=300, window_size=3,
                  with_tokenization=True, ignore_columns=None,
-                 insert_col=True, permutation_rate=0
+                 insert_col=True, permutation_rate=10
                  ):
         # embedding values
         self.mat = np.array([])
@@ -79,8 +96,10 @@ class BaseWrapper(object):
         df = df.apply(lambda x: ' '.join(x.dropna().astype(str).to_list()), axis=1)
         df = df.values
 
-        # ToDo: check permutation
+        # check permutation
         print('Using data augmentation.')
+        if self.permutation_rate >= 1:
+            sentence_permutation(df, self.permutation_rate)
 
         print('Start embedding {}.'.format(self.training_algorithm))
         base = BaseEmbedding(self.training_algorithm, n_dimensions=self.n_dimensions, window_size=self.window_size)
