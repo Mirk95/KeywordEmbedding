@@ -1,0 +1,158 @@
+{
+  "cast_info": [
+    {
+      "constraint_type": "UNIQUE",
+      "column_name": "__search_id",
+      "foreign_table_name": "cast_info",
+      "foreign_column_name": "__search_id"
+    },
+    {
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "cast_info",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "movie_id",
+      "foreign_table_name": "title",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "movie_id",
+      "foreign_table_name": "title",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "movie_id",
+      "foreign_table_name": "title",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "movie_id",
+      "foreign_table_name": "title",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "person_id",
+      "foreign_table_name": "name",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "person_role_id",
+      "foreign_table_name": "char_name",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "role_id",
+      "foreign_table_name": "role_type",
+      "foreign_column_name": "id"
+    }
+  ],
+  "char_name": [
+    {
+      "constraint_type": "UNIQUE",
+      "column_name": "__search_id",
+      "foreign_table_name": "char_name",
+      "foreign_column_name": "__search_id"
+    },
+    {
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "char_name",
+      "foreign_column_name": "id"
+    }
+  ],
+  "movie_info": [
+    {
+      "constraint_type": "UNIQUE",
+      "column_name": "__search_id",
+      "foreign_table_name": "movie_info",
+      "foreign_column_name": "__search_id"
+    },
+    {
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "movie_info",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "movie_id",
+      "foreign_table_name": "title",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "movie_id",
+      "foreign_table_name": "title",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "movie_id",
+      "foreign_table_name": "title",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "FOREIGN KEY",
+      "column_name": "movie_id",
+      "foreign_table_name": "title",
+      "foreign_column_name": "id"
+    }
+  ],
+  "name": [
+    {
+      "constraint_type": "UNIQUE",
+      "column_name": "__search_id",
+      "foreign_table_name": "name",
+      "foreign_column_name": "__search_id"
+    },
+    {
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "name",
+      "foreign_column_name": "id"
+    }
+  ],
+  "role_type": [
+    {
+      "constraint_type": "UNIQUE",
+      "column_name": "__search_id",
+      "foreign_table_name": "role_type",
+      "foreign_column_name": "__search_id"
+    },
+    {
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "role_type",
+      "foreign_column_name": "id"
+    },
+    {
+      "constraint_type": "UNIQUE",
+      "column_name": "role",
+      "foreign_table_name": "role_type",
+      "foreign_column_name": "role"
+    }
+  ],
+  "title": [
+    {
+      "constraint_type": "UNIQUE",
+      "column_name": "__search_id",
+      "foreign_table_name": "title",
+      "foreign_column_name": "__search_id"
+    },
+    {
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "title",
+      "foreign_column_name": "id"
+    }
+  ]
+}

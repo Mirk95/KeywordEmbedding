@@ -1,0 +1,10 @@
+{
+  "google_vecs": [
+    {
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "google_vecs",
+      "foreign_column_name": "id"
+    }
+  ]
+}

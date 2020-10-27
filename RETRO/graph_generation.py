@@ -1,0 +1,122 @@
+#!/usr/bin/python3
+
+import os
+import json
+import pandas as pd
+import networkx as nx
+from collections import defaultdict
+from itertools import combinations
+
+
+def get_schema(schema_dir, vectors_filename):
+    """
+    :param vectors_filename: filename with pre-trained embeddings
+    :param schema_dir: path to schema directory
+    :return schema: a dictionary with pk and fk separated
+    """
+    rels = []
+    db_schema_path = schema_dir + 'db_schema.json'
+    vectors_schema_path = schema_dir + vectors_filename + '_schema.json'
+
+    if os.path.isfile(db_schema_path) and os.path.isfile(vectors_schema_path):
+        with open(db_schema_path, 'r') as f:
+            db_json_data = json.load(f)
+        with open(vectors_schema_path, 'r') as f:
+            json_data = json.load(f)
+        json_data.update(db_json_data)
+        for table_name in json_data:
+            for item in json_data[table_name]:
+                constraint_type = item['constraint_type']
+                column_name = item['column_name']
+                foreign_table_name = item['foreign_table_name']
+                foreign_column_name = item['foreign_column_name']
+                rel_tuple = (table_name, constraint_type, column_name, foreign_table_name, foreign_column_name)
+                rels.append(rel_tuple)
+    else:
+        print(f'ERROR: The directory {schema_dir} must have a db_schema file inside!')
+        return
+
+    schema = dict()
+    for entry in rels:
+        if not entry[0] in schema:
+            schema[entry[0]] = {'pkey': None, 'fkeys': []}
+        if entry[1] == 'PRIMARY KEY':
+            schema[entry[0]]['pkey'] = entry[2]
+        if entry[1] == 'FOREIGN KEY':
+            f_rel = (entry[2], entry[3], entry[4])
+            if 'fkeys' in schema[entry[0]]:
+                schema[entry[0]]['fkeys'].append(f_rel)
+    return schema
+
+
+def construct_relation_graph(schema, columns, blacklist):
+    result = nx.MultiDiGraph()
+    bl = [[y.split('.') for y in x.split('~')] for x in blacklist]
+    for key in columns.keys():
+        result.add_node(key, columns=columns[key], pkey=schema[key]['pkey'])
+    for table_name in schema.keys():
+        fkeys = schema[table_name]['fkeys']
+        if (len(fkeys) > 1) and (table_name not in columns):
+            if not table_name in blacklist:
+                relevant_fkeys = set()
+                for key in fkeys:
+                    if key[1] in columns.keys():
+                        relevant_fkeys.add(key)
+                for (key1, key2) in combinations(relevant_fkeys,2):
+                    name = table_name
+                    if len(fkeys) > 2:
+                        name += ':' + key1[0] + '~' + key2[0]
+                    result.add_edge(
+                        key1[1],
+                        key2[1],
+                        col1=key1[0],
+                        col2=key2[0],
+                        name=table_name)
+        if (len(fkeys) > 0) and (table_name in columns.keys()):
+            for fkey in fkeys:
+                if fkey[1] in columns.keys():
+                    if not fkey[0] in blacklist:
+                        result.add_edge(
+                            table_name, fkey[1], col1=fkey[0], col2=fkey[2], name='-')
+    return result
+
+
+def get_all_db_columns(db_path, blacklists):
+    """
+    :param db_path: files directory path
+    :param blacklists: in config/retro_config.json
+    :return names: dictionary with column names
+    """
+    responses = []
+    db_files = os.listdir(db_path)
+    sorted_files = sorted(db_files)
+    for file in sorted_files:
+        table_name = os.path.splitext(file)[0]
+        df = pd.read_csv(db_path+file)
+        columns = df.columns
+        for column in columns:
+            responses.append([table_name, column])
+
+    names = defaultdict(list)
+    for (table, col) in responses:
+        if (not table in blacklists[0]) and (not (table + '.' + col) in blacklists[1]):
+            names[table].append(col)
+    return names
+
+
+def main(conf):
+    # Directory with files csv and db schema
+    db_path = conf['DATASETS_PATH']
+    schema_path = conf['SCHEMAS_PATH']
+
+    # read out data from database
+    db_columns = get_all_db_columns(db_path, (conf['TABLE_BLACKLIST'], conf['COLUMN_BLACKLIST']))
+
+    # construct graph from relational data
+    schema = get_schema(schema_path, conf['WE_ORIGINAL_TABLE_NAME'])
+
+    # export schema
+    relation_graph = construct_relation_graph(schema, db_columns, conf['RELATION_BLACKLIST'])
+    nx.write_gml(relation_graph, conf['SCHEMA_GRAPH_PATH'])
+
+    return
