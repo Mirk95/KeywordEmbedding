@@ -10,6 +10,6 @@ pipeline/nlp/tokenizers/*
 *.emb
 *.walks
 *.ipynb
-*.bin
+*.gz
 *.pickle
 *.wv

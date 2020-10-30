@@ -10,8 +10,8 @@ from itertools import combinations
 
 def get_schema(schema_dir, vectors_filename):
     """
-    :param vectors_filename: filename with pre-trained embeddings
     :param schema_dir: path to schema directory
+    :param vectors_filename: filename with pre-trained embeddings
     :return schema: a dictionary with pk and fk separated
     """
     rels = []
@@ -83,14 +83,13 @@ def construct_relation_graph(schema, columns, blacklist):
 
 def get_all_db_columns(db_path, blacklists):
     """
-    :param db_path: files directory path
-    :param blacklists: in config/retro_config.json
+    :param db_path: datasets directory path
+    :param blacklists: lists of tables and columns not to be considered
     :return names: dictionary with column names
     """
     responses = []
     db_files = os.listdir(db_path)
-    sorted_files = sorted(db_files)
-    for file in sorted_files:
+    for file in db_files:
         table_name = os.path.splitext(file)[0]
         df = pd.read_csv(db_path+file)
         columns = df.columns
@@ -105,17 +104,16 @@ def get_all_db_columns(db_path, blacklists):
 
 
 def main(conf):
-    # Directory with files csv and db schema
-    db_path = conf['DATASETS_PATH']
+    # Directory with db schemas
     schema_path = conf['SCHEMAS_PATH']
 
-    # read out data from database
-    db_columns = get_all_db_columns(db_path, (conf['TABLE_BLACKLIST'], conf['COLUMN_BLACKLIST']))
+    # Read out data from database
+    db_columns = get_all_db_columns(conf['DATASETS_PATH'], (conf['TABLE_BLACKLIST'], conf['COLUMN_BLACKLIST']))
 
-    # construct graph from relational data
+    # Construct graph from relational data
     schema = get_schema(schema_path, conf['WE_ORIGINAL_TABLE_NAME'])
 
-    # export schema
+    # Export schema
     relation_graph = construct_relation_graph(schema, db_columns, conf['RELATION_BLACKLIST'])
     nx.write_gml(relation_graph, conf['SCHEMA_GRAPH_PATH'])
 

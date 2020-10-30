@@ -56,12 +56,12 @@ def tokenize(term):
         return ''
 
 
-def get_terms(columns, datasets_path, max_rows):
+def get_terms(columns, conf):
     result = dict()
     for column in columns:
         table_name, column_name = column.split('.')
-        df = pd.read_csv(datasets_path+table_name+'.csv')
-        df = df[:max_rows]
+        df = pd.read_csv(conf['DATASETS_PATH'] + table_name + '.csv')
+        df = df[:conf['MAX_ROWS']]
         res = df[column_name].dropna()
         result[column] = [tokenize(x) for idx, x in res.iteritems()]
         result[column] = list(set(result[column]))  # remove duplicates
