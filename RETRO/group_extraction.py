@@ -246,11 +246,8 @@ def main(conf):
     groups = dict()
 
     # get terms (like radix tree)
-    df_vectors = pd.read_csv(conf['WE_ORIGINAL_TABLE_PATH'], nrows=conf['MAX_ROWS'])
-    df_vectors['vector'] = df_vectors['vector'].apply(lambda x: x.replace('[', ''))
-    df_vectors['vector'] = df_vectors['vector'].apply(lambda x: x.replace(']', ''))
+    df_vectors, terms = utils.get_terms_from_vector_set(conf)
     df_vectors['id_vec'] = range(len(df_vectors))
-    terms = utils.get_terms_from_vector_set(df_vectors)
 
     # get groups of text values occurring in the same column
     groups = update_groups(groups, get_column_groups(df_vectors, graph, terms, conf))

@@ -111,17 +111,20 @@ def get_vectors_for_present_terms_from_group_file(data_columns, groups_info):
 
 
 # UPDATED function
-def get_terms_from_vector_set(df):
+def get_terms_from_vector_set(conf):
     print("Getting terms from vector table:")
-    BATCH_SIZE = 500000
+    chunk_size = 500000
+    list_df = []
     term_dict = dict()
     min_id = 0
-    max_id = BATCH_SIZE
-    while True:
-        subset = df.iloc[min_id:max_id, :]
+    max_id = chunk_size
+    for chunk in pd.read_csv(conf['WE_ORIGINAL_TABLE_PATH'], chunksize=chunk_size):
+        chunk['vector'] = chunk['vector'].apply(lambda x: x.replace('[', ''))
+        chunk['vector'] = chunk['vector'].apply(lambda x: x.replace(']', ''))
+        list_df.append(chunk)
         term_list = []
-        for index, row in subset.iterrows():
-            term = [str(row.word), row.vector, index]
+        for idx, word, vector in chunk.itertuples(name=None):
+            term = [str(word), vector, int(idx)]
             term_list.append(term)
         if len(term_list) < 1:
             break
@@ -140,6 +143,9 @@ def get_terms_from_vector_set(df):
                 i += 1
             current[1] = vector
             current[2] = freq
+        if max_id == conf['MAX_ROWS']:
+            break
         min_id = max_id
-        max_id += BATCH_SIZE
-    return term_dict
+        max_id += chunk_size
+    df_vectors = pd.concat(list_df)
+    return df_vectors, term_dict

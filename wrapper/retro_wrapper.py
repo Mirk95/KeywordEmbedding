@@ -73,7 +73,7 @@ class RETROWrapper(object):
                  beta=0.0,
                  gamma=3.0,
                  delta=3.0,
-                 max_rows=1000,
+                 max_rows=2000000,
                  tokenization='simple',
                  table_blacklist=[],
                  ):
