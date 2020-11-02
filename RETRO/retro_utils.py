@@ -143,7 +143,7 @@ def get_terms_from_vector_set(conf):
                 i += 1
             current[1] = vector
             current[2] = freq
-        if max_id == conf['MAX_ROWS']:
+        if max_id >= conf['MAX_ROWS']:
             break
         min_id = max_id
         max_id += chunk_size
