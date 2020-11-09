@@ -1,10 +1,13 @@
-import pandas as pd
 import string
-
+import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 
+from gensim.parsing.preprocessing import preprocess_string, strip_tags, strip_punctuation, strip_multiple_whitespaces, \
+    stem_text
+
 porter = PorterStemmer()
+
 
 def remove_punctuations(sentence):
     translator = str.maketrans('', '', string.punctuation)
@@ -32,7 +35,7 @@ def tokenize_word(word, stem=False):
     return word
 
 
-def tokenize_sentence(sentence, stem=False):
+def tokenize_sentence_old(sentence, stem=False):
     sentence = sentence.strip()
     # Lowercase
     sentence = sentence.lower()
@@ -42,6 +45,15 @@ def tokenize_sentence(sentence, stem=False):
         # Apply stemming
         sentence = stemSentence(sentence)
     return sentence
+
+
+def tokenize_sentence(sentence, stem=True):
+    if stem:
+        CUSTOM_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces, stem_text]
+    else:
+        CUSTOM_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces]
+
+    return ' '.join(preprocess_string(sentence, CUSTOM_FILTERS))
 
 
 def tokenize_dataset(df, stem=False):

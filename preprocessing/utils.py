@@ -40,10 +40,10 @@ def get_wrapper_arguments():
                         required=True,
                         help='dataset to analyze and use to generate token embeddings')
 
-    parser.add_argument('--sep',
-                        type=str,
-                        default=',',
-                        help='table separator to analyze input dataset')
+    # parser.add_argument('--sep',
+    #                     type=str,
+    #                     default=',',
+    #                     help='table separator to analyze input dataset')
 
     parser.add_argument('--dbms',
                         action='store_true',

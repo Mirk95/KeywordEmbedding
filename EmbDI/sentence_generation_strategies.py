@@ -145,7 +145,8 @@ def generate_walks(parameters, graph, intersection=None):
 
     walks_file = 'pipeline/walks/' + parameters['output_file'] + '.walks'
 
-    if parameters['write_walks']: fp_walks = open(walks_file, 'w')
+    if parameters['write_walks']:
+        fp_walks = open(walks_file, 'w')
 
     print(OUTPUT_FORMAT.format('Generating basic random walks.', str_start_time))
     sentence_counter = 0

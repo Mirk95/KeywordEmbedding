@@ -1,11 +1,11 @@
 import re
-import nltk
 import datetime
 import warnings
+import argparse
 from sklearn.metrics.pairwise import euclidean_distances, cosine_distances
 
 from preprocessing.tokenizer import tokenize_dataset, tokenize_sentence
-from preprocessing.utils import check_nltk_library, add_nltk_path, get_wrapper_arguments
+from preprocessing.utils import check_nltk_library, add_nltk_path
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
@@ -16,6 +16,38 @@ with warnings.catch_warnings():
     from EmbDI.graph import Graph
     from EmbDI.logging import *
     from wrapper.edgelist import EdgeList
+
+
+def get_embdi_arguments():
+    parser = argparse.ArgumentParser(description='Run EmbDI embedding')
+
+    parser.add_argument('--file',
+                        type=str,
+                        required=True,
+                        help='dataset or directory to analyze and use to generate token embeddings')
+
+    mode_hint = """
+    mode to execute EmbDi algorithm:\n 
+    - "full" all step;\n
+    - "el" edge list step;\n 
+    - "rw" random walk step;\n 
+    - "emb" embedding step\n
+    """
+    parser.add_argument('--mode',
+                        type=str,
+                        choices=['full', 'el', 'rw', 'emb'],
+                        default='full',
+                        help=mode_hint)
+
+    args = parser.parse_args()
+
+    if args.mode == 'full' and not os.path.isdir(args.file) and not os.path.isfile(args.file):
+        raise ValueError('{} is not a valid file or directory to execute all'.format(args.file))
+
+    if args.mode != 'full' and not os.path.isfile(args.file):
+        raise ValueError('{} is not a valid file'.format(args.file))
+
+    return args
 
 
 def update_edgelist(rename, edgelist, pref='idx__'):
@@ -177,6 +209,7 @@ class EmbDIWrapper(object):
                  training_algorithm='word2vec',
                  learning_method='skipgram',
                  with_tokenization=True,
+
                  ignore_columns=None,
                  ):
 
@@ -199,7 +232,7 @@ class EmbDIWrapper(object):
         configuration = {
             'task': 'train',
             'input_file': name,
-            'output_file': name,
+            'output_file': 'embdi__{}'.format(name),
 
             'flatten': 'tt',
 
@@ -216,9 +249,6 @@ class EmbDIWrapper(object):
             'training_algorithm': self.training_algorithm,
             'learning_method': self.learning_method,
         }
-
-        os.makedirs('pipeline/walks', exist_ok=True)
-        os.makedirs('pipeline/embeddings', exist_ok=True)
 
         print('#' * 80)
         t_start = datetime.datetime.now()
@@ -255,10 +285,16 @@ class EmbDIWrapper(object):
 
         edgelist = el.get_edgelist()
 
+        # rename edge list idx name
+        update_edgelist(name, edgelist, pref='idx__')
+
         # preprocess compression
         if configuration['compression']:  # Execute compression if required.
             df, dictionary = dict_compression_edgelist(df, prefixes=prefixes)
             el = df.values.tolist()
+
+            update_edgelist(name, el, pref='idx__')
+
         else:
             dictionary = None
             el = edgelist
@@ -311,7 +347,7 @@ class EmbDIWrapper(object):
         configuration = {
             'task': 'train',
             'input_file': dir_name,
-            'output_file': dir_name,
+            'output_file': 'embdi__{}'.format(dir_name),
 
             'flatten': 'tt',
 
@@ -328,10 +364,6 @@ class EmbDIWrapper(object):
             'training_algorithm': self.training_algorithm,
             'learning_method': self.learning_method,
         }
-
-        # EmbDI directory
-        os.makedirs('pipeline/walks', exist_ok=True)
-        os.makedirs('pipeline/embeddings', exist_ok=True)
 
         print('#' * 80)
         t_start = datetime.datetime.now()
@@ -360,6 +392,7 @@ class EmbDIWrapper(object):
                         df.drop(col, axis=1, inplace=True)
 
             # tokenize dataset
+            print('Start tokenization')
             if self.with_tokenization:
                 df = tokenize_dataset(df, stem=True)
 
@@ -367,6 +400,7 @@ class EmbDIWrapper(object):
             df = df.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
 
             # create edge list
+            print('Create edgelist')
             el = EdgeList(df, prefixes)
 
             # extract edge list
@@ -379,6 +413,8 @@ class EmbDIWrapper(object):
             db_edgelist += edgelist
 
         # create an empty edgelist model
+
+        print('Create global edgelist')
         el = EdgeList(pd.DataFrame(), prefixes)
 
         # load db_edgelist into el
@@ -534,26 +570,136 @@ if __name__ == '__main__':
     # check nltk library dependency
     check_nltk_library()
 
-    args = get_wrapper_arguments()
+    # Check pipeline directory
+    assert os.path.isdir('pipeline'), 'Pipeline directory does not exist'
 
-    # define model
-    wrapper = EmbDIWrapper(ignore_columns=['__search_id'])
+    # Create mandatory dir for EmbDi
+    os.makedirs('pipeline/edges', exist_ok=True)
+    os.makedirs('pipeline/walks', exist_ok=True)
+    os.makedirs('pipeline/embeddings', exist_ok=True)
 
-    if args.dbms:
-        # generate dbms embedding
-        wrapper.fit_db(args.file)
+    # conf paramss
+    with_tokenization = True
+    ignore_columns = ['__search_id']
+    blacklist_columns = ['']
+    prefixes = ['3#__tn', '3$__tt', '5$__idx', '1$__cid']
 
-    else:
+    args = get_embdi_arguments()
+
+    if args.mode == 'full':
+        # define model
+        wrapper = EmbDIWrapper(ignore_columns=ignore_columns)
+
+        if os.path.isdir(args.file):
+            # generate dbms embedding
+            print('Start embedding dbms')
+            wrapper.fit_db(args.file)
+
+        else:
+            # Read input dataset
+            input_file = args.file
+            print('Read input dataset')
+            df = pd.read_csv(input_file)
+
+            file_name = str(os.path.basename(input_file).split('.')[0])
+
+            # tokenize dataset
+            print('Tokenize input dataset')
+            new_df = tokenize_dataset(df, stem=True)
+
+            # generate embedding
+            print('Start embedding dataset')
+            wrapper.fit(new_df, name=file_name)
+
+    elif args.mode == 'el':
         # Read input dataset
         input_file = args.file
+        print('Read input dataset')
         df = pd.read_csv(input_file)
-        # df = df.head(50)
-        file_name = str(os.path.basename(input_file).split('.')[0])
 
-        # tokenize dataset
-        new_df = tokenize_dataset(df, stem=True)
+        filename = str(os.path.basename(input_file).split('.')[0])
 
-        # generate embedding
-        wrapper.fit(new_df, name=file_name)
+        # Ignore selected columns
+        for col in ignore_columns:
+            if col in df:
+                df.drop(col, axis=1, inplace=True)
+
+        # Tokenize input dataset
+        if with_tokenization:
+            print('Tokenize input dataset')
+            df = tokenize_dataset(df, stem=True)
+
+        # Generate edge list
+        print('Generate Edge List')
+        el = EdgeList(df, prefixes)
+        el = el.get_edgelist()
+
+        # Loading the graph to make sure it can load the edgelist.
+        # print('Check Edge List')
+        # g = Graph(el, prefixes=prefixes)
+
+        # Update edgelist idx
+        print('Update Edge List')
+        update_edgelist(filename, el, pref='idx__')
+
+        # Save Edge List
+        print('Save Edge List')
+        filename = filename + '.edges'
+        filename = os.path.join('pipeline/edges', filename)
+
+        pd.DataFrame(el, dtype=str, columns=prefixes).to_csv(filename, index=False)
+
+    elif args.mode == 'rw':
+
+        # Read edge list
+        print('Read Edge List')
+        df = pd.read_csv(args.file)
+        prefixes, edgelist = read_edgelist(args.file)
+
+        configuration = {
+            'walks_strategy': 'basic',
+            'flatten': 'tt',
+            'n_sentences': 'default',
+            'sentence_length': 10,
+            'write_walks': True,
+            'intersection': False,
+            'backtrack': True,
+            'output_file': str(os.path.basename(args.file).split('.')[0]),
+            'repl_numbers': False,
+            'repl_strings': False,
+            'factor': 100,
+        }
+
+        # Create graph from edge list
+        print('Create Graph')
+        graph = graph_generation(configuration, edgelist, prefixes, dictionary=None)
+
+        if configuration['n_sentences'] == 'default':
+            #  Compute the number of sentences according to the rule of thumb.
+            configuration['n_sentences'] = graph.compute_n_sentences(int(configuration['sentence_length']),
+                                                                     factor=configuration['factor'])
+
+        # Generate random walk and save it
+        print('Generate Random Walk')
+        walks = random_walks_generation(configuration, df, graph)
+
+        print('Finish: {}'.format(walks))
+
+    elif args.mode == 'emb':
+
+        configuration = {
+            'run-tag': 'embdi__' + str(os.path.basename(args.file).split('.')[0]),
+            'write_walks': True,
+            'n_dimensions': 300,
+            'window_size': 3,
+            'training_algorithm': 'word2vec',
+            'learning_method': 'skipgram',
+            'sampling_factor': 0.001,
+            'compression': False,
+        }
+
+        # Embedding generation using generated walk
+        print('Generate Embedding')
+        configuration = embeddings_generation(args.file, configuration, None)
 
     print(':)')
