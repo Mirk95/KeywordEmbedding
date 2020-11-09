@@ -51,7 +51,7 @@ def get_column_groups(df_vectors, graph, terms, conf):
         df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv')
         df_node = df_node[:conf['MAX_ROWS']]
         df_node = df_node.applymap(str)
-        df_node = df_node.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
+        df_node = df_node.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         for column_name in column_names:
             print('Process %s.%s ...' % (node, column_name))
             if df_node.dtypes[column_name] == 'object':
@@ -124,7 +124,7 @@ def get_row_groups(df_vectors, graph, conf):
         df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv')
         df_node = df_node[:conf['MAX_ROWS']]
         df_node = df_node.applymap(str)
-        df_node = df_node.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
+        df_node = df_node.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         if type(columns) != list:
             continue
         for col1, col2 in combinations(columns, 2):
@@ -156,11 +156,11 @@ def get_relation_groups(df_vectors, graph, conf):
         df_table1 = pd.read_csv(conf['DATASETS_PATH'] + str(table1) + '.csv')
         df_table1 = df_table1[:conf['MAX_ROWS']]
         df_table1 = df_table1.applymap(str)
-        df_table1 = df_table1.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
+        df_table1 = df_table1.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         df_table2 = pd.read_csv(conf['DATASETS_PATH'] + str(table2) + '.csv')
         df_table2 = df_table2[:conf['MAX_ROWS']]
         df_table2 = df_table2.applymap(str)
-        df_table2 = df_table2.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
+        df_table2 = df_table2.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         key_col1, key_col2 = attrs['col1'], attrs['col2']
         columns_attr1 = graph.nodes[node1]['columns']
         column_names1 = columns_attr1 if type(columns_attr1) == list else [columns_attr1]
@@ -202,7 +202,7 @@ def get_relation_groups(df_vectors, graph, conf):
                     rel_tab_name = attrs['name']
                     df_rel_tab = pd.read_csv(conf['DATASETS_PATH'] + str(rel_tab_name) + '.csv')
                     df_rel_tab = df_rel_tab.applymap(str)
-                    df_rel_tab = df_rel_tab.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
+                    df_rel_tab = df_rel_tab.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
                     merge1 = pd.merge(df_table1, df_rel_tab, left_on=pkey_col1, right_on=key_col1)
                     merge2 = pd.merge(merge1, df_table2, left_on=key_col2, right_on=pkey_col2)
                     merge3 = pd.merge(merge2, df_vectors, left_on=col1, right_on=df_vectors.word)
@@ -246,11 +246,8 @@ def main(conf):
     groups = dict()
 
     # get terms (like radix tree)
-    df_vectors = pd.read_csv(conf['WE_ORIGINAL_TABLE_PATH'], nrows=conf['MAX_ROWS'])
-    df_vectors['vector'] = df_vectors['vector'].apply(lambda x: x.replace('[', ''))
-    df_vectors['vector'] = df_vectors['vector'].apply(lambda x: x.replace(']', ''))
+    df_vectors, terms = utils.get_terms_from_vector_set(conf)
     df_vectors['id_vec'] = range(len(df_vectors))
-    terms = utils.get_terms_from_vector_set(df_vectors)
 
     # get groups of text values occurring in the same column
     groups = update_groups(groups, get_column_groups(df_vectors, graph, terms, conf))

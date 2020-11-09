@@ -283,16 +283,23 @@ def run_retrofitting(M0, S, v_c, c, v_P, A_cat, rel_key_pairs, term_list, conf):
 
 
 def output_vectors(term_list, Mk, output_file_name):
+    counter = 0
+    for i, term in enumerate(term_list):
+        is_all_zero = np.all((Mk[i] == 0))
+        if not is_all_zero:
+            counter += 1
+
     # init output file
     f_out = open(output_file_name, 'w')
     # write meta information
-    f_out.write('%d %d' % (Mk.shape[0], Mk.shape[1]) + linesep)
+    f_out.write('%d %d' % (counter, Mk.shape[1]) + linesep)
     # write term vector pairs
     for i, term in enumerate(term_list):
-        if i % 1000 == 0:
+        is_all_zero = np.all((Mk[i] == 0))
+        if not is_all_zero:
             print('Exported', i, 'term vectors | Current term:', term)
-        f_out.write('%s %s' % (term, ' '.join([str(x) for x in Mk[i]])))
-        f_out.write(linesep)
+            f_out.write('%s %s' % (term, ' '.join([str(x) for x in Mk[i]])))
+            f_out.write(linesep)
     f_out.close()
     return
 
@@ -303,7 +310,7 @@ def main(conf):
     data_columns = utils.get_data_columns_from_group_data(groups_info)
 
     # get tokens of data columns
-    all_terms = utils.get_terms(data_columns, conf['DATASETS_PATH'], conf['MAX_ROWS'])
+    all_terms = utils.get_terms(data_columns, conf)
     print('Retrieved terms from database')
 
     present_vectors, dim = utils.get_vectors_for_present_terms_from_group_file(data_columns, groups_info)
