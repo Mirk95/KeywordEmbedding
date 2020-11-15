@@ -11,5 +11,5 @@ pipeline/nlp/tokenizers/*
 *.walks
 *.ipynb
 *.gz
-*.pickle
+*.pk
 *.wv

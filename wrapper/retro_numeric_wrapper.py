@@ -11,10 +11,10 @@ from preprocessing.utils import check_nltk_library, add_nltk_path, get_wrapper_a
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
-    from RETRO.graph_generation import main as graph_generation
-    from RETRO.group_extraction import main as group_extraction
-    from RETRO.matrix_retrofit import main as retrofit
-    from RETRO.gml2json import main as gml2json
+    from RETRO_Numeric.graph_generation import main as graph_generation
+    from RETRO_Numeric.group_extraction import main as group_extraction
+    from RETRO_Numeric.matrix_retrofit import main as retrofit
+    from RETRO_Numeric.gml2json import main as gml2json
 
 OUTPUT_FORMAT = '# {:.<60} {}'
 
@@ -66,15 +66,15 @@ def prepare_emb_matrix(embeddings_file):
     return mat, keys
 
 
-class RETROWrapper(object):
+class RETRONumericWrapper(object):
     def __init__(self,
                  n_iterations=10,
                  alpha=1.0,
                  beta=0.0,
                  gamma=3.0,
-                 delta=3.0,
-                 max_rows=2000000,
-                 tokenization='simple',
+                 delta=1.0,
+                 number_dims=300,
+                 standard_deviation=1.0,
                  table_blacklist=[],
                  ):
 
@@ -88,8 +88,8 @@ class RETROWrapper(object):
         self.beta = beta
         self.gamma = gamma
         self.delta = delta
-        self.max_rows = max_rows
-        self.tokenization = tokenization
+        self.number_dims = number_dims
+        self.standard_deviation = standard_deviation
         self.table_blacklist = table_blacklist
 
     def fit(self):
@@ -98,6 +98,7 @@ class RETROWrapper(object):
             "DATASETS_PATH": "pipeline/datasets/",
             "VECTORS_PATH": "pipeline/vectors/",
             "SCHEMAS_PATH": "pipeline/schemas/",
+            "COLUMNS_TYPE_PATH": "pipeline/columns/",
             "OUTPUT_PATH": "pipeline/output/",
             "VECTORS_LOCATION": "pipeline/vectors/GoogleNews-vectors-negative300.bin.gz",
             "WE_ORIGINAL_TABLE_NAME": "google_vecs",
@@ -109,13 +110,22 @@ class RETROWrapper(object):
             "TABLE_BLACKLIST": self.table_blacklist,
             "COLUMN_BLACKLIST": [],
             "RELATION_BLACKLIST": [],
+            "M0_ZERO_COLUMNS": [],
             "ITERATIONS": self.n_iterations,
-            "TOKENIZATION": self.tokenization,
+            "TOKENIZATION_SETTINGS": {
+                "TEXT_TOKENIZATION": "simple",
+                "NUMERIC_TOKENIZATION": {
+                    "MODE": "unary-random-dim",
+                    "BUCKETS": True,
+                    "NUMBER_DIMS": self.number_dims,
+                    "STANDARD_DEVIATION": self.standard_deviation,
+                    "NORMALIZATION": True
+                }
+            },
             "ALPHA": self.alpha,
             "BETA": self.beta,
             "GAMMA": self.gamma,
-            "DELTA": self.delta,
-            "MAX_ROWS": self.max_rows
+            "DELTA": self.delta
         }
 
         # RETRO directory
@@ -137,11 +147,18 @@ class RETROWrapper(object):
 
         print('Create schema graph in', configuration['SCHEMA_GRAPH_PATH'], '...')
         graph_generation(configuration)
-        gml2json(configuration)  # only for visualization
+        gml2json(configuration)     # only for visualization
         print('Extract groups and generate', configuration['GROUPS_FILE_NAME'], '...')
         group_extraction(configuration)
         print('Start retrofitting ...')
         retrofit(configuration)
+
+        print("Finished retrofitting for:")
+        print("TEXT MODE: ", configuration['TOKENIZATION_SETTINGS']['TEXT_TOKENIZATION'])
+        print("NUMERIC MODE: ", configuration['TOKENIZATION_SETTINGS']['NUMERIC_TOKENIZATION']['MODE'])
+        print("\t BUCKETS: ", configuration['TOKENIZATION_SETTINGS']['NUMERIC_TOKENIZATION']['BUCKETS'])
+        print("\t NUMBER DIMS: ", configuration['TOKENIZATION_SETTINGS']['NUMERIC_TOKENIZATION']['NUMBER_DIMS'])
+        print("DELTA: ", configuration['DELTA'])
 
         self.mat, self.keys = prepare_emb_matrix(configuration['RETRO_VECS_FILE_NAME'])
 
@@ -163,6 +180,7 @@ class RETROWrapper(object):
             "DATASETS_PATH": "pipeline/datasets/",
             "VECTORS_PATH": "pipeline/vectors/",
             "SCHEMAS_PATH": "pipeline/schemas/",
+            "COLUMNS_TYPE_PATH": "pipeline/columns/",
             "OUTPUT_PATH": "pipeline/output/",
             "VECTORS_LOCATION": "pipeline/vectors/GoogleNews-vectors-negative300.bin.gz",
             "WE_ORIGINAL_TABLE_NAME": "google_vecs",
@@ -171,16 +189,25 @@ class RETROWrapper(object):
             "SCHEMA_JSON_GRAPH_PATH": "pipeline/output/schema.json",
             "GROUPS_FILE_NAME": "pipeline/output/groups.pk",
             "RETRO_VECS_FILE_NAME": "pipeline/output/retrofitted_vectors.wv",
-            "TABLE_BLACKLIST": self.table_blacklist,
+            "TABLE_BLACKLIST": ['char_name', 'movie_info', 'role_type', 'title'],
             "COLUMN_BLACKLIST": [],
             "RELATION_BLACKLIST": [],
+            "M0_ZERO_COLUMNS": [],
             "ITERATIONS": self.n_iterations,
-            "TOKENIZATION": self.tokenization,
+            "TOKENIZATION_SETTINGS": {
+                "TEXT_TOKENIZATION": "simple",
+                "NUMERIC_TOKENIZATION": {
+                    "MODE": "unary-random-dim",
+                    "BUCKETS": True,
+                    "NUMBER_DIMS": self.number_dims,
+                    "STANDARD_DEVIATION": self.standard_deviation,
+                    "NORMALIZATION": True
+                }
+            },
             "ALPHA": self.alpha,
             "BETA": self.beta,
             "GAMMA": self.gamma,
-            "DELTA": self.delta,
-            "MAX_ROWS": self.max_rows
+            "DELTA": self.delta
         }
 
         # RETRO directory
@@ -202,7 +229,7 @@ class RETROWrapper(object):
 
         print('Create schema graph in', configuration['SCHEMA_GRAPH_PATH'], '...')
         graph_generation(configuration)
-        gml2json(configuration)  # only for visualization
+        gml2json(configuration)     # only for visualization
         print('Extract groups and generate', configuration['GROUPS_FILE_NAME'], '...')
         group_extraction(configuration)
         print('Start retrofitting ...')
@@ -231,7 +258,7 @@ if __name__ == '__main__':
     args = get_wrapper_arguments()
 
     # Define model
-    wrapper = RETROWrapper()
+    wrapper = RETRONumericWrapper()
     if args.dbms:
         # Generate dbms embedding
         wrapper.fit_db(args.file)

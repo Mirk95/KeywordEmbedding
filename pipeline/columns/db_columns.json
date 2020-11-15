@@ -1,0 +1,58 @@
+{
+  "cast_info": {
+    "id": "integer",
+    "person_id": "integer",
+    "movie_id": "integer",
+    "person_role_id": "integer",
+    "note": "text",
+    "nr_order": "integer",
+    "role_id": "integer",
+    "__search_id": "integer"
+  },
+  "char_name": {
+    "id": "integer",
+    "name": "text",
+    "imdb_index": "varchar",
+    "imdb_id": "integer",
+    "name_pcode_nf": "varchar",
+    "surname_pcode": "varchar",
+    "__search_id": "integer"
+  },
+  "movie_info": {
+    "id": "integer",
+    "movie_id": "integer",
+    "info_type_id": "integer",
+    "info": "text",
+    "note": "text",
+    "__search_id": "integer"
+  },
+  "name": {
+    "id": "integer",
+    "name": "text",
+    "imdb_index": "varchar",
+    "imdb_id": "integer",
+    "name_pcode_cf": "varchar",
+    "name_pcode_nf": "varchar",
+    "surname_pcode": "varchar",
+    "__search_id": "integer"
+  },
+  "role_type": {
+    "id": "integer",
+    "role": "varchar",
+    "__search_id": "integer"
+  },
+  "title": {
+    "id": "integer",
+    "title": "text",
+    "imdb_index": "varchar",
+    "kind_id": "integer",
+    "production_year": "integer",
+    "imdb_id": "integer",
+    "phonetic_code": "varchar",
+    "episode_of_id": "integer",
+    "season_nr": "integer",
+    "episode_nr": "integer",
+    "series_years": "varchar",
+    "__search_id": "integer"
+  }
+}
