@@ -60,9 +60,9 @@ def get_terms(columns, conf):
     result = dict()
     for column in columns:
         table_name, column_name = column.split('.')
-        df = pd.read_csv(conf['DATASETS_PATH'] + table_name + '.csv')
-        df = df[:conf['MAX_ROWS']]
-        res = df[column_name].dropna()
+        df = pd.read_csv(conf['DATASETS_PATH'] + table_name + '.csv', na_filter=False)
+        res = df[column_name]
+        res = res.fillna('')
         result[column] = [tokenize(x) for idx, x in res.iteritems()]
         result[column] = list(set(result[column]))  # remove duplicates
     return result
@@ -76,7 +76,7 @@ def construct_index_lookup(list_obj):
 
 
 def get_dist_params(vectors):
-    # returns the distribution parameter for vector elements
+    # Returns the distribution parameter for vector elements
     m_value = 0
     count = 0
     values = []
@@ -94,6 +94,19 @@ def get_dist_params(vectors):
     return m_value, s_value
 
 
+def execute_threads_from_pool(thread_pool, verbose=False):
+    while len(thread_pool) > 0:
+        try:
+            next = thread_pool.pop()
+            if verbose:
+                print('Number of threads:', len(thread_pool))
+            next.start()
+            next.join()
+        except ValueError:
+            print("Warning: threadpool.pop() failed")
+    return
+
+
 def get_vectors_for_present_terms_from_group_file(data_columns, groups_info):
     result_present = dict()
     dim = 0
@@ -102,7 +115,7 @@ def get_vectors_for_present_terms_from_group_file(data_columns, groups_info):
         group_extended = groups_info[column][0]['inferred_elements']
         result_present[column] = dict()
         for term in group:
-            result_present[column][term] = np.array(group[term]['vector'].split(), dtype='float32')
+            result_present[column][term] = np.array(group[term]['vector'], dtype='float32')
             dim = len(result_present[column][term])
         for term in group_extended:
             result_present[column][term] = np.array(group_extended[term]['vector'], dtype='float32')
@@ -110,26 +123,21 @@ def get_vectors_for_present_terms_from_group_file(data_columns, groups_info):
     return result_present, dim
 
 
-# UPDATED function
-def get_terms_from_vector_set(conf):
+def get_terms_from_vector_set(df_vectors):
     print("Getting terms from vector table:")
-    chunk_size = 500000
-    list_df = []
+    chunk_size = 100000
     term_dict = dict()
     min_id = 0
     max_id = chunk_size
-    for chunk in pd.read_csv(conf['WE_ORIGINAL_TABLE_PATH'], chunksize=chunk_size):
-        chunk['vector'] = chunk['vector'].apply(lambda x: x.replace('[', ''))
-        chunk['vector'] = chunk['vector'].apply(lambda x: x.replace(']', ''))
-        list_df.append(chunk)
-        term_list = []
-        for idx, word, vector in chunk.itertuples(name=None):
-            term = [str(word), vector, int(idx)]
-            term_list.append(term)
+    while True:
+        print("%s to %s..." % (min_id, max_id))
+        records = df_vectors[min_id:max_id].to_records(index=False)
+        term_list = list(records)
         if len(term_list) < 1:
             break
-        print("%s to %s..." % (min_id, max_id))
         for (term, vector, freq) in term_list:
+            term = str(term)
+            freq = int(freq)
             splits = term.split('_')
             current = [term_dict, None, -1]
             i = 1
@@ -143,9 +151,8 @@ def get_terms_from_vector_set(conf):
                 i += 1
             current[1] = vector
             current[2] = freq
-        if max_id >= conf['MAX_ROWS']:
+        if max_id >= 100000:
             break
         min_id = max_id
         max_id += chunk_size
-    df_vectors = pd.concat(list_df)
-    return df_vectors, term_dict
+    return term_dict

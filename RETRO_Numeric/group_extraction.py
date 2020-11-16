@@ -41,9 +41,10 @@ def get_group(name, group_type, vector_dict, extended=None, query='', export_typ
     return result
 
 
-def get_column_groups(df_vectors, graph, terms, tokenization_settings):
+def get_column_groups(df_vectors, graph, terms, conf):
     print("Column relation extraction started:")
     result = dict()
+    tokenization_settings = conf['TOKENIZATION_SETTINGS']
     # Initialize tokenization algorithms
     initialize_numeric_tokenization(df_vectors, tokenization_settings)
 
@@ -59,12 +60,12 @@ def get_column_groups(df_vectors, graph, terms, tokenization_settings):
 
             # Process numeric values
             if column_type == 'number':
-                get_numeric_column_groups(node, column_name, vec_dict_inferred, terms, tokenization_settings)
+                get_numeric_column_groups(node, column_name, vec_dict_inferred, terms, tokenization_settings, conf)
             else:  # Process string values
-                df_node = pd.read_csv('pipeline/datasets/' + str(node) + '.csv', na_filter=False)
-                new_df_node = df_node.applymap(str)
-                new_df_node = new_df_node.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
-                merging = pd.merge(new_df_node, df_vectors, how='left', left_on=column_name, right_on=df_vectors.word)
+                df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv', na_filter=False)
+                df_node = df_node.applymap(str)
+                df_node = df_node.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
+                merging = pd.merge(df_node, df_vectors, how='left', left_on=column_name, right_on=df_vectors.word)
                 merging = merging[[column_name, 'vector', 'id_vec']]
                 merging = merging.fillna('')
                 records = merging.to_records(index=False)
@@ -94,14 +95,14 @@ def initialize_numeric_tokenization(df_vectors, tokenization_strategy):
         encoder.initialize_numeric_word_embeddings(df_vectors)
 
 
-def get_numeric_column_groups(node, column_name, vec_dict, terms, tokenization_settings):
+def get_numeric_column_groups(node, column_name, vec_dict, terms, tokenization_settings, conf):
     mode = tokenization_settings["NUMERIC_TOKENIZATION"]["MODE"]
     buckets = encoder.set_buckets(tokenization_settings["NUMERIC_TOKENIZATION"]["BUCKETS"])
     normalization = encoder.set_normalization(tokenization_settings["NUMERIC_TOKENIZATION"]["NORMALIZATION"])
     standard_deviation = encoder.set_standard_deviation(tokenization_settings["NUMERIC_TOKENIZATION"]["STANDARD_DEVIATION"])
     number_dims = encoder.set_number_dims(tokenization_settings["NUMERIC_TOKENIZATION"]["NUMBER_DIMS"])
     column_encoding = encoder.needs_column_encoding(mode)
-    df_node = pd.read_csv('pipeline/datasets/' + str(node) + '.csv')
+    df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv')
 
     if encoder.needs_min_max_values(mode, buckets):
         min_value = df_node[column_name].min()
@@ -192,13 +193,13 @@ def get_numeric_column_groups(node, column_name, vec_dict, terms, tokenization_s
             vec_dict[term]['vector'] = vec
 
 
-def get_row_groups(graph):
+def get_row_groups(graph, conf):
     print("Row relation extraction started...")
     result = dict()
     for node in graph.nodes:
         columns = graph.nodes[node]['columns']
         types = graph.nodes[node]['types']
-        df_node = pd.read_csv('pipeline/datasets/' + str(node) + '.csv')
+        df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv')
         if type(columns) != list or type(types) != list:
             continue
         columns_types = zip(columns, types)
@@ -218,14 +219,14 @@ def get_row_groups(graph):
     return result
 
 
-def get_relation_groups(graph):
+def get_relation_groups(graph, conf):
     # Assumption: two tables are only direct related by one foreign key relation
     print("Table relation extraction started:")
     result = dict()
     for (node1, node2, attrs) in graph.edges.data():
         table1, table2 = node1, node2
-        df_table1 = pd.read_csv('pipeline/datasets/' + str(table1) + '.csv')
-        df_table2 = pd.read_csv('pipeline/datasets/' + str(table2) + '.csv')
+        df_table1 = pd.read_csv(conf['DATASETS_PATH'] + str(table1) + '.csv')
+        df_table2 = pd.read_csv(conf['DATASETS_PATH'] + str(table2) + '.csv')
         key_col1, key_col2 = attrs['col1'], attrs['col2']
         columns_attr1 = graph.nodes[node1]['columns']
         column_names1 = columns_attr1 if type(columns_attr1) == list else [columns_attr1]
@@ -255,7 +256,7 @@ def get_relation_groups(graph):
                     pkey_col1 = graph.nodes[node1]['pkey']
                     pkey_col2 = graph.nodes[node2]['pkey']
                     rel_tab_name = attrs['name']
-                    df_rel_tab = pd.read_csv('pipeline/datasets/' + str(rel_tab_name) + '.csv')
+                    df_rel_tab = pd.read_csv(conf['DATASETS_PATH'] + str(rel_tab_name) + '.csv')
                     merge1 = pd.merge(df_table1, df_rel_tab, left_on=pkey_col1, right_on=key_col1)
                     merging = pd.merge(merge1, df_table2, left_on=key_col2, right_on=pkey_col2)
                     # Construct complete query for reconstruction
@@ -308,7 +309,7 @@ def main(conf):
         chunk['vector'] = chunk['vector'].apply(lambda x: x.replace('[', ''))
         chunk['vector'] = chunk['vector'].apply(lambda x: x.replace(']', ''))
         list_df.append(chunk)
-        print(f'Process {counter * 50000} rows')
+        print(f'Process {counter * 50000} rows on GoogleVecs file')
         counter += 1
 
     df_vectors = pd.concat(list_df)
@@ -318,13 +319,13 @@ def main(conf):
     terms = utils.get_terms_from_vector_set(df_vectors)
 
     # Get groups of values occurring in the same column
-    groups = update_groups(groups, get_column_groups(df_vectors, graph, terms, conf['TOKENIZATION_SETTINGS']))
+    groups = update_groups(groups, get_column_groups(df_vectors, graph, terms, conf))
 
     # Get all relations between text values in two columns in the same table
-    groups = update_groups(groups, get_row_groups(graph))
+    groups = update_groups(groups, get_row_groups(graph, conf))
 
     # Get all relations in the graph
-    groups = update_groups(groups, get_relation_groups(graph))
+    groups = update_groups(groups, get_relation_groups(graph, conf))
 
     # Export groups
     print('Export groups ...')

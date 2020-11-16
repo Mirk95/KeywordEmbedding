@@ -73,7 +73,6 @@ class RETROWrapper(object):
                  beta=0.0,
                  gamma=3.0,
                  delta=3.0,
-                 max_rows=2000000,
                  tokenization='simple',
                  table_blacklist=[],
                  ):
@@ -88,7 +87,6 @@ class RETROWrapper(object):
         self.beta = beta
         self.gamma = gamma
         self.delta = delta
-        self.max_rows = max_rows
         self.tokenization = tokenization
         self.table_blacklist = table_blacklist
 
@@ -98,6 +96,7 @@ class RETROWrapper(object):
             "DATASETS_PATH": "pipeline/datasets/",
             "VECTORS_PATH": "pipeline/vectors/",
             "SCHEMAS_PATH": "pipeline/schemas/",
+            "COLUMNS_TYPE_PATH": "pipeline/columns/",
             "OUTPUT_PATH": "pipeline/output/",
             "VECTORS_LOCATION": "pipeline/vectors/GoogleNews-vectors-negative300.bin.gz",
             "WE_ORIGINAL_TABLE_NAME": "google_vecs",
@@ -114,8 +113,7 @@ class RETROWrapper(object):
             "ALPHA": self.alpha,
             "BETA": self.beta,
             "GAMMA": self.gamma,
-            "DELTA": self.delta,
-            "MAX_ROWS": self.max_rows
+            "DELTA": self.delta
         }
 
         # RETRO directory
@@ -163,6 +161,7 @@ class RETROWrapper(object):
             "DATASETS_PATH": "pipeline/datasets/",
             "VECTORS_PATH": "pipeline/vectors/",
             "SCHEMAS_PATH": "pipeline/schemas/",
+            "COLUMNS_TYPE_PATH": "pipeline/columns/",
             "OUTPUT_PATH": "pipeline/output/",
             "VECTORS_LOCATION": "pipeline/vectors/GoogleNews-vectors-negative300.bin.gz",
             "WE_ORIGINAL_TABLE_NAME": "google_vecs",
@@ -171,7 +170,7 @@ class RETROWrapper(object):
             "SCHEMA_JSON_GRAPH_PATH": "pipeline/output/schema.json",
             "GROUPS_FILE_NAME": "pipeline/output/groups.pk",
             "RETRO_VECS_FILE_NAME": "pipeline/output/retrofitted_vectors.wv",
-            "TABLE_BLACKLIST": self.table_blacklist,
+            "TABLE_BLACKLIST": ['char_name', 'movie_info', 'role_type', 'title'],
             "COLUMN_BLACKLIST": [],
             "RELATION_BLACKLIST": [],
             "ITERATIONS": self.n_iterations,
@@ -179,8 +178,7 @@ class RETROWrapper(object):
             "ALPHA": self.alpha,
             "BETA": self.beta,
             "GAMMA": self.gamma,
-            "DELTA": self.delta,
-            "MAX_ROWS": self.max_rows
+            "DELTA": self.delta
         }
 
         # RETRO directory

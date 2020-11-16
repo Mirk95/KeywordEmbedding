@@ -9,10 +9,10 @@ from itertools import combinations
 
 def get_schema(schema_dir, vectors_filename):
     """
-        :param schema_dir: path to schema directory
-        :param vectors_filename: filename with pre-trained embeddings
-        :return schema: a dictionary with pk and fk separated
-        """
+    :param schema_dir: path to schema directory
+    :param vectors_filename: filename with pre-trained embeddings
+    :return schema: a dictionary with pk and fk separated
+    """
     rels = []
     db_schema_path = schema_dir + 'db_schema.json'
     vectors_schema_path = schema_dir + vectors_filename + '_schema.json'

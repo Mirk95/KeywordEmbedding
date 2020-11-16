@@ -21,7 +21,7 @@ def prepare_emb_matrix(embeddings_file):
 
 
 mat, keys = prepare_emb_matrix('pipeline/output/retrofitted_vectors.wv')
-idx_element = keys.index("name.name#Koch_Eckehard")
+idx_element = keys.index("name.name#Bechis_Marco")
 emb = mat[idx_element]
 emb = emb.reshape(1, -1)
 distance_matrix_cosine = cosine_distances(emb, mat)
@@ -33,8 +33,8 @@ distance_matrix_cosine = distance_matrix_cosine.ravel()
 distance_matrix_euclidean = np.sum(distance_matrix_euclidean, axis=0, keepdims=True)
 distance_matrix_euclidean = distance_matrix_euclidean.ravel()
 
-indexes_cosine = distance_matrix_cosine.argsort()[:20]
-indexes_euclidean = distance_matrix_euclidean.argsort()[:20]
+indexes_cosine = distance_matrix_cosine.argsort()[:10]
+indexes_euclidean = distance_matrix_euclidean.argsort()[:10]
 
 k = np.array(keys)
 new_keys_cosine = k[indexes_cosine]

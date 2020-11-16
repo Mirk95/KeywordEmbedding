@@ -2,7 +2,6 @@
 
 import os
 import json
-import pandas as pd
 import networkx as nx
 from collections import defaultdict
 from itertools import combinations
@@ -81,20 +80,23 @@ def construct_relation_graph(schema, columns, blacklist):
     return result
 
 
-def get_all_db_columns(db_path, blacklists):
+def get_all_db_columns(columns_dir, blacklists):
     """
-    :param db_path: datasets directory path
+    :param columns_dir: path to json file with columns types
     :param blacklists: lists of tables and columns not to be considered
     :return names: dictionary with column names
     """
     responses = []
-    db_files = os.listdir(db_path)
-    for file in db_files:
-        table_name = os.path.splitext(file)[0]
-        df = pd.read_csv(db_path+file)
-        columns = df.columns
-        for column in columns:
-            responses.append([table_name, column])
+    db_columns_path = columns_dir + 'db_columns.json'
+    if os.path.isfile(db_columns_path):
+        with open(db_columns_path, 'r') as f:
+            json_data = json.load(f)
+        for table_name in json_data:
+            for column, type in json_data[table_name].items():
+                if type in ('text', 'varchar'):
+                    responses.append((table_name, column))
+    else:
+        raise ValueError(f'ERROR: Not found the db_columns.json file inside the directory {columns_dir}!')
 
     names = defaultdict(list)
     for (table, col) in responses:
@@ -108,7 +110,7 @@ def main(conf):
     schema_path = conf['SCHEMAS_PATH']
 
     # Read out data from database
-    db_columns = get_all_db_columns(conf['DATASETS_PATH'], (conf['TABLE_BLACKLIST'], conf['COLUMN_BLACKLIST']))
+    db_columns = get_all_db_columns(conf['COLUMNS_TYPE_PATH'], (conf['TABLE_BLACKLIST'], conf['COLUMN_BLACKLIST']))
 
     # Construct graph from relational data
     schema = get_schema(schema_path, conf['WE_ORIGINAL_TABLE_NAME'])

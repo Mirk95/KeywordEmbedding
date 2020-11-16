@@ -48,71 +48,71 @@ def get_column_groups(df_vectors, graph, terms, conf):
     for node in graph.nodes:
         columns_attr = graph.nodes[node]['columns']
         column_names = columns_attr if type(columns_attr) == list else [columns_attr]
-        df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv')
-        df_node = df_node[:conf['MAX_ROWS']]
+        df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv', na_filter=False)
         df_node = df_node.applymap(str)
         df_node = df_node.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         for column_name in column_names:
             print('Process %s.%s ...' % (node, column_name))
-            if df_node.dtypes[column_name] == 'object':
-                vec_dict_fit = dict()
-                vec_dict_inferred = dict()
-                merging = pd.merge(df_node, df_vectors, how='left', left_on=column_name, right_on=df_vectors.word)
-                merging = merging[[column_name, 'vector', 'id_vec']]
-                merging = merging.fillna('')
-                for (_, term, vec_bytes, vec_id) in merging.itertuples(name=None):
-                    if vec_bytes != '':
-                        vec_dict_fit[term] = dict()
-                        vec_dict_fit[term]['vector'] = vec_bytes
-                        vec_dict_fit[term]['id'] = int(vec_id)
-                    else:
-                        if term == '':
-                            continue
-                        splits = [x.replace('_', '') for x in term.split('_')]
-                        i = 1
-                        j = 0
-                        current = [terms, None, -1]
-                        vector = None
-                        last_match = (0, None, -1)
-                        count = 0
-                        while (i <= len(splits)) or (type(last_match[1]) != type(None)):
-                            sub_word = '_'.join(splits[j:i])
-                            if sub_word in current[0]:
-                                current = current[0][sub_word]
-                                if (current[1] != '') and (current[1] is not None):
-                                    last_match = (i, np.array(current[1].split(), dtype='float32'), current[2])
-                            else:
-                                if type(last_match[1]) != type(None):
-                                    if type(vector) != type(None):
-                                        if conf['TOKENIZATION'] == 'log10':
-                                            vector += last_match[1] * np.log10(last_match[2])
-                                            count += np.log10(last_match[2])
-                                        else:  # 'simple' or different
-                                            vector += last_match[1]
-                                            count += 1
-                                    else:
-                                        if conf['TOKENIZATION'] == 'log10':
-                                            vector = last_match[1] * np.log10(last_match[2])
-                                            count += np.log10(last_match[2])
-                                        else:  # 'simple' or different
-                                            vector = last_match[1]
-                                            count += 1
-                                    j = last_match[0]
-                                    i = j
-                                    last_match = (0, None, -1)
+            vec_dict_fit = dict()
+            vec_dict_inferred = dict()
+            merging = pd.merge(df_node, df_vectors, how='left', left_on=column_name, right_on=df_vectors.word)
+            merging = merging[[column_name, 'vector', 'id_vec']]
+            merging = merging.fillna('')
+            records = merging.to_records(index=False)
+            term_vecs = list(records)
+            for (term, vec_bytes, vec_id) in term_vecs:
+                if vec_bytes != '':
+                    vec_dict_fit[term] = dict()
+                    vec_dict_fit[term]['vector'] = np.array(vec_bytes.split(), dtype='float32')
+                    vec_dict_fit[term]['id'] = int(vec_id)
+                else:
+                    if term == '':
+                        continue
+                    splits = [x.replace('_', '') for x in term.split('_')]
+                    i = 1
+                    j = 0
+                    current = [terms, None, -1]
+                    vector = None
+                    last_match = (0, None, -1)
+                    count = 0
+                    while i <= len(splits) or last_match[1] is not None:
+                        sub_word = '_'.join(splits[j:i])
+                        if sub_word in current[0]:
+                            current = current[0][sub_word]
+                            if (current[1] != '') and (current[1] is not None):
+                                last_match = (i, np.array(current[1].split(), dtype='float32'), current[2])
+                        else:
+                            if last_match[1] is not None:
+                                if vector is not None:
+                                    if conf['TOKENIZATION'] == 'log10':
+                                        vector += last_match[1] * np.log10(last_match[2])
+                                        count += np.log10(last_match[2])
+                                    else:  # 'simple' or different
+                                        vector += last_match[1]
+                                        count += 1
                                 else:
-                                    j += 1
-                                    i = j
-                                current = [terms, None, -1]
-                            i += 1
-                        if type(vector) != type(None):
-                            vector /= count
-                            vec_dict_inferred[term] = dict()
-                            vec_dict_inferred[term]['vector'] = vector
-                result['%s.%s' % (node, column_name)] = [get_group('%s.%s' % (node, column_name),
-                                                                   'categorial',
-                                                                   vec_dict_fit,
-                                                                   extended=vec_dict_inferred)]
+                                    if conf['TOKENIZATION'] == 'log10':
+                                        vector = last_match[1] * np.log10(last_match[2])
+                                        count += np.log10(last_match[2])
+                                    else:  # 'simple' or different
+                                        vector = last_match[1]
+                                        count += 1
+                                j = last_match[0]
+                                i = j
+                                last_match = (0, None, -1)
+                            else:
+                                j += 1
+                                i = j
+                            current = [terms, None, -1]
+                        i += 1
+                    if vector is not None:
+                        vector /= count
+                        vec_dict_inferred[term] = dict()
+                        vec_dict_inferred[term]['vector'] = vector
+            result['%s.%s' % (node, column_name)] = [get_group('%s.%s' % (node, column_name),
+                                                               'categorial',
+                                                               vec_dict_fit,
+                                                               extended=vec_dict_inferred)]
     return result
 
 
@@ -121,8 +121,7 @@ def get_row_groups(df_vectors, graph, conf):
     result = dict()
     for node in graph.nodes:
         columns = graph.nodes[node]['columns']
-        df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv')
-        df_node = df_node[:conf['MAX_ROWS']]
+        df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv', na_filter=False)
         df_node = df_node.applymap(str)
         df_node = df_node.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         if type(columns) != list:
@@ -134,8 +133,14 @@ def get_row_groups(df_vectors, graph, conf):
             merge1 = pd.merge(df_node, df_vectors, how='inner', left_on=col1, right_on=df_vectors.word)
             merge2 = pd.merge(merge1, df_vectors, how='inner', left_on=col2, right_on=df_vectors.word)
             merging = merge2[[col1, col2, 'vector_x', 'vector_y', 'id_vec_x', 'id_vec_y']]
-            complete_query = '%s.%s,%s.%s' % (node, col1, node, col2)
-            for (_, term1, term2, vec1, vec2, id_vec1, id_vec2) in merging.itertuples(name=None):
+            merging = merging.fillna('')
+            records = merging.to_records(index=False)
+            res = list(records)
+            complete_query = {
+                "SELECT": "%s,%s" % (col1, col2),
+                "FROM": node
+            }
+            for (term1, term2, vec1, vec2, id_vec1, id_vec2) in res:
                 key = '%s~%s' % (term1, term2)
                 vec_dict[key] = dict()
                 vec_dict[key]['ids'] = [int(id_vec1), int(id_vec2)]
@@ -153,12 +158,10 @@ def get_relation_groups(df_vectors, graph, conf):
     result = dict()
     for (node1, node2, attrs) in graph.edges.data():
         table1, table2 = node1, node2
-        df_table1 = pd.read_csv(conf['DATASETS_PATH'] + str(table1) + '.csv')
-        df_table1 = df_table1[:conf['MAX_ROWS']]
+        df_table1 = pd.read_csv(conf['DATASETS_PATH'] + str(table1) + '.csv', na_filter=False)
         df_table1 = df_table1.applymap(str)
         df_table1 = df_table1.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
-        df_table2 = pd.read_csv(conf['DATASETS_PATH'] + str(table2) + '.csv')
-        df_table2 = df_table2[:conf['MAX_ROWS']]
+        df_table2 = pd.read_csv(conf['DATASETS_PATH'] + str(table2) + '.csv', na_filter=False)
         df_table2 = df_table2.applymap(str)
         df_table2 = df_table2.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         key_col1, key_col2 = attrs['col1'], attrs['col2']
@@ -194,13 +197,18 @@ def get_relation_groups(df_vectors, graph, conf):
                         merge3 = pd.merge(merge2, df_vectors, left_on=col2 + '_y', right_on=df_vectors.word)
                         merging = merge3[[col1, col2 + '_y', 'vector_x', 'vector_y', 'id_vec_x', 'id_vec_y']]
                     # Construct complete query for reconstruction
-                    complete_query = '%s.%s,%s.%s|%s,%s,%s,%s' % (
-                        table1, col1, table2, col2, table1, table2, key_col1, key_col2)
+                    complete_query = {
+                        "SELECT": "%s,%s" % (col1, col2),
+                        "FROM": table1,
+                        "JOIN": table2,
+                        "LEFT_ON": key_col1,
+                        "RIGHT_ON": key_col2
+                    }
                 else:
                     pkey_col1 = graph.nodes[node1]['pkey']
                     pkey_col2 = graph.nodes[node2]['pkey']
                     rel_tab_name = attrs['name']
-                    df_rel_tab = pd.read_csv(conf['DATASETS_PATH'] + str(rel_tab_name) + '.csv')
+                    df_rel_tab = pd.read_csv(conf['DATASETS_PATH'] + str(rel_tab_name) + '.csv', na_filter=False)
                     df_rel_tab = df_rel_tab.applymap(str)
                     df_rel_tab = df_rel_tab.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
                     merge1 = pd.merge(df_table1, df_rel_tab, left_on=pkey_col1, right_on=key_col1)
@@ -209,9 +217,17 @@ def get_relation_groups(df_vectors, graph, conf):
                     merge4 = pd.merge(merge3, df_vectors, left_on=col2, right_on=df_vectors.word)
                     merging = merge4[[col1, col2, 'vector_x', 'vector_y', 'id_vec_x', 'id_vec_y']]
                     # Construct complete query for reconstruction
-                    complete_query = '%s.%s,%s.%s|%s,%s,%s,%s|merge1,%s,%s,%s' % (
-                        table1, col1, table2, col2, table1, rel_tab_name, pkey_col1, key_col1, table2, key_col2, pkey_col2)
-                for (_, term1, term2, vec1_bytes, vec2_bytes, vec1_id, vec2_id) in merging.itertuples(name=None):
+                    complete_query = {
+                        "SELECT": "%s,%s" % (col1, col2),
+                        "FROM": table1,
+                        "JOIN": [rel_tab_name, table2],
+                        "LEFT_ON": [pkey_col1, key_col2],
+                        "RIGHT_ON": [key_col1, pkey_col2]
+                    }
+                merging = merging.fillna('')
+                records = merging.to_records(index=False)
+                res = list(records)
+                for (term1, term2, vec1_bytes, vec2_bytes, vec1_id, vec2_id) in res:
                     key = '%s~%s' % (term1, term2)
                     vec_dict[key] = dict()
                     vec_dict[key]['ids'] = [int(vec1_id), int(vec2_id)]
@@ -244,20 +260,32 @@ def main(conf):
     print('Retrieved graph data')
 
     groups = dict()
+    we_table_name_path = conf['WE_ORIGINAL_TABLE_PATH']
 
-    # get terms (like radix tree)
-    df_vectors, terms = utils.get_terms_from_vector_set(conf)
-    df_vectors['id_vec'] = range(len(df_vectors))
+    list_df = []
+    counter = 1
+    for chunk in pd.read_csv(we_table_name_path, chunksize=50000, na_filter=False):
+        chunk['vector'] = chunk['vector'].apply(lambda x: x.replace('[', ''))
+        chunk['vector'] = chunk['vector'].apply(lambda x: x.replace(']', ''))
+        list_df.append(chunk)
+        print(f'Process {counter * 50000} rows on GoogleVecs file')
+        counter += 1
 
-    # get groups of text values occurring in the same column
+    df_vectors = pd.concat(list_df)
+    df_vectors['id_vec'] = np.arange(1, len(df_vectors) + 1)
+
+    # Get terms (like radix tree)
+    terms = utils.get_terms_from_vector_set(df_vectors)
+
+    # Get groups of text values occurring in the same column
     groups = update_groups(groups, get_column_groups(df_vectors, graph, terms, conf))
 
-    # get all relations between text values in two columns in the same table
+    # Get all relations between text values in two columns in the same table
     groups = update_groups(groups, get_row_groups(df_vectors, graph, conf))
 
-    # get all relations in the graph
+    # Get all relations in the graph
     groups = update_groups(groups, get_relation_groups(df_vectors, graph, conf))
 
-    # export groups
+    # Export groups
     print('Export groups ...')
     output_groups(groups, conf['GROUPS_FILE_NAME'])

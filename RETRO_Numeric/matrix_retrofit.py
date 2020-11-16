@@ -98,14 +98,16 @@ def retrieve_relation_elements(group, conf):
 
 def fill_adjacency_matrix_relational(size, column_names, index_lookup, group, conf):
     # Retrieve all relation elements from the database
-    group_elements = retrieve_relation_elements(group, conf)
+    group_elements_df = retrieve_relation_elements(group, conf)
+    records = group_elements_df.to_records(index=False)
+    group_elements = list(records)
 
     # Construct matrix and count vector
     A = lil_matrix((size, size))
     c_out = np.zeros(size)
     c_in = np.zeros(size)
 
-    for (_, text_value1, text_value2) in group_elements.itertuples(name=None):
+    for (text_value1, text_value2) in group_elements:
         if group['data_type'][0] == 'string':
             text_value1 = utils.tokenize(text_value1)
         else:
@@ -198,7 +200,7 @@ def get_categorial_vector(v_cat, M0, presence_vector):
         return np.zeros(M0.shape[1])
 
 
-def get_v_c(A_cat,  M0, presence_vector):  # parallel version
+def get_v_c(A_cat,  M0, presence_vector):  # Parallel version
     res_cat = dict()
     for key in A_cat:
         res_cat[key] = get_categorial_vector(A_cat[key], M0, presence_vector)
@@ -380,7 +382,7 @@ def main(conf):
     term_list, M0, v_P = create_M0(all_terms, present_vectors, dim, conf)
     print('Constructed initial matrix M0 with size', M0.shape)
 
-    print('len', len(v_P.nonzero()[0]))
+    print('Len', len(v_P.nonzero()[0]))
 
     # Create adjacency matrices, weight matrices, count vectors and vector for R
     A_cat, S, c, rel_key_pairs = create_adjacency_matrices(term_list, groups_info, conf)
@@ -391,7 +393,7 @@ def main(conf):
     for key in v_c:
         print(key, np.linalg.norm(v_c[key]))
 
-    print('Created  category vectors')
+    print('Created category vectors')
     v_Q = np.ones(len(v_P))
     # Run iterative algorithm
     Mk = run_retrofitting(M0, S, v_c, c, v_Q, A_cat, rel_key_pairs, conf)
