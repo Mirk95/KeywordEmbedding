@@ -19,8 +19,12 @@ MIN_GROUP_SIZE = 2
 def get_adjacency_vector(size, group_name, index_lookup, conf):
     # Get group elements (elements of column)
     print('Get adjacency vector for group:', group_name)
+    create_new_column_index = conf['CREATE_NEW_COLUMN_INDEX']
     table_name, column_name = utils.get_column_data_from_label(group_name, 'column')
     df = pd.read_csv(conf['DATASETS_PATH'] + table_name + '.csv', na_filter=False)
+    if create_new_column_index:
+        df['index'] = range(len(df))
+        df['index'] = df['index'].apply(lambda x: 'index__' + table_name + '__' + str(x))
     res = df[column_name]
     res = res.fillna('')
     group_elements = [group_name + '#' + utils.tokenize(x) for idx, x in res.iteritems()]
@@ -36,6 +40,7 @@ def retrieve_relation_elements(group, conf):
     query = group['query']
     columns = query['SELECT'].split(',')
     table1 = query['FROM']
+    create_new_column_index = conf['CREATE_NEW_COLUMN_INDEX']
     if 'JOIN' in query:
         # Table Relation
         if not isinstance(query['JOIN'], list):
@@ -44,8 +49,14 @@ def retrieve_relation_elements(group, conf):
             left_column = query['LEFT_ON']
             right_column = query['RIGHT_ON']
             df_table1 = pd.read_csv(conf['DATASETS_PATH'] + table1 + '.csv')
+            if create_new_column_index:
+                df_table1['index'] = range(len(df_table1))
+                df_table1['index'] = df_table1['index'].apply(lambda x: 'index__' + table1 + '__' + str(x))
             columns_df_table1 = df_table1.columns.tolist()
             df_table2 = pd.read_csv(conf['DATASETS_PATH'] + table2 + '.csv')
+            if create_new_column_index:
+                df_table2['index'] = range(len(df_table2))
+                df_table2['index'] = df_table2['index'].apply(lambda x: 'index__' + table2 + '__' + str(x))
             columns_df_table2 = df_table2.columns.tolist()
             list1_as_set = set(columns_df_table1)
             intersection = list1_as_set.intersection(columns_df_table2)
@@ -68,8 +79,17 @@ def retrieve_relation_elements(group, conf):
             left_column = query['LEFT_ON']
             right_column = query['RIGHT_ON']
             df_table1 = pd.read_csv(conf['DATASETS_PATH'] + table1 + '.csv')
+            if create_new_column_index:
+                df_table1['index'] = range(len(df_table1))
+                df_table1['index'] = df_table1['index'].apply(lambda x: 'index__' + table1 + '__' + str(x))
             df_table2 = pd.read_csv(conf['DATASETS_PATH'] + table2 + '.csv')
+            if create_new_column_index:
+                df_table2['index'] = range(len(df_table2))
+                df_table2['index'] = df_table2['index'].apply(lambda x: 'index__' + table2 + '__' + str(x))
             df_table3 = pd.read_csv(conf['DATASETS_PATH'] + table3 + '.csv')
+            if create_new_column_index:
+                df_table3['index'] = range(len(df_table3))
+                df_table3['index'] = df_table3['index'].apply(lambda x: 'index__' + table3 + '__' + str(x))
             merge1 = pd.merge(df_table1, df_table2, left_on=left_column[0], right_on=right_column[0])
             merging = pd.merge(merge1, df_table3, left_on=left_column[1], right_on=right_column[1])
             group_elements = merging[columns]
@@ -78,6 +98,9 @@ def retrieve_relation_elements(group, conf):
     else:
         # Row Relation
         df_table1 = pd.read_csv(conf['DATASETS_PATH'] + table1 + '.csv')
+        if create_new_column_index:
+            df_table1['index'] = range(len(df_table1))
+            df_table1['index'] = df_table1['index'].apply(lambda x: 'index__' + table1 + '__' + str(x))
         group_elements = df_table1[columns]
         group_elements = group_elements.fillna('')
         return group_elements

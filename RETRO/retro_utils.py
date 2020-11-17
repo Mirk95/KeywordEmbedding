@@ -57,10 +57,14 @@ def tokenize(term):
 
 
 def get_terms(columns, conf):
+    create_new_column_index = conf['CREATE_NEW_COLUMN_INDEX']
     result = dict()
     for column in columns:
         table_name, column_name = column.split('.')
         df = pd.read_csv(conf['DATASETS_PATH'] + table_name + '.csv', na_filter=False)
+        if create_new_column_index:
+            df['index'] = range(len(df))
+            df['index'] = df['index'].apply(lambda x: 'index__' + table_name + '__' + str(x))
         res = df[column_name]
         res = res.fillna('')
         result[column] = [tokenize(x) for idx, x in res.iteritems()]
