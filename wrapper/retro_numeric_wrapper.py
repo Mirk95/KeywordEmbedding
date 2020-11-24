@@ -19,7 +19,7 @@ with warnings.catch_warnings():
 OUTPUT_FORMAT = '# {:.<60} {}'
 
 
-def download_file(url: str, vectors_path: str):
+def download_file(url, vectors_path):
     print(f"Beginning {vectors_path} file download...")
     resp = requests.get(url, stream=True)
     total = int(resp.headers.get('content-length', 0))
@@ -99,14 +99,14 @@ class RETRONumericWrapper(object):
             "VECTORS_PATH": "pipeline/vectors/",
             "SCHEMAS_PATH": "pipeline/schemas/",
             "COLUMNS_TYPE_PATH": "pipeline/columns/",
-            "OUTPUT_PATH": "pipeline/output/",
+            "OUTPUT_PATH": "pipeline/output_retro_numeric/",
             "VECTORS_LOCATION": "pipeline/vectors/GoogleNews-vectors-negative300.bin.gz",
             "WE_ORIGINAL_TABLE_NAME": "google_vecs",
             "WE_ORIGINAL_TABLE_PATH": "pipeline/vectors/google_vecs.csv",
-            "SCHEMA_GRAPH_PATH": "pipeline/output/schema.gml",
-            "SCHEMA_JSON_GRAPH_PATH": "pipeline/output/schema.json",
-            "GROUPS_FILE_NAME": "pipeline/output/groups.pk",
-            "RETRO_VECS_FILE_NAME": "pipeline/output/retrofitted_vectors.wv",
+            "SCHEMA_GRAPH_PATH": "pipeline/output_retro_numeric/schema.gml",
+            "SCHEMA_JSON_GRAPH_PATH": "pipeline/output_retro_numeric/schema.json",
+            "GROUPS_FILE_NAME": "pipeline/output_retro_numeric/groups.pk",
+            "RETRO_VECS_FILE_NAME": "pipeline/output_retro_numeric/retrofitted_vectors.wv",
             "TABLE_BLACKLIST": self.table_blacklist,
             "COLUMN_BLACKLIST": [],
             "RELATION_BLACKLIST": [],
@@ -181,15 +181,15 @@ class RETRONumericWrapper(object):
             "VECTORS_PATH": "pipeline/vectors/",
             "SCHEMAS_PATH": "pipeline/schemas/",
             "COLUMNS_TYPE_PATH": "pipeline/columns/",
-            "OUTPUT_PATH": "pipeline/output/",
+            "OUTPUT_PATH": "pipeline/output_retro_numeric/",
             "VECTORS_LOCATION": "pipeline/vectors/GoogleNews-vectors-negative300.bin.gz",
             "WE_ORIGINAL_TABLE_NAME": "google_vecs",
             "WE_ORIGINAL_TABLE_PATH": "pipeline/vectors/google_vecs.csv",
-            "SCHEMA_GRAPH_PATH": "pipeline/output/schema.gml",
-            "SCHEMA_JSON_GRAPH_PATH": "pipeline/output/schema.json",
-            "GROUPS_FILE_NAME": "pipeline/output/groups.pk",
-            "RETRO_VECS_FILE_NAME": "pipeline/output/retrofitted_vectors.wv",
-            "TABLE_BLACKLIST": ['char_name', 'movie_info', 'role_type', 'title'],
+            "SCHEMA_GRAPH_PATH": "pipeline/output_retro_numeric/schema.gml",
+            "SCHEMA_JSON_GRAPH_PATH": "pipeline/output_retro_numeric/schema.json",
+            "GROUPS_FILE_NAME": "pipeline/output_retro_numeric/groups.pk",
+            "RETRO_VECS_FILE_NAME": "pipeline/output_retro_numeric/retrofitted_vectors.wv",
+            "TABLE_BLACKLIST": self.table_blacklist,
             "COLUMN_BLACKLIST": [],
             "RELATION_BLACKLIST": [],
             "M0_ZERO_COLUMNS": [],

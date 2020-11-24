@@ -1,0 +1,30 @@
+{
+    "directed": true,
+    "multigraph": true,
+    "graph": {},
+    "nodes": [
+        {
+            "columns": [
+                "name",
+                "imdb_index",
+                "name_pcode_nf",
+                "surname_pcode",
+                "id",
+                "imdb_id",
+                "__search_id"
+            ],
+            "types": [
+                "string",
+                "string",
+                "string",
+                "string",
+                "number",
+                "number",
+                "number"
+            ],
+            "pkey": "id",
+            "id": "char_name"
+        }
+    ],
+    "links": []
+}

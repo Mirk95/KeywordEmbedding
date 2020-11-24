@@ -7,13 +7,9 @@ from scipy.sparse import csr_matrix
 from scipy.sparse import lil_matrix
 from sklearn import preprocessing
 from os import linesep
-from threading import Thread
-from threading import Lock
-import multiprocessing
 
 import RETRO_Numeric.retro_utils as utils
 
-NUM_THREADS = max(2, multiprocessing.cpu_count()-2)
 MIN_GROUP_SIZE = 2
 
 
@@ -25,7 +21,8 @@ def get_adjacency_vector(size, group_name, index_lookup, data_type, conf):
     # Retrieve all elements from the column
     res = df[column_name]
     if data_type == 'string':
-        res = res.replace({np.nan: None, 'nan': None})
+        res = res.replace(np.nan, None)
+        res = res.replace('nan', None)
     else:
         res = res.fillna('')
     group_elements = []
@@ -207,7 +204,7 @@ def get_v_c(A_cat,  M0, presence_vector):  # Parallel version
     return res_cat
 
 
-def calculate_Madd_rel(S, key, inv_key, c_inv, M_last, M_sum, v_denominator, conf, M_sum_lock, v_denominator_lock):
+def calculate_Madd_rel(S, key, inv_key, c_inv, M_last, M_sum, v_denominator, conf):
     GAMMA = conf['GAMMA']
     DELTA = conf['DELTA']
     start = time.time()
@@ -247,27 +244,19 @@ def calculate_Madd_rel(S, key, inv_key, c_inv, M_last, M_sum, v_denominator, con
         max_cardinality * max_c_inv**-1)) * DELTA * 2
     denum_sum = np.array(np.sum(S[inv_key].T.multiply(c_inv), axis=1)).T[0] * GAMMA + GAMMA * sources_one_hot * c_inv - 2 * DELTA * (
         num_targets - gamma_i_inv) / (max_cardinality * max_c_inv**-1) * sources_one_hot  # add to denominator
-    M_sum_lock.acquire()
     M_sum += (M_inc - M_dec)
-    M_sum_lock.release()
-    v_denominator_lock.acquire()
     v_denominator += denum_sum
-    v_denominator_lock.release()
     end = time.time()
     print('Calculation for relation', key, 'done', 'time:', end - start)
     return
 
 
-def calculate_Madd_cat(A_cat, key, Mc, M_sum, v_denominator, v_c, conf, M_sum_lock, v_denominator_lock):
+def calculate_Madd_cat(A_cat, key, Mc, M_sum, v_denominator, v_c, conf):
     BETA = conf['BETA']
     start = time.time()
     centroid = v_c[key]
-    M_sum_lock.acquire()
     M_sum += np.array([Mc.diagonal() * A_cat[key]]).T * centroid * BETA
-    M_sum_lock.release()
-    v_denominator_lock.acquire()
     v_denominator += Mc.diagonal() * A_cat[key] * BETA
-    v_denominator_lock.release()
     end = time.time()
     print('Calculation for categorial relation', key, 'done', 'time:', end - start)
     return
@@ -278,24 +267,11 @@ def calculate_Mk(M0, M_last, Mc, c_inv, S, v_c, v_P, A_cat, invert_rel, conf):
     M_sum = np.zeros(M0.shape)
     v_denominator = np.zeros(M0.shape[0], dtype='float32')
     M_sum += M0 * np.array([v_P]).T * ALPHA
-    threads = []
-    executer_threads = []
-    M_sum_lock = Lock()
-    v_denominator_lock = Lock()
 
     for key in A_cat:
-        threads.append(Thread(target=calculate_Madd_cat, args=(
-            A_cat, key, Mc, M_sum, v_denominator, v_c, conf, M_sum_lock, v_denominator_lock)))
+        calculate_Madd_cat(A_cat, key, Mc, M_sum, v_denominator, v_c, conf)
     for key in S:
-        threads.append(Thread(target=calculate_Madd_rel, args=(
-            S, key, invert_rel[key], c_inv, M_last, M_sum, v_denominator, conf, M_sum_lock, v_denominator_lock)))
-    for i in range(NUM_THREADS):
-        executer_threads.append(Thread(target=utils.execute_threads_from_pool, args=(threads,),
-                                       kwargs={'verbose': False}))
-    for thread in executer_threads:
-        thread.start()
-    for thread in executer_threads:
-        thread.join()
+        calculate_Madd_rel(S, key, invert_rel[key], c_inv, M_last, M_sum, v_denominator, conf)
 
     result = M_sum / ((v_P * ALPHA + v_denominator)[:, None])
     print('Delta:', sum(np.linalg.norm(result - M_last, ord=1, axis=1)))
