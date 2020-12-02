@@ -287,6 +287,7 @@ class EmbDIWrapper(object):
 
         # rename edge list idx name
         update_edgelist(name, edgelist, pref='idx__')
+        update_edgelist(name, edgelist, pref='cid__')
 
         # preprocess compression
         if configuration['compression']:  # Execute compression if required.
@@ -294,6 +295,7 @@ class EmbDIWrapper(object):
             el = df.values.tolist()
 
             update_edgelist(name, el, pref='idx__')
+            update_edgelist(name, el, pref='cid__')
 
         else:
             dictionary = None
@@ -408,6 +410,7 @@ class EmbDIWrapper(object):
 
             # rename edge list idx name
             update_edgelist(filename, edgelist, pref='idx__')
+            update_edgelist(filename, edgelist, pref='cid__')
 
             # add edge list to db_edgelist
             db_edgelist += edgelist
@@ -641,6 +644,7 @@ if __name__ == '__main__':
         # Update edgelist idx
         print('Update Edge List')
         update_edgelist(filename, el, pref='idx__')
+        update_edgelist(filename, el, pref='cid__')
 
         # Save Edge List
         print('Save Edge List')
