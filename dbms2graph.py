@@ -15,27 +15,26 @@ def get_arguments():
     return args
 
 
-def create_graph_from_dataset(file):
-    g = nx.read_adjlist(file, delimiter=',', create_using=nx.DiGraph())
-    nx.draw(g, with_labels=True)
-    plt.savefig('plotgraph.png', dpi=300, bbox_inches='tight')
-    plt.show()
+def create_graph(input_dir):
+    if not os.path.isdir(input_dir):
+        raise ValueError('Input dir does not exists: {}'.format(input_dir))
 
+    # Extract dataset name
+    dir_name = os.path.normpath(input_dir)
+    dir_name = dir_name.split(os.sep)[-1]
 
-def create_graph_from_dbms(input_dir):
-    pass
+    # Get list of table name
+    file_list = [f for f in os.listdir(input_dir) if f.endswith('.csv')]
+    file_names = [f.split('.')[0] for f in file_list]
+    G = nx.Graph()
+    G.add_nodes_from(file_names)
+    return G
 
 
 if __name__ == '__main__':
     # Check pipeline directory
     assert os.path.isdir('pipeline'), 'Pipeline directory does not exist'
     args = get_arguments()
-
-    if os.path.isdir(args.file):
-        # Generate dbms graph
-        print('Start creation dbms graph')
-        create_graph_from_dbms(args.file)
-    else:
-        # Read input dataset
-        input_file = args.file
-        create_graph_from_dataset(input_file)
+    # Generate dbms graph
+    print('Start creation dbms graph')
+    graph = create_graph(args.file)
