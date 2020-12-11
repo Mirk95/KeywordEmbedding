@@ -41,15 +41,15 @@ def nodes_and_edges_from_df_extraction(table_name, dataframe, G, labels):
     for idx, row in dataframe.iterrows():
         node_name = table_name + '__' + str(idx)
         G.add_node(node_name)
-        row_dict = row.to_dict()
-        values = [str(table_name) + '.' + str(key) + '#' + str(row_dict[key])[:20]
-                  for key in row_dict.keys() if row_dict[key] != '']
-        columns = ['val->' + col for col in row_dict.keys() if row_dict[col] != '']
-        G.add_nodes_from(values)
-        combinations_edges = [(node_name, i) for i in values]
-        G.add_edges_from(combinations_edges)
-        labels_row = dict(zip(combinations_edges, columns))
-        labels.update(labels_row)
+        # row_dict = row.to_dict()
+        # values = [str(table_name) + '.' + str(key) + '#' + str(row_dict[key])[:20]
+        #           for key in row_dict.keys() if row_dict[key] != '']
+        # columns = ['val->' + col for col in row_dict.keys() if row_dict[col] != '']
+        # G.add_nodes_from(values)
+        # combinations_edges = [(node_name, i) for i in values]
+        # G.add_edges_from(combinations_edges)
+        # labels_row = dict(zip(combinations_edges, columns))
+        # labels.update(labels_row)
 
 
 def foreign_keys_extraction(input_dir, table_name, table_schema, G, labels, with_tokenization):
@@ -60,8 +60,10 @@ def foreign_keys_extraction(input_dir, table_name, table_schema, G, labels, with
             foreign_column_name = relation['foreign_column_name']
             df1 = pd.read_csv(input_dir + table_name + '.csv', na_filter=False)
             df1 = df1[:50]
+            df1['index'] = range(len(df1))
             df2 = pd.read_csv(input_dir + foreign_table_name + '.csv', na_filter=False)
             df2 = df2[:50]
+            df2['index'] = range(len(df2))
             if with_tokenization:
                 df1 = tokenize_dataset(df1, stem=True)
                 df2 = tokenize_dataset(df2, stem=True)
@@ -69,12 +71,14 @@ def foreign_keys_extraction(input_dir, table_name, table_schema, G, labels, with
             df2 = df2.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
             df1 = df1.astype(str)
             df2 = df2.astype(str)
-            column_names1 = df1.columns.tolist()
-            column_names2 = df2.columns.tolist()
-            list1_as_set = set(column_names1)
-            intersection = list1_as_set.intersection(column_names2)
-            intersection_as_list = list(intersection)
+            # column_names1 = df1.columns.tolist()
+            # column_names2 = df2.columns.tolist()
+            # list1_as_set = set(column_names1)
+            # intersection = list1_as_set.intersection(column_names2)
+            # intersection_as_list = list(intersection)
             result = pd.merge(df1, df2, left_on=column_name, right_on=foreign_column_name)
+            result = result[['index_x', 'index_y']]
+            """
             if (column_name in intersection_as_list) and (foreign_column_name in intersection_as_list):
                 result = result[[column_name + '_x', foreign_column_name + '_y']]
             elif (column_name not in intersection_as_list) and (foreign_column_name not in intersection_as_list):
@@ -83,16 +87,20 @@ def foreign_keys_extraction(input_dir, table_name, table_schema, G, labels, with
                 result = result[[column_name + '_x', foreign_column_name]]
             else:
                 result = result[[column_name, foreign_column_name + '_y']]
+            """
             if not result.empty:
                 result = result.drop_duplicates()
                 for _, row in result.iterrows():
-                    first_node = table_name + '.' + column_name + '#' + str(row[0])
-                    second_node = foreign_table_name + '.' + foreign_column_name + '#' + str(row[1])
+                    # first_node = table_name + '.' + column_name + '#' + str(row[0])
+                    # second_node = foreign_table_name + '.' + foreign_column_name + '#' + str(row[1])
+                    first_node = table_name + '__' + str(row[0])
+                    second_node = foreign_table_name + '__' + str(row[1])
                     if G.has_edge(first_node, second_node) or G.has_edge(second_node, first_node):
                         pass
                     else:
                         G.add_edge(first_node, second_node)
-                        new_label = {(first_node, second_node): 'FK'}
+                        new_label = {(first_node, second_node): 'FK: ' + table_name + '.' + column_name +
+                                                                '-->' + foreign_table_name + '.' + foreign_column_name}
                         labels.update(new_label)
 
 
@@ -128,9 +136,9 @@ def create_graph(input_dir, with_tokenization=False):
     labels_value.update(labels_fk)
     pos = nx.spring_layout(G)
     deg = dict(G.degree)
-    nx.draw(G, pos, node_size=[v * 5 for v in deg.values()], with_labels=False)
+    nx.draw(G, pos, node_size=[v * 5 for v in deg.values()], with_labels=True)
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels_fk, font_size=8)
-    plt.savefig('graph.png', dpi=300, bbox_inches='tight')
+    plt.savefig('graph.png')
     plt.show()
     return G
 
