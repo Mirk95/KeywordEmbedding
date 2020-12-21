@@ -6,7 +6,6 @@ import pandas as pd
 from scipy.sparse import csr_matrix
 from scipy.sparse import lil_matrix
 from sklearn import preprocessing
-from os import linesep
 
 import RETRO_Numeric.retro_utils as utils
 
@@ -33,7 +32,11 @@ def get_adjacency_vector(size, group_name, index_lookup, data_type, conf):
             else:
                 continue
         else:
-            group_elements.append(group_name + '#' + utils.tokenize(x))
+            # Modified the following rows to support multi-words per token
+            tokenize_x = utils.tokenize(x)
+            for val in tokenize_x.split('_'):
+                group_elements.append(group_name + '#' + val)
+            # group_elements.append(group_name + '#' + utils.tokenize(x))
     # Construct vector
     vector = np.zeros(size)
     for element in group_elements:
@@ -119,12 +122,19 @@ def fill_adjacency_matrix_relational(size, column_names, index_lookup, group, co
                 text_value2 = str(int(text_value2))
             else:
                 text_value2 = 'None'
-        i = index_lookup[utils.get_label(column_names[0], text_value1)]
-        j = index_lookup[utils.get_label(column_names[1], text_value2)]
-        A[i, j] = 1
-        c_out[i] = 1
-        c_in[j] = 1
-
+        # Modified the following rows to support multi-words per token
+        for val1 in text_value1.split('_'):
+            for val2 in text_value2.split('_'):
+                i = index_lookup[utils.get_label(column_names[0], val1)]
+                j = index_lookup[utils.get_label(column_names[1], val2)]
+                A[i, j] = 1
+                c_out[i] = 1
+                c_in[j] = 1
+        # i = index_lookup[utils.get_label(column_names[0], text_value1)]
+        # j = index_lookup[utils.get_label(column_names[1], text_value2)]
+        # A[i, j] = 1
+        # c_out[i] = 1
+        # c_in[j] = 1
     return csr_matrix(A), (c_in + c_out)
 
 
@@ -308,40 +318,6 @@ def run_retrofitting(M0, S, v_c, c, v_P, A_cat, rel_key_pairs, conf):
     return Mk
 
 
-def output_vectors(term_list, Mk, output_file_name, with_zero_vectors=True):
-    # Init output file
-    f_out = open(output_file_name, 'w')
-    if with_zero_vectors:
-        # Write meta information
-        f_out.write('%d %d' % (Mk.shape[0], Mk.shape[1]) + linesep)
-        # Write term vector pairs
-        for i, term in enumerate(term_list):
-            if i % 1000 == 0:
-                print('Exported', i, 'term vectors | Current term:', term)
-            f_out.write('%s %s' % (term, ' '.join([str(x) for x in Mk[i]])))
-            f_out.write(linesep)
-    else:
-        counter = 0
-        for i, term in enumerate(term_list):
-            is_all_zero = np.all((Mk[i] == 0))
-            if not is_all_zero:
-                counter += 1
-
-        # Init output file
-        f_out = open(output_file_name, 'w')
-        # Write meta information
-        f_out.write('%d %d' % (counter, Mk.shape[1]) + linesep)
-        # Write term vector pairs
-        for i, term in enumerate(term_list):
-            is_all_zero = np.all((Mk[i] == 0))
-            if not is_all_zero:
-                print('Exported', i, 'term vectors | Current term:', term)
-                f_out.write('%s %s' % (term, ' '.join([str(x) for x in Mk[i]])))
-                f_out.write(linesep)
-    f_out.close()
-    return
-
-
 def main(conf):
     # Get group information
     groups_info = utils.parse_groups(conf['GROUPS_FILE_NAME'])
@@ -375,8 +351,4 @@ def main(conf):
     Mk = run_retrofitting(M0, S, v_c, c, v_Q, A_cat, rel_key_pairs, conf)
     print('Retrofitting done, start to generate vectors file ...')
 
-    # Output result to file
-    output_vectors(term_list, Mk, conf['RETRO_VECS_FILE_NAME'], with_zero_vectors=True)
-    print('Exported vectors')
-
-    return
+    return term_list, Mk

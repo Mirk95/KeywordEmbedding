@@ -59,10 +59,10 @@ def foreign_keys_extraction(input_dir, table_name, table_schema, G, labels, with
             foreign_table_name = relation['foreign_table_name']
             foreign_column_name = relation['foreign_column_name']
             df1 = pd.read_csv(input_dir + table_name + '.csv', na_filter=False)
-            df1 = df1[:50]
+            df1 = df1[:200]
             df1['index'] = range(len(df1))
             df2 = pd.read_csv(input_dir + foreign_table_name + '.csv', na_filter=False)
-            df2 = df2[:50]
+            df2 = df2[:200]
             df2['index'] = range(len(df2))
             if with_tokenization:
                 df1 = tokenize_dataset(df1, stem=True)
@@ -118,7 +118,7 @@ def create_graph(input_dir, with_tokenization=False):
         # Read dataset
         print('Filename: {}'.format(filename))
         df = pd.read_csv(os.path.join(input_dir, filename), na_filter=False)
-        df = df[:50]
+        df = df[:200]
         # Tokenize dataset
         print('Start tokenization')
         if with_tokenization:

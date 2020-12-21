@@ -7,6 +7,7 @@
             "columns": [
                 "name",
                 "imdb_index",
+                "name_pcode_cf",
                 "name_pcode_nf",
                 "surname_pcode",
                 "id",
@@ -18,12 +19,13 @@
                 "string",
                 "string",
                 "string",
+                "string",
                 "number",
                 "number",
                 "number"
             ],
             "pkey": "id",
-            "id": "char_name"
+            "id": "name"
         }
     ],
     "links": []

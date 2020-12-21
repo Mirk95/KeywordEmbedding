@@ -472,7 +472,7 @@ class EmbDIWrapper(object):
         print('1. pipeline/walks/' + configuration['output_file'] + '.walks')
         print('2. pipeline/embeddings/' + configuration['output_file'] + '.emb')
 
-    def load_emebedding(self, embedding_file):
+    def load_embedding(self, embedding_file):
         self.mat, self.keys = prepare_emb_matrix(embedding_file)
 
     def preprocess_sentence(self, sentence):

@@ -1,5 +1,4 @@
 import string
-import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 
@@ -57,13 +56,13 @@ def tokenize_sentence(sentence, stem=True):
 
 
 def tokenize_dataset(df, stem=False):
-    '''
+    """
     Dataset tokenization:
     - lowercase
     - space separation between tokens
-    - remove puntuation
+    - remove punctuation
     - (optional) stemming
-    '''
+    """
     # df = pd.read_csv(input_file)
     # Remove the Dataframe columns containing all Nan values
     df = df.dropna(how='all', axis=1)

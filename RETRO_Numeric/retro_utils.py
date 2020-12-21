@@ -51,6 +51,7 @@ def get_label(x, y): return '%s#%s' % (x, y)
 
 def tokenize(term):
     if type(term) == str:
+        term = term.lower()
         return re.sub('[\.#~\s,\(\)/\[\]:]+', '_', str(term))
     else:
         return ''
@@ -69,6 +70,15 @@ def get_terms(columns, conf):
             res = res.replace('nan', '')
             res = res.replace(np.nan, '')
             result[column] = [tokenize(x) for idx, x in res.iteritems()]
+        # Added the following rows to support multi-words per token
+        prev_unstack = []
+        for val in result[column]:
+            if val is None:
+                prev_unstack += [None]
+            else:
+                prev_unstack += val.split('_')
+
+        result[column] = prev_unstack
         result[column] = list(set(result[column]))  # Remove duplicates
     return result
 

@@ -71,16 +71,28 @@ def get_column_groups(df_vectors, graph, terms, conf):
                 records = merging.to_records(index=False)
                 term_vecs = list(records)
                 for (term, vec_bytes, vec_id) in term_vecs:
-                    inferred, vector = encoder.text_to_vec(term, vec_bytes, terms, tokenization_settings)
-                    if inferred:
-                        if vector is None:
-                            continue
-                        vec_dict_inferred[term] = dict()
-                        vec_dict_inferred[term]['vector'] = vector
-                    else:
-                        vec_dict_fit[term] = dict()
-                        vec_dict_fit[term]['vector'] = np.array(vector.split(), dtype='float32')
-                        vec_dict_fit[term]['id'] = int(vec_id)
+                    # Modified the following rows to support multi-words per token
+                    for val in term.split('_'):
+                        inferred, vector = encoder.text_to_vec(val, vec_bytes, terms, tokenization_settings)
+                        if inferred:
+                            if vector is None:
+                                continue
+                            vec_dict_inferred[val] = dict()
+                            vec_dict_inferred[val]['vector'] = vector
+                        else:
+                            vec_dict_fit[val] = dict()
+                            vec_dict_fit[val]['vector'] = np.array(vector.split(), dtype='float32')
+                            vec_dict_fit[val]['id'] = int(vec_id)
+                    # inferred, vector = encoder.text_to_vec(term, vec_bytes, terms, tokenization_settings)
+                    # if inferred:
+                    #     if vector is None:
+                    #         continue
+                    #     vec_dict_inferred[term] = dict()
+                    #     vec_dict_inferred[term]['vector'] = vector
+                    # else:
+                    #     vec_dict_fit[term] = dict()
+                    #     vec_dict_fit[term]['vector'] = np.array(vector.split(), dtype='float32')
+                    #     vec_dict_fit[term]['id'] = int(vec_id)
 
             result['%s.%s' % (node, column_name)] = [get_group('%s.%s' % (node, column_name),
                                                                'categorial',
@@ -311,6 +323,8 @@ def main(conf):
         list_df.append(chunk)
         print(f'Process {counter * 50000} rows on GoogleVecs file')
         counter += 1
+        if counter == 10:
+            break
 
     df_vectors = pd.concat(list_df)
     df_vectors['id_vec'] = np.arange(1, len(df_vectors) + 1)
