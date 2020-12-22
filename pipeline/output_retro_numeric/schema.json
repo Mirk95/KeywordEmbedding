@@ -5,6 +5,72 @@
     "nodes": [
         {
             "columns": [
+                "note",
+                "id",
+                "person_id",
+                "movie_id",
+                "person_role_id",
+                "nr_order",
+                "role_id",
+                "__search_id"
+            ],
+            "types": [
+                "string",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number"
+            ],
+            "pkey": "id",
+            "id": "cast_info"
+        },
+        {
+            "columns": [
+                "name",
+                "imdb_index",
+                "name_pcode_nf",
+                "surname_pcode",
+                "id",
+                "imdb_id",
+                "__search_id"
+            ],
+            "types": [
+                "string",
+                "string",
+                "string",
+                "string",
+                "number",
+                "number",
+                "number"
+            ],
+            "pkey": "id",
+            "id": "char_name"
+        },
+        {
+            "columns": [
+                "info",
+                "note",
+                "id",
+                "movie_id",
+                "info_type_id",
+                "__search_id"
+            ],
+            "types": [
+                "string",
+                "string",
+                "number",
+                "number",
+                "number",
+                "number"
+            ],
+            "pkey": "id",
+            "id": "movie_info"
+        },
+        {
+            "columns": [
                 "name",
                 "imdb_index",
                 "name_pcode_cf",
@@ -26,7 +92,142 @@
             ],
             "pkey": "id",
             "id": "name"
+        },
+        {
+            "columns": [
+                "role",
+                "id",
+                "__search_id"
+            ],
+            "types": [
+                "string",
+                "number",
+                "number"
+            ],
+            "pkey": "id",
+            "id": "role_type"
+        },
+        {
+            "columns": [
+                "title",
+                "imdb_index",
+                "phonetic_code",
+                "series_years",
+                "id",
+                "kind_id",
+                "production_year",
+                "imdb_id",
+                "episode_of_id",
+                "season_nr",
+                "episode_nr",
+                "__search_id"
+            ],
+            "types": [
+                "string",
+                "string",
+                "string",
+                "string",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number"
+            ],
+            "pkey": "id",
+            "id": "title"
         }
     ],
-    "links": []
+    "links": [
+        {
+            "col1": "movie_id",
+            "col2": "id",
+            "name": "-",
+            "source": "cast_info",
+            "target": "title",
+            "key": 0
+        },
+        {
+            "col1": "movie_id",
+            "col2": "id",
+            "name": "-",
+            "source": "cast_info",
+            "target": "title",
+            "key": 1
+        },
+        {
+            "col1": "movie_id",
+            "col2": "id",
+            "name": "-",
+            "source": "cast_info",
+            "target": "title",
+            "key": 2
+        },
+        {
+            "col1": "movie_id",
+            "col2": "id",
+            "name": "-",
+            "source": "cast_info",
+            "target": "title",
+            "key": 3
+        },
+        {
+            "col1": "person_id",
+            "col2": "id",
+            "name": "-",
+            "source": "cast_info",
+            "target": "name",
+            "key": 0
+        },
+        {
+            "col1": "person_role_id",
+            "col2": "id",
+            "name": "-",
+            "source": "cast_info",
+            "target": "char_name",
+            "key": 0
+        },
+        {
+            "col1": "role_id",
+            "col2": "id",
+            "name": "-",
+            "source": "cast_info",
+            "target": "role_type",
+            "key": 0
+        },
+        {
+            "col1": "movie_id",
+            "col2": "id",
+            "name": "-",
+            "source": "movie_info",
+            "target": "title",
+            "key": 0
+        },
+        {
+            "col1": "movie_id",
+            "col2": "id",
+            "name": "-",
+            "source": "movie_info",
+            "target": "title",
+            "key": 1
+        },
+        {
+            "col1": "movie_id",
+            "col2": "id",
+            "name": "-",
+            "source": "movie_info",
+            "target": "title",
+            "key": 2
+        },
+        {
+            "col1": "movie_id",
+            "col2": "id",
+            "name": "-",
+            "source": "movie_info",
+            "target": "title",
+            "key": 3
+        }
+    ]
 }

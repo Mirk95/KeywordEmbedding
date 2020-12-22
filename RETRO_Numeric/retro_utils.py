@@ -147,8 +147,6 @@ def get_terms_from_vector_set(df_vectors):
                 i += 1
             current[1] = vector
             current[2] = freq
-        if max_id >= 100000:
-            break
         min_id = max_id
         max_id += chunk_size
     return term_dict

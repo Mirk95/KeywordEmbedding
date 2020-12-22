@@ -323,8 +323,6 @@ def main(conf):
         list_df.append(chunk)
         print(f'Process {counter * 50000} rows on GoogleVecs file')
         counter += 1
-        if counter == 10:
-            break
 
     df_vectors = pd.concat(list_df)
     df_vectors['id_vec'] = np.arange(1, len(df_vectors) + 1)

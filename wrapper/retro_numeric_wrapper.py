@@ -107,11 +107,11 @@ def transform_keys_embeddings(keys):
     return new_keys
 
 
-def output_vectors(term_list, Mk, config, with_zero_vectors=True):
-    keys, matrix = create_idx_embeddings(term_list, Mk, config['DATASETS_PATH'])
+def output_vectors(term_list, Mk, output_file, datasets_path, with_zero_vectors=True):
+    keys, matrix = create_idx_embeddings(term_list, Mk, datasets_path)
     keys_transformed = transform_keys_embeddings(keys)
     # Init output file
-    f_out = open(config['RETRO_VECS_FILE_NAME'], 'w')
+    f_out = open(output_file, 'w')
     if with_zero_vectors:
         # Write meta information
         f_out.write('%d %d' % (matrix.shape[0], matrix.shape[1]) + linesep)
@@ -129,7 +129,7 @@ def output_vectors(term_list, Mk, config, with_zero_vectors=True):
                 counter += 1
 
         # Init output file
-        f_out = open(config['RETRO_VECS_FILE_NAME'], 'w')
+        f_out = open(output_file, 'w')
         # Write meta information
         f_out.write('%d %d' % (counter, matrix.shape[1]) + linesep)
         # Write term vector pairs
@@ -188,21 +188,20 @@ class RETRONumericWrapper(object):
         # Preprocessing data values
         self.with_tokenization = with_tokenization
 
-    def fit(self):
+    def fit(self, input_file):
         # Configuration dictionary
         configuration = {
             "DATASETS_PATH": "pipeline/datasets/",
             "VECTORS_PATH": "pipeline/vectors/",
             "SCHEMAS_PATH": "pipeline/schemas/",
             "COLUMNS_TYPE_PATH": "pipeline/columns/",
-            "OUTPUT_PATH": "pipeline/output_retro_numeric/",
+            "OUTPUT_PATH": "pipeline/embeddings/",
             "VECTORS_LOCATION": "pipeline/vectors/GoogleNews-vectors-negative300.bin.gz",
             "WE_ORIGINAL_TABLE_NAME": "google_vecs",
             "WE_ORIGINAL_TABLE_PATH": "pipeline/vectors/google_vecs.csv",
-            "SCHEMA_GRAPH_PATH": "pipeline/output_retro_numeric/schema.gml",
-            "SCHEMA_JSON_GRAPH_PATH": "pipeline/output_retro_numeric/schema.json",
-            "GROUPS_FILE_NAME": "pipeline/output_retro_numeric/groups.pk",
-            "RETRO_VECS_FILE_NAME": "pipeline/output_retro_numeric/retrofitted_vectors.wv",
+            "SCHEMA_GRAPH_PATH": "pipeline/embeddings/schema.gml",
+            "SCHEMA_JSON_GRAPH_PATH": "pipeline/embeddings/schema.json",
+            "GROUPS_FILE_NAME": "pipeline/embeddings/groups.pk",
             "TABLE_BLACKLIST": self.table_blacklist,
             "COLUMN_BLACKLIST": [],
             "RELATION_BLACKLIST": [],
@@ -250,7 +249,8 @@ class RETRONumericWrapper(object):
         term_list, Mk = retrofit(configuration)
 
         # Output result to file
-        output_vectors(term_list, Mk, configuration, with_zero_vectors=True)
+        output_filename = configuration['OUTPUT_PATH'] + 'retro__' + input_file + '.emb'
+        output_vectors(term_list, Mk, output_filename, configuration['DATASETS_PATH'], with_zero_vectors=True)
         print('Exported vectors')
 
         print("Finished retrofitting for:")
@@ -260,7 +260,12 @@ class RETRONumericWrapper(object):
         print("\t NUMBER DIMS: ", configuration['TOKENIZATION_SETTINGS']['NUMERIC_TOKENIZATION']['NUMBER_DIMS'])
         print("DELTA: ", configuration['DELTA'])
 
-        self.mat, self.keys = prepare_emb_matrix(configuration['RETRO_VECS_FILE_NAME'])
+        self.mat, self.keys = prepare_emb_matrix(output_filename)
+
+        # Remove Schema Graphs and Groups file, to free some memory...
+        del configuration['SCHEMA_GRAPH_PATH']
+        del configuration['SCHEMA_JSON_GRAPH_PATH']
+        del configuration['GROUPS_FILE_NAME']
 
         t_end = datetime.datetime.now()
         print(OUTPUT_FORMAT.format('Ending run.', t_end))
@@ -281,14 +286,13 @@ class RETRONumericWrapper(object):
             "VECTORS_PATH": "pipeline/vectors/",
             "SCHEMAS_PATH": "pipeline/schemas/",
             "COLUMNS_TYPE_PATH": "pipeline/columns/",
-            "OUTPUT_PATH": "pipeline/output_retro_numeric/",
+            "OUTPUT_PATH": "pipeline/embeddings/",
             "VECTORS_LOCATION": "pipeline/vectors/GoogleNews-vectors-negative300.bin.gz",
             "WE_ORIGINAL_TABLE_NAME": "google_vecs",
             "WE_ORIGINAL_TABLE_PATH": "pipeline/vectors/google_vecs.csv",
-            "SCHEMA_GRAPH_PATH": "pipeline/output_retro_numeric/schema.gml",
-            "SCHEMA_JSON_GRAPH_PATH": "pipeline/output_retro_numeric/schema.json",
-            "GROUPS_FILE_NAME": "pipeline/output_retro_numeric/groups.pk",
-            "RETRO_VECS_FILE_NAME": "pipeline/output_retro_numeric/retrofitted_vectors.wv",
+            "SCHEMA_GRAPH_PATH": "pipeline/embeddings/schema.gml",
+            "SCHEMA_JSON_GRAPH_PATH": "pipeline/embeddings/schema.json",
+            "GROUPS_FILE_NAME": "pipeline/embeddings/groups.pk",
             "TABLE_BLACKLIST": self.table_blacklist,
             "COLUMN_BLACKLIST": [],
             "RELATION_BLACKLIST": [],
@@ -336,7 +340,8 @@ class RETRONumericWrapper(object):
         term_list, Mk = retrofit(configuration)
 
         # Output result to file
-        output_vectors(term_list, Mk, configuration['RETRO_VECS_FILE_NAME'], with_zero_vectors=True)
+        output_filename = configuration['OUTPUT_PATH'] + 'retro__datasets.emb'
+        output_vectors(term_list, Mk, output_filename, configuration['DATASETS_PATH'], with_zero_vectors=True)
         print('Exported vectors')
 
         print("Finished retrofitting for:")
@@ -346,7 +351,12 @@ class RETRONumericWrapper(object):
         print("\t NUMBER DIMS: ", configuration['TOKENIZATION_SETTINGS']['NUMERIC_TOKENIZATION']['NUMBER_DIMS'])
         print("DELTA: ", configuration['DELTA'])
 
-        self.mat, self.keys = prepare_emb_matrix(configuration['RETRO_VECS_FILE_NAME'])
+        self.mat, self.keys = prepare_emb_matrix(output_filename)
+
+        # Remove Schema Graphs and Groups file, to free some memory...
+        del configuration['SCHEMA_GRAPH_PATH']
+        del configuration['SCHEMA_JSON_GRAPH_PATH']
+        del configuration['GROUPS_FILE_NAME']
 
         t_end = datetime.datetime.now()
         print(OUTPUT_FORMAT.format('Ending run.', t_end))
@@ -435,6 +445,7 @@ if __name__ == '__main__':
         wrapper.table_blacklist = [file.split('.')[0] for file in file_list]
 
         # Generate embedding
-        wrapper.fit()
+        file_name = os.path.basename(input_file).split('.')[0]
+        wrapper.fit(file_name)
 
     print(':)')
