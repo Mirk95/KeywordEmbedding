@@ -263,9 +263,9 @@ class RETRONumericWrapper(object):
         self.mat, self.keys = prepare_emb_matrix(output_filename)
 
         # Remove Schema Graphs and Groups file, to free some memory...
-        del configuration['SCHEMA_GRAPH_PATH']
-        del configuration['SCHEMA_JSON_GRAPH_PATH']
-        del configuration['GROUPS_FILE_NAME']
+        os.remove(configuration['SCHEMA_GRAPH_PATH'])
+        os.remove(configuration['SCHEMA_JSON_GRAPH_PATH'])
+        os.remove(configuration['GROUPS_FILE_NAME'])
 
         t_end = datetime.datetime.now()
         print(OUTPUT_FORMAT.format('Ending run.', t_end))
@@ -354,9 +354,9 @@ class RETRONumericWrapper(object):
         self.mat, self.keys = prepare_emb_matrix(output_filename)
 
         # Remove Schema Graphs and Groups file, to free some memory...
-        del configuration['SCHEMA_GRAPH_PATH']
-        del configuration['SCHEMA_JSON_GRAPH_PATH']
-        del configuration['GROUPS_FILE_NAME']
+        os.remove(configuration['SCHEMA_GRAPH_PATH'])
+        os.remove(configuration['SCHEMA_JSON_GRAPH_PATH'])
+        os.remove(configuration['GROUPS_FILE_NAME'])
 
         t_end = datetime.datetime.now()
         print(OUTPUT_FORMAT.format('Ending run.', t_end))
