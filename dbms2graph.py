@@ -3,7 +3,6 @@ import json
 import argparse
 import pandas as pd
 import networkx as nx
-import matplotlib.pyplot as plt
 from preprocessing.tokenizer import tokenize_dataset
 
 
@@ -37,19 +36,10 @@ def get_schema(schema_dir):
     return schema
 
 
-def nodes_and_edges_from_df_extraction(table_name, dataframe, G, labels):
+def nodes_extraction(table_name, dataframe, G):
     for idx, row in dataframe.iterrows():
         node_name = table_name + '__' + str(idx)
         G.add_node(node_name)
-        # row_dict = row.to_dict()
-        # values = [str(table_name) + '.' + str(key) + '#' + str(row_dict[key])[:20]
-        #           for key in row_dict.keys() if row_dict[key] != '']
-        # columns = ['val->' + col for col in row_dict.keys() if row_dict[col] != '']
-        # G.add_nodes_from(values)
-        # combinations_edges = [(node_name, i) for i in values]
-        # G.add_edges_from(combinations_edges)
-        # labels_row = dict(zip(combinations_edges, columns))
-        # labels.update(labels_row)
 
 
 def foreign_keys_extraction(input_dir, table_name, table_schema, G, labels, with_tokenization):
@@ -59,10 +49,8 @@ def foreign_keys_extraction(input_dir, table_name, table_schema, G, labels, with
             foreign_table_name = relation['foreign_table_name']
             foreign_column_name = relation['foreign_column_name']
             df1 = pd.read_csv(input_dir + table_name + '.csv', na_filter=False)
-            df1 = df1[:200]
             df1['index'] = range(len(df1))
             df2 = pd.read_csv(input_dir + foreign_table_name + '.csv', na_filter=False)
-            df2 = df2[:200]
             df2['index'] = range(len(df2))
             if with_tokenization:
                 df1 = tokenize_dataset(df1, stem=True)
@@ -71,28 +59,11 @@ def foreign_keys_extraction(input_dir, table_name, table_schema, G, labels, with
             df2 = df2.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
             df1 = df1.astype(str)
             df2 = df2.astype(str)
-            # column_names1 = df1.columns.tolist()
-            # column_names2 = df2.columns.tolist()
-            # list1_as_set = set(column_names1)
-            # intersection = list1_as_set.intersection(column_names2)
-            # intersection_as_list = list(intersection)
             result = pd.merge(df1, df2, left_on=column_name, right_on=foreign_column_name)
             result = result[['index_x', 'index_y']]
-            """
-            if (column_name in intersection_as_list) and (foreign_column_name in intersection_as_list):
-                result = result[[column_name + '_x', foreign_column_name + '_y']]
-            elif (column_name not in intersection_as_list) and (foreign_column_name not in intersection_as_list):
-                result = result[[column_name, foreign_column_name]]
-            elif (column_name in intersection_as_list) and (foreign_column_name not in intersection_as_list):
-                result = result[[column_name + '_x', foreign_column_name]]
-            else:
-                result = result[[column_name, foreign_column_name + '_y']]
-            """
             if not result.empty:
                 result = result.drop_duplicates()
                 for _, row in result.iterrows():
-                    # first_node = table_name + '.' + column_name + '#' + str(row[0])
-                    # second_node = foreign_table_name + '.' + foreign_column_name + '#' + str(row[1])
                     first_node = table_name + '__' + str(row[0])
                     second_node = foreign_table_name + '__' + str(row[1])
                     if G.has_edge(first_node, second_node) or G.has_edge(second_node, first_node):
@@ -112,34 +83,25 @@ def create_graph(input_dir, with_tokenization=False):
     file_list = [f for f in os.listdir(input_dir) if f.endswith('.csv')]
     schema = get_schema('pipeline/schemas/')
     G = nx.Graph()
-    labels_value = dict()
     labels_fk = dict()
     for filename in file_list:
         # Read dataset
         print('Filename: {}'.format(filename))
         df = pd.read_csv(os.path.join(input_dir, filename), na_filter=False)
-        df = df[:200]
         # Tokenize dataset
-        print('Start tokenization')
         if with_tokenization:
+            print('Start tokenization dataset')
             df = tokenize_dataset(df, stem=True)
         # Replace space with underscore
         df = df.applymap(lambda x: x.replace(' ', '_') if isinstance(x, str) else x)
         table_name = filename.split('.')[0]
-        print('Start nodes and edges extraction from dataframe...')
-        nodes_and_edges_from_df_extraction(table_name, df, G, labels_value)
+        print('Start Nodes extraction from dataset...')
+        nodes_extraction(table_name, df, G)
 
     for table in schema.keys():
-        print('Start Foreign Keys extraction for {} table'.format(table))
+        print('Start Foreign Keys extraction for table {}'.format(table))
         foreign_keys_extraction(input_dir, table, schema[table], G, labels_fk, with_tokenization)
 
-    labels_value.update(labels_fk)
-    pos = nx.spring_layout(G)
-    deg = dict(G.degree)
-    nx.draw(G, pos, node_size=[v * 5 for v in deg.values()], with_labels=True)
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels_fk, font_size=8)
-    plt.savefig('graph.png')
-    plt.show()
     return G
 
 

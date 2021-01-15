@@ -13,6 +13,7 @@ from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
 from scipy.cluster.hierarchy import linkage, fcluster
 from scipy.spatial.distance import pdist
+from preprocessing.tokenizer import tokenize_dataset
 
 
 with warnings.catch_warnings():
@@ -20,6 +21,7 @@ with warnings.catch_warnings():
     from wrapper.embdi_wrapper import EmbDIWrapper
     from wrapper.retro_numeric_wrapper import RETRONumericWrapper
     from wrapper.base_wrapper import BaseWrapper
+    from dbms2graph import create_graph
 
 
 def get_arguments():
@@ -34,6 +36,11 @@ def get_arguments():
                         choices=['single-to-single', 'single-to-many'],
                         default='single-to-single',
                         help='Mode to use for query embedding')
+    parser.add_argument('--approach',
+                        type=str,
+                        choices=['cn_search', 'clustering'],
+                        default='cn_search',
+                        help='Approach to use for Single-to-Many mode')
     parser.add_argument('--clustering_method',
                         type=str,
                         choices=['elbow', 'silhouette', 'offline'],
@@ -75,25 +82,15 @@ def extract_keywords(filename):
 
 
 # @Francesco's Function
-def extract_representatives(X, cluster_index, cluster_size_dict, representatives):
-    num_clusters = len(set(cluster_index))
-    for clu in range(num_clusters):
-        clu_idx = np.argwhere(cluster_index == clu + 1)[:, 0]
-        cluster_size_dict[clu] = clu_idx.shape[0]
-        representative_center = np.average(X[clu_idx, :], axis=0)
-        representatives.append(representative_center)
-
-
-# @Francesco's Function
-def offline_clustering(X, cluster_size_dict, representatives, max_dist=0.3):
+def offline_clustering(X, max_dist=0.3):
     print('Starting offline clustering...')
     p_dist = pdist(X)
     z = linkage(p_dist, 'complete')
-    cluster_index = fcluster(z, max_dist, criterion='distance')
-    extract_representatives(X, cluster_index, cluster_size_dict, representatives)
+    clusters_indices = fcluster(z, max_dist, criterion='distance')
+    num_clusters = len(set(clusters_indices))
     print('Processed {} instances.'.format(X.shape[0]))
-    print('Found {} clusters offline.\n'.format(len(representatives)))
-    return cluster_index
+    print('Found {} clusters offline.\n'.format(num_clusters))
+    return num_clusters, clusters_indices
 
 
 # Function returns WSS score for k values from 1 to k_max
@@ -137,7 +134,8 @@ def plot_and_save_graph(min_range, max_range, data, x_label, y_label, title, fil
 
 
 def find_optimal_clusters(matrix, method):
-    k_max = 10
+    k_max = 100
+    print("Start finding optimal k value...")
     if method == 'elbow':
         """
             Calculate the Within-Cluster-Sum of Squared Errors (WSS) for different values of k, 
@@ -177,6 +175,17 @@ def find_optimal_clusters(matrix, method):
         raise ValueError("Error: type of method to find optimal clusters unknown!")
 
 
+def plot_embeddings(matrix):
+    pca = PCA(n_components=2)
+    reduced = pca.fit_transform(matrix)
+    t = reduced.transpose()
+    plt.scatter(t[0], t[1])
+    figure = plt.gcf()
+    figure.set_size_inches(14, 10)
+    plt.savefig('embeddings.png', dpi=100)
+    plt.show()
+
+
 if __name__ == '__main__':
     # Add nltk data directory
     nltk.data.path.append('/home/mirko/nltk_data')
@@ -186,77 +195,120 @@ if __name__ == '__main__':
 
     # Define embedding model
     if args.wrapper == 'embdi':
-        wrapper = EmbDIWrapper(n_dimensions=300,
-                               window_size=3,
-                               n_sentences='default',
-                               training_algorithm='word2vec',
-                               learning_method='skipgram',
+        wrapper = EmbDIWrapper(n_dimensions=300, window_size=3, n_sentences='default',
+                               training_algorithm='word2vec', learning_method='skipgram',
                                with_tokenization=True)
     elif args.wrapper == 'retro':
-        wrapper = RETRONumericWrapper(n_iterations=10, alpha=1.0, beta=0.0,
-                                      gamma=3.0, delta=1.0, number_dims=300,
-                                      standard_deviation=1.0,
-                                      table_blacklist=[],
+        wrapper = RETRONumericWrapper(n_iterations=10, alpha=1.0, beta=0.0, gamma=3.0, delta=1.0,
+                                      number_dims=300, standard_deviation=1.0, table_blacklist=[],
                                       with_tokenization=True)
     else:
-        wrapper = BaseWrapper(training_algorithm='word2vec_CBOW',
-                              n_dimensions=300, window_size=3,
-                              with_tokenization=True, ignore_columns=None,
-                              insert_col=True, permutation_rate=10)
+        wrapper = BaseWrapper(training_algorithm='word2vec_CBOW', n_dimensions=300, window_size=3,
+                              with_tokenization=True, ignore_columns=None, insert_col=True,
+                              permutation_rate=10)
 
     emb_file = 'pipeline/embeddings/' + args.wrapper + '__datasets.emb'
     if os.path.isfile(emb_file):
         # Load embedding matrix
         wrapper.load_embedding(emb_file)
+        # Plot embeddings
+        plot_embeddings(wrapper.mat)
 
         label_dir = 'pipeline/queries/IMDB'
-        label_files = ["{:03d}.txt".format(x) for x in range(1, 11)]
-
-        # Plot embeddings:
-        pca = PCA(n_components=2)
-        reduced = pca.fit_transform(wrapper.mat)
-        t = reduced.transpose()
-        plt.scatter(t[0], t[1])
-        figure = plt.gcf()
-        figure.set_size_inches(14, 10)
-        plt.savefig('embeddings.png', dpi=100)
-        plt.show()
+        datasets_dir = 'pipeline/datasets/'
+        label_files = ["{:03d}.txt".format(x) for x in range(1, 51)]
 
         if args.mode == 'single-to-many':
-            # Compute clusters only once, instead computing it for each query
-            if args.clustering_method == 'offline':
-                cluster_size_dict = dict()
-                representatives = list()
-                cluster_index = offline_clustering(wrapper.mat[:100], cluster_size_dict, representatives)
-                k = len(representatives)
-            else:
-                k = find_optimal_clusters(wrapper.mat[:100], method=args.clustering_method)
-                kmeans = KMeans(n_clusters=k).fit(wrapper.mat[:100])
-                centroids = kmeans.cluster_centers_
-                cluster_index = kmeans.labels_
+            # Compute the graph of dbms, useful for both cn_search and clustering approaches
+            print("Starting creation of dbms graph...")
+            graph = create_graph(datasets_dir, with_tokenization=True)
+            print("Dbms graph successfully created!")
+
+            if args.approach == 'clustering':
+                # Compute clusters only once, instead computing it for each query
+                print("Starting clustering...")
+                cond = [True if x.startswith('idx') else False for x in wrapper.keys]
+                if args.clustering_method == 'offline':
+                    k, clusters_indices = offline_clustering(wrapper.mat[cond])
+                else:
+                    k = find_optimal_clusters(wrapper.mat[cond], method=args.clustering_method)
+                    kmeans = KMeans(n_clusters=k).fit(wrapper.mat[cond])
+                    clusters_indices = kmeans.labels_
 
         for label_name in label_files:
-            print('\n File: {}'.format(label_name))
+            print('#' * 80)
+            print('File: {}'.format(label_name))
             keywords, search_ids = extract_keywords(os.path.join(label_dir, label_name))
-            print('Keywords {}'.format(keywords))
-            print('Label search id {}'.format(search_ids))
-            print('\n Embedding extraction')
+            print('Keywords: {}'.format(keywords))
+            print('Label search id: {}'.format(search_ids))
+            print('Embedding extraction...')
 
             # Preprocess sentence with trained model preprocessing
             sentence = wrapper.preprocess_sentence(keywords)
 
             if args.mode == 'single-to-single':
-                # Get nearest_neighbour
-                print('\n Get K nearest records')
-                neighbours = wrapper.get_k_nearest_token(sentence, k=5, distance='cosine', pref='idx', withMean=False)
+                # Single-to-Single mode
+                # Get nearest_neighbours
+                print('Get K nearest records:')
+                neighbours = wrapper.get_k_nearest_token(sentence, k=5, distance='cosine', pref='idx', withMean=True)
                 neighbours = [x.replace('idx__', '') for x in neighbours]
                 for neighbour in neighbours:
                     table, idx = neighbour.split('__')
-                    df = pd.read_csv('pipeline/datasets/' + table + '.csv', na_filter=False)
+                    if '.csv' in table:
+                        table = table.replace('.csv', '')
+                    df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
                     print(df.loc[int(idx)])
+                    print('\n')
             else:
-                # Single-to-many mode
-                pass
+                # Single-to-Many mode
+                # Get nearest_neighbours
+                print('Get K nearest records:')
+                neighbours = wrapper.get_k_nearest_token(sentence, k=1, distance='cosine', pref='idx', withMean=True)
+                neighbours = [x.replace('idx__', '') for x in neighbours]
+                for neighbour in neighbours:
+                    table, idx = neighbour.split('__')
+                    if '.csv' in table:
+                        table = table.replace('.csv', '')
+                    if args.approach == 'cn_search':
+                        # Candidate Network Searching approach
+                        node_name = table + '__' + idx
+                        print(f"Searching Candidate Network for node {node_name}: ")
+                        df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
+                        print(df.loc[int(idx)])
+                        print('\n')
+                        edges_list = list(graph[node_name])
+                        if edges_list:
+                            # The node has at least one edge with other nodes
+                            for edge in edges_list:
+                                table_edge, idx_edge = edge.split('__')
+                                print(f"Found an edge with table {table_edge} and idx {idx_edge}")
+                                df = pd.read_csv(datasets_dir + table_edge + '.csv', na_filter=False)
+                                print(df.loc[int(idx_edge)])
+                                print('\n')
+                    else:
+                        # Clustering approach
+                        df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
+                        df = tokenize_dataset(df, stem=False)
+                        row = df.loc[int(idx)]
+                        print(row)
+                        print('\n')
+                        clusters_indices_list = []
+                        for val in row.values:
+                            val = str(val)
+                            if val in wrapper.keys:
+                                key_idx = wrapper.keys.index(val)
+                                clusters_indices_list.append(clusters_indices[key_idx])
+                        # Remove duplicates
+                        clusters_indices_list = list(set(clusters_indices_list))
+                        for index in clusters_indices_list:
+                            final_clusters_list = list(np.array(np.where(clusters_indices == index)).ravel())
+                            tokens = []
+                            for item in final_clusters_list:
+                                token = wrapper.keys[item]
+                                tokens.append(token)
+                            print(f"Tokens in cluster {index}: ")
+                            print(*tokens, sep="\t")
+                            print('\n')
 
     else:
         raise ValueError(f'The file {emb_file} does not exist!')

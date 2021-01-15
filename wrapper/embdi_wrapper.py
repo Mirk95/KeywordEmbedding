@@ -528,8 +528,8 @@ class EmbDIWrapper(object):
         distance_matrix = distance_matrix.ravel()
 
         indexes = distance_matrix.argsort()[:k]
-        keys = np.array(self.keys)
-        new_keys = keys[cond][indexes]
+        keys = np.array([self.keys[i] for i in range(len(self.keys)) if cond[i]])
+        new_keys = keys[indexes]
 
         return new_keys
 

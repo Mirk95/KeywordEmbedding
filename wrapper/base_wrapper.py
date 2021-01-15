@@ -1,6 +1,7 @@
 import os
 import datetime
 import numpy as np
+import pandas as pd
 
 from sklearn.metrics.pairwise import euclidean_distances, cosine_distances
 
@@ -30,7 +31,6 @@ def sentence_permutation(sentences, permutation_rate):
 
 
 class BaseWrapper(object):
-
     def __init__(self, training_algorithm='word2vec_CBOW',
                  n_dimensions=300, window_size=3,
                  with_tokenization=True, ignore_columns=None,
@@ -176,7 +176,42 @@ class BaseWrapper(object):
         distance_matrix = distance_matrix.ravel()
 
         indexes = distance_matrix.argsort()[:k]
-        keys = np.array(self.keys)
-        new_keys = keys[cond][indexes]
+        keys = np.array([self.keys[i] for i in range(len(self.keys)) if cond[i]])
+        new_keys = keys[indexes]
 
         return new_keys
+
+
+if __name__ == '__main__':
+    # Add nltk data directory
+    add_nltk_path('/home/mirko/nltk_data')
+    add_nltk_path('pipeline/nlp/')
+
+    # Check nltk library dependency
+    check_nltk_library()
+
+    args = get_wrapper_arguments()
+
+    # Define model
+    wrapper = BaseWrapper()
+    if args.dbms:
+        # Generate dbms embedding
+        print('Start embedding dbms')
+        wrapper.fit_db(args.file)
+    else:
+        # Read input dataset
+        input_file = args.file
+        print('Read input dataset')
+        df = pd.read_csv(input_file)
+
+        file_name = str(os.path.basename(input_file).split('.')[0])
+
+        # Tokenize dataset
+        print('Tokenize input dataset')
+        new_df = tokenize_dataset(df, stem=True)
+
+        # Generate embedding
+        print('Start embedding dataset')
+        wrapper.fit(new_df, name=file_name)
+
+    print(':)')
