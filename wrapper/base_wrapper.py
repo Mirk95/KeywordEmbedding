@@ -1,4 +1,5 @@
 import os
+import random
 import datetime
 import numpy as np
 import pandas as pd
@@ -15,19 +16,17 @@ OUTPUT_FORMAT = '# {:.<60} {}'
 
 def sentence_permutation(sentences, permutation_rate):
     new_sentences = []
-    # new_length = permutation_rate * 100 * len(sentences)
     permutation_rate = np.floor(permutation_rate)
 
     for sentence in sentences:
         new_sentences.append(sentence)
-
         sentence = sentence.split(' ')
 
-        for _ in range(permutation_rate):
-            np.shuffle(sentence)
+        for _ in range(int(permutation_rate)):
+            random.shuffle(sentence)
             new_sentences.append(' '.join(sentence))
 
-    return new_sentences
+    return np.array(new_sentences)
 
 
 class BaseWrapper(object):
@@ -36,74 +35,86 @@ class BaseWrapper(object):
                  with_tokenization=True, ignore_columns=None,
                  insert_col=True, permutation_rate=10
                  ):
-        # embedding values
+        # Embedding values
         self.mat = np.array([])
         self.keys = []
 
-        # embedding model parameters
+        # Embedding model parameters
         self.n_dimensions = n_dimensions
         self.window_size = window_size
         self.training_algorithm = training_algorithm
 
-        # preprocessing data values
+        # Preprocessing data values
         self.with_tokenization = with_tokenization
         self.ignore_columns = ignore_columns if ignore_columns else []
         self.insert_col = insert_col
         self.permutation_rate = permutation_rate
 
-    def fit(self, df, name='test_name'):
-
-        os.makedirs('pipeline/embeddings', exist_ok=True)
-
-        print('#' * 80)
-        t_start = datetime.datetime.now()
-        print(OUTPUT_FORMAT.format('Starting run.', t_start))
-
-        # create a copy of the input dataset
-        df = df.copy()
-
-        # ignore selected columns
+    def generate_walks(self, dataframe, dataset_name):
+        # Ignore selected columns
         if self.ignore_columns is not None:
             for col in self.ignore_columns:
-                if col in df:
-                    df.drop(col, axis=1, inplace=True)
+                if col in dataframe:
+                    dataframe.drop(col, axis=1, inplace=True)
 
-        # tokenize input dataset
+        # Tokenize input dataset
         if self.with_tokenization:
-            print('Generating basic tokenization.')
-            df = tokenize_dataset(df, stem=True)
+            print(f'Generating basic tokenization for {dataset_name} dataset.')
+            dataframe = tokenize_dataset(dataframe, stem=True)
 
         print('Insert semantic content inside each tuple.')
 
-        # insert <COL> information
+        # Insert <COL> information
         if self.insert_col:
-            cols = df.columns
+            cols = dataframe.columns
             new_cols = []
 
             for col in cols:
                 new_col = '__idx_{}'.format(col)
-                df[new_col] = '<{}>'.format(col.upper())
+                new_col_metadata = '_'.join(col.split(' '))
+                new_col_metadata = 'cid__{}__{}'.format(dataset_name, new_col_metadata)
+                dataframe[new_col] = new_col_metadata
                 new_cols.append(new_col)
                 new_cols.append(col)
 
-            df.reindex(new_cols, axis=1)
+            dataframe = dataframe[new_cols]
 
-        # insert idx__ID information
-        df['__idx'] = ['idx__' + str(i) for i in df.index]
+        # Insert idx__ID information
+        dataframe['__idx'] = ['idx__{}__{}'.format(dataset_name, i) for i in range(len(dataframe))]
 
-        # create sentence list
-        print('Generating sentences from dataset.')
-        df = df.apply(lambda x: ' '.join(x.dropna().astype(str).to_list()), axis=1)
-        df = df.values
+        # Create sentence list
+        print(f'Generating sentences from {dataset_name} dataset.')
+        dataframe = dataframe.apply(lambda x: ' '.join(x.dropna().astype(str).to_list()), axis=1)
+        sentences_array = dataframe.values
 
-        # check permutation
+        # Check permutation
         print('Using data augmentation.')
         if self.permutation_rate >= 1:
-            sentence_permutation(df, self.permutation_rate)
+            sentences_array = sentence_permutation(sentences_array, self.permutation_rate)
+
+        return sentences_array
+
+    def fit(self, df, name='test_name'):
+        os.makedirs('pipeline/embeddings', exist_ok=True)
+        os.makedirs('pipeline/walks', exist_ok=True)
+
+        print('#' * 80)
+        t_start = datetime.datetime.now()
+        print(OUTPUT_FORMAT.format('Starting run...', t_start))
+
+        # Walks generation
+        walks = self.generate_walks(df, name)
+
+        print('Save Walks...')
+        walks_name = os.path.join('pipeline/walks/', 'base_{}.walks'.format(name))
+
+        with open(walks_name, 'w') as f:
+            for val in walks:
+                f.write(val + '\n')
 
         print('Start embedding {}.'.format(self.training_algorithm))
         base = BaseEmbedding(self.training_algorithm, n_dimensions=self.n_dimensions, window_size=self.window_size)
-        base.fit(df)
+        base.fit(walks_name)
 
         name = 'base_{}_{}.emb'.format(self.training_algorithm, name)
         name = os.path.join('pipeline/embeddings', name)
@@ -123,22 +134,74 @@ class BaseWrapper(object):
         print('1. {}'.format(name))
 
     def fit_db(self, input_dir):
-        pass
+        if not os.path.isdir(input_dir):
+            raise ValueError('Input dir does not exists: {}'.format(input_dir))
 
-    def load_emebedding(self, embedding_file):
+        os.makedirs('pipeline/embeddings', exist_ok=True)
+        os.makedirs('pipeline/walks', exist_ok=True)
+
+        # Get list of tables names
+        file_list = [f for f in os.listdir(input_dir) if f.endswith('.csv')]
+
+        print('#' * 80)
+        t_start = datetime.datetime.now()
+        print(OUTPUT_FORMAT.format('Starting run...', t_start))
+
+        dbms_walks = []
+        # For each dataset we compute walks
+        for filename in file_list:
+            name = filename.split('.')[0]
+
+            # Read dataset
+            print('Filename: {}'.format(filename))
+            df = pd.read_csv(os.path.join(input_dir, filename))
+
+            # Walks generation
+            walks = self.generate_walks(df, name)
+            dbms_walks.append(walks)
+            print('\n')
+
+        print('Save Walks...')
+        walks_name = os.path.join('pipeline/walks/base_datasets.walks')
+
+        with open(walks_name, 'w') as f:
+            for walk in dbms_walks:
+                for val in walk:
+                    f.write(val + '\n')
+
+        print('Start embedding {}.'.format(self.training_algorithm))
+        base = BaseEmbedding(self.training_algorithm, n_dimensions=self.n_dimensions, window_size=self.window_size)
+        base.fit(walks_name)
+
+        name = 'base_{}__datasets.emb'.format(self.training_algorithm)
+        name = os.path.join('pipeline/embeddings', name)
+        base.save(name)
+
+        print('End embedding {}.'.format(self.training_algorithm))
+
+        self.mat, self.keys = prepare_emb_matrix(name)
+
+        t_end = datetime.datetime.now()
+        print(OUTPUT_FORMAT.format('Ending run.', t_end))
+        dt = t_end - t_start
+        print('# Time required: {}'.format(dt.total_seconds()))
+
+        print('')
+        print('File created:')
+        print('1. {}'.format(name))
+
+    def load_embedding(self, embedding_file):
         self.mat, self.keys = prepare_emb_matrix(embedding_file)
 
     def preprocess_sentence(self, sentence):
         if self.with_tokenization:
             sentence = tokenize_sentence(sentence, stem=True)
-
         return sentence
 
     def get_token_embedding(self, token):
         vec = None
         if token in self.keys:
             vec = self.mat[self.keys.index(token)]
-
         return vec
 
     def get_sentence_embedding(self, sentence, keep_none=False):
@@ -146,10 +209,8 @@ class BaseWrapper(object):
         sentence = sentence.split(' ')
         for word in sentence:
             vec = self.get_token_embedding(word)
-
             if vec is not None or keep_none:
                 vecs.append(vec)
-
         return vecs
 
     def get_k_nearest_token(self, sentence, k=5, distance='cosine', pref='idx', withMean=True):
@@ -158,6 +219,7 @@ class BaseWrapper(object):
         emb_sentence = self.get_sentence_embedding(sentence)
         if not emb_sentence:
             return []
+
         emb_sentence = np.array(emb_sentence)
 
         if withMean:
@@ -174,7 +236,6 @@ class BaseWrapper(object):
             distance_matrix = np.sum(distance_matrix, axis=0, keepdims=True)
 
         distance_matrix = distance_matrix.ravel()
-
         indexes = distance_matrix.argsort()[:k]
         keys = np.array([self.keys[i] for i in range(len(self.keys)) if cond[i]])
         new_keys = keys[indexes]
@@ -189,6 +250,9 @@ if __name__ == '__main__':
 
     # Check nltk library dependency
     check_nltk_library()
+
+    # Check pipeline directory
+    assert os.path.isdir('pipeline'), 'Pipeline directory does not exist'
 
     args = get_wrapper_arguments()
 
@@ -206,12 +270,8 @@ if __name__ == '__main__':
 
         file_name = str(os.path.basename(input_file).split('.')[0])
 
-        # Tokenize dataset
-        print('Tokenize input dataset')
-        new_df = tokenize_dataset(df, stem=True)
-
         # Generate embedding
         print('Start embedding dataset')
-        wrapper.fit(new_df, name=file_name)
+        wrapper.fit(df, name=file_name)
 
     print(':)')

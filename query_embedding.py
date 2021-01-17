@@ -186,6 +186,116 @@ def plot_embeddings(matrix):
     plt.show()
 
 
+def query_embeddings(arguments, embeddings_file):
+    results = {}
+    # Load embedding matrix
+    wrapper.load_embedding(embeddings_file)
+    # Plot embeddings
+    plot_embeddings(wrapper.mat)
+
+    label_dir = 'pipeline/queries/IMDB'
+    datasets_dir = 'pipeline/datasets/'
+    label_files = ["{:03d}.txt".format(x) for x in range(1, 51)]
+
+    if arguments.mode == 'single-to-many':
+        # Compute the graph of dbms, useful for both cn_search and clustering approaches
+        print("Starting creation of dbms graph...")
+        graph = create_graph(datasets_dir, with_tokenization=True)
+        print("Dbms graph successfully created!")
+
+        if arguments.approach == 'clustering':
+            # Compute clusters only once, instead computing it for each query
+            print("Starting clustering...")
+            cond = [True if x.startswith('idx') else False for x in wrapper.keys]
+            if arguments.clustering_method == 'offline':
+                k, clusters_indices = offline_clustering(wrapper.mat[cond])
+            else:
+                k = find_optimal_clusters(wrapper.mat[cond], method=arguments.clustering_method)
+                kmeans = KMeans(n_clusters=k).fit(wrapper.mat[cond])
+                clusters_indices = kmeans.labels_
+
+    for label_name in label_files:
+        print('#' * 80)
+        print('File: {}'.format(label_name))
+        keywords, search_ids = extract_keywords(os.path.join(label_dir, label_name))
+        print('Keywords: {}'.format(keywords))
+        print('Label search id: {}'.format(search_ids))
+        print('Embedding extraction...')
+
+        # Preprocess sentence with trained model preprocessing
+        sentence = wrapper.preprocess_sentence(keywords)
+
+        if arguments.mode == 'single-to-single':
+            # Single-to-Single mode --> get nearest_neighbours
+            print('Get K nearest records:')
+            search_ids_found = []
+            neighbours = wrapper.get_k_nearest_token(sentence, k=5, distance='cosine', pref='idx', withMean=True)
+            neighbours = [x.replace('idx__', '') for x in neighbours]
+            for neighbour in neighbours:
+                table, idx = neighbour.split('__')
+                if '.csv' in table:
+                    table = table.replace('.csv', '')
+                df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
+                print(df.loc[int(idx)])
+                print('\n')
+                search_ids_found.append(df.loc[int(idx), '__search_id'])
+            results[label_name] = (keywords, search_ids, search_ids_found)
+        else:
+            # Single-to-Many mode --> get nearest_neighbours
+            print('Get K nearest records:')
+            search_ids_found = []
+            neighbours = wrapper.get_k_nearest_token(sentence, k=5, distance='cosine', pref='idx', withMean=True)
+            neighbours = [x.replace('idx__', '') for x in neighbours]
+            for neighbour in neighbours:
+                table, idx = neighbour.split('__')
+                if '.csv' in table:
+                    table = table.replace('.csv', '')
+                if arguments.approach == 'cn_search':
+                    # Candidate Network Searching approach
+                    node_name = table + '__' + idx
+                    print(f"Searching Candidate Network for node {node_name}: ")
+                    df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
+                    print(df.loc[int(idx)])
+                    print('\n')
+                    search_ids_found.append(df.loc[int(idx), '__search_id'])
+                    edges_list = list(graph[node_name])
+                    if edges_list:
+                        # The node has at least one edge with other nodes
+                        for edge in edges_list:
+                            table_edge, idx_edge = edge.split('__')
+                            print(f"Found an edge with table {table_edge} and idx {idx_edge}")
+                            df = pd.read_csv(datasets_dir + table_edge + '.csv', na_filter=False)
+                            print(df.loc[int(idx_edge)])
+                            print('\n')
+                            search_ids_found.append(df.loc[int(idx), '__search_id'])
+                    results[label_name] = (keywords, search_ids, search_ids_found)
+                else:
+                    # Clustering approach
+                    df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
+                    df = tokenize_dataset(df, stem=False)
+                    row = df.loc[int(idx)]
+                    print(row)
+                    print('\n')
+                    clusters_indices_list = []
+                    for val in row.values:
+                        val = str(val)
+                        if val in wrapper.keys:
+                            key_idx = wrapper.keys.index(val)
+                            clusters_indices_list.append(clusters_indices[key_idx])
+                    # Remove duplicates
+                    clusters_indices_list = list(set(clusters_indices_list))
+                    for index in clusters_indices_list:
+                        final_clusters_list = list(np.array(np.where(clusters_indices == index)).ravel())
+                        tokens = []
+                        for item in final_clusters_list:
+                            token = wrapper.keys[item]
+                            tokens.append(token)
+                        print(f"Tokens in cluster {index}: ")
+                        print(*tokens, sep="\t")
+                        print('\n')
+    return results
+
+
 if __name__ == '__main__':
     # Add nltk data directory
     nltk.data.path.append('/home/mirko/nltk_data')
@@ -209,106 +319,7 @@ if __name__ == '__main__':
 
     emb_file = 'pipeline/embeddings/' + args.wrapper + '__datasets.emb'
     if os.path.isfile(emb_file):
-        # Load embedding matrix
-        wrapper.load_embedding(emb_file)
-        # Plot embeddings
-        plot_embeddings(wrapper.mat)
-
-        label_dir = 'pipeline/queries/IMDB'
-        datasets_dir = 'pipeline/datasets/'
-        label_files = ["{:03d}.txt".format(x) for x in range(1, 51)]
-
-        if args.mode == 'single-to-many':
-            # Compute the graph of dbms, useful for both cn_search and clustering approaches
-            print("Starting creation of dbms graph...")
-            graph = create_graph(datasets_dir, with_tokenization=True)
-            print("Dbms graph successfully created!")
-
-            if args.approach == 'clustering':
-                # Compute clusters only once, instead computing it for each query
-                print("Starting clustering...")
-                cond = [True if x.startswith('idx') else False for x in wrapper.keys]
-                if args.clustering_method == 'offline':
-                    k, clusters_indices = offline_clustering(wrapper.mat[cond])
-                else:
-                    k = find_optimal_clusters(wrapper.mat[cond], method=args.clustering_method)
-                    kmeans = KMeans(n_clusters=k).fit(wrapper.mat[cond])
-                    clusters_indices = kmeans.labels_
-
-        for label_name in label_files:
-            print('#' * 80)
-            print('File: {}'.format(label_name))
-            keywords, search_ids = extract_keywords(os.path.join(label_dir, label_name))
-            print('Keywords: {}'.format(keywords))
-            print('Label search id: {}'.format(search_ids))
-            print('Embedding extraction...')
-
-            # Preprocess sentence with trained model preprocessing
-            sentence = wrapper.preprocess_sentence(keywords)
-
-            if args.mode == 'single-to-single':
-                # Single-to-Single mode
-                # Get nearest_neighbours
-                print('Get K nearest records:')
-                neighbours = wrapper.get_k_nearest_token(sentence, k=5, distance='cosine', pref='idx', withMean=True)
-                neighbours = [x.replace('idx__', '') for x in neighbours]
-                for neighbour in neighbours:
-                    table, idx = neighbour.split('__')
-                    if '.csv' in table:
-                        table = table.replace('.csv', '')
-                    df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
-                    print(df.loc[int(idx)])
-                    print('\n')
-            else:
-                # Single-to-Many mode
-                # Get nearest_neighbours
-                print('Get K nearest records:')
-                neighbours = wrapper.get_k_nearest_token(sentence, k=1, distance='cosine', pref='idx', withMean=True)
-                neighbours = [x.replace('idx__', '') for x in neighbours]
-                for neighbour in neighbours:
-                    table, idx = neighbour.split('__')
-                    if '.csv' in table:
-                        table = table.replace('.csv', '')
-                    if args.approach == 'cn_search':
-                        # Candidate Network Searching approach
-                        node_name = table + '__' + idx
-                        print(f"Searching Candidate Network for node {node_name}: ")
-                        df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
-                        print(df.loc[int(idx)])
-                        print('\n')
-                        edges_list = list(graph[node_name])
-                        if edges_list:
-                            # The node has at least one edge with other nodes
-                            for edge in edges_list:
-                                table_edge, idx_edge = edge.split('__')
-                                print(f"Found an edge with table {table_edge} and idx {idx_edge}")
-                                df = pd.read_csv(datasets_dir + table_edge + '.csv', na_filter=False)
-                                print(df.loc[int(idx_edge)])
-                                print('\n')
-                    else:
-                        # Clustering approach
-                        df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
-                        df = tokenize_dataset(df, stem=False)
-                        row = df.loc[int(idx)]
-                        print(row)
-                        print('\n')
-                        clusters_indices_list = []
-                        for val in row.values:
-                            val = str(val)
-                            if val in wrapper.keys:
-                                key_idx = wrapper.keys.index(val)
-                                clusters_indices_list.append(clusters_indices[key_idx])
-                        # Remove duplicates
-                        clusters_indices_list = list(set(clusters_indices_list))
-                        for index in clusters_indices_list:
-                            final_clusters_list = list(np.array(np.where(clusters_indices == index)).ravel())
-                            tokens = []
-                            for item in final_clusters_list:
-                                token = wrapper.keys[item]
-                                tokens.append(token)
-                            print(f"Tokens in cluster {index}: ")
-                            print(*tokens, sep="\t")
-                            print('\n')
-
+        final_results = query_embeddings(args, emb_file)
+        # Accuracy valuation
     else:
         raise ValueError(f'The file {emb_file} does not exist!')
