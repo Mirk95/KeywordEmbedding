@@ -14,3 +14,4 @@ pipeline/nlp/tokenizers/*
 *.gz
 *.pk
 *.wv
+*.pickle

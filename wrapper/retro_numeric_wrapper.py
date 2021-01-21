@@ -392,13 +392,38 @@ class RETRONumericWrapper(object):
 
     def get_k_nearest_token(self, sentence, k=5, distance='cosine', pref='idx', withMean=True):
         cond = [True if x.startswith(pref) else False for x in self.keys]
-
         emb_sentence = self.get_sentence_embedding(sentence)
         if not emb_sentence:
             return []
 
         emb_sentence = np.array(emb_sentence)
+        if withMean:
+            emb_sentence = np.mean(emb_sentence, axis=0, keepdims=True)
 
+        if distance == 'cosine':
+            distance_matrix = cosine_distances(emb_sentence, self.mat[cond])
+        elif distance == 'euclidean':
+            distance_matrix = euclidean_distances(emb_sentence, self.mat[cond])
+        else:
+            raise ValueError('Selected the wrong distance {}'.format(distance))
+
+        if not withMean:
+            distance_matrix = np.sum(distance_matrix, axis=0, keepdims=True)
+
+        distance_matrix = distance_matrix.ravel()
+        indexes = distance_matrix.argsort()[:k]
+        keys = np.array([self.keys[i] for i in range(len(self.keys)) if cond[i]])
+        new_keys = keys[indexes]
+
+        return new_keys
+
+    def get_best_record(self, sentence, list_records, k=1, distance='cosine', withMean=True):
+        cond = [True if x in list_records else False for x in self.keys]
+        emb_sentence = self.get_sentence_embedding(sentence)
+        if not emb_sentence:
+            return []
+
+        emb_sentence = np.array(emb_sentence)
         if withMean:
             emb_sentence = np.mean(emb_sentence, axis=0, keepdims=True)
 
