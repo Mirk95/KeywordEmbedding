@@ -381,7 +381,7 @@ if __name__ == '__main__':
         if args.mode == 'single-to-single':
             query_emb_filename = name_wrapper + '_singletosingle.pickle'
         else:
-            query_emb_filename = name_wrapper + '_cnsearch_' + args.technique + '.pickle'
+            query_emb_filename = name_wrapper + '_cnsearch_' + args.cn_technique + '.pickle'
 
         with open(results_dir + query_emb_filename, 'wb') as handle:
             pickle.dump(final_results, handle, protocol=pickle.HIGHEST_PROTOCOL)

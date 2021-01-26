@@ -15,3 +15,4 @@ pipeline/nlp/tokenizers/*
 *.pk
 *.wv
 *.pickle
+*.uxf

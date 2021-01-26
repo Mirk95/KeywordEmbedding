@@ -26,8 +26,11 @@ class BaseEmbedding(object):
                                   workers=mp.cpu_count(), sample=0.001)
 
         elif self.model_type == 'fasttext':
-            self.model = FastText(corpus_file=sentences, size=300, window=3,
+            self.model = FastText(sentences=sentences, size=300, window=3,
                                   min_count=1, workers=mp.cpu_count())
 
     def save(self, path):
-        self.model.wv.save_word2vec_format(path, binary=False)
+        if self.model_type == 'fasttext':
+            self.model.wv.save(path)
+        else:
+            self.model.wv.save_word2vec_format(path, binary=False)

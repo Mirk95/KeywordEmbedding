@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import pickle
 import itertools
 
@@ -15,6 +16,17 @@ def recall(ground_truth, predicted, k):
     predicted_set = set(predicted[:k])
     result = len(ground_truth_set & predicted_set) / float(len(ground_truth_set))
     return result
+
+
+def simple_accuracy(ground_truth, predicted):
+    ground_truth_set = set(ground_truth)
+    predicted_set = set(predicted)
+    return True if len(ground_truth_set & predicted_set) > 0 else False
+
+
+def accuracy_k(ground_truth, predicted, k):
+    pred_at_k = [simple_accuracy(ground_truth, val) for val in predicted[:k]]
+    return np.any(pred_at_k)
 
 
 def compute_precision_and_recall(query_results):
