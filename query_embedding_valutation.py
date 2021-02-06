@@ -1,7 +1,6 @@
 import os
 import numpy as np
 import pickle
-import itertools
 
 
 def precision(ground_truth, predicted, k):
@@ -24,34 +23,22 @@ def simple_accuracy(ground_truth, predicted):
     return True if len(ground_truth_set & predicted_set) > 0 else False
 
 
-def accuracy_k(ground_truth, predicted, k):
-    pred_at_k = [simple_accuracy(ground_truth, val) for val in predicted[:k]]
-    return np.any(pred_at_k)
+def accuracy_k(mode, ground_truth, predicted, k):
+    if mode == 'singletosingle':
+        pred_at_k = simple_accuracy(ground_truth, predicted[:k])
+        return pred_at_k
+    else:
+        pred_at_k = [simple_accuracy(ground_truth, val) for val in predicted[:k]]
+        return np.any(pred_at_k)
 
 
-def compute_precision_and_recall(query_results):
+def compute_precision_and_recall(query_results, mode):
     for file in query_results.keys():
         print(f'Computing precision and recall at k for file {file}: ')
         query, ground_truth, predictions = query_results[file]
-        list_of_tuples = []
-        list_of_relationships = []
-        for gt in ground_truth:
-            tuples, relationships = gt[0], gt[1]
-            list_of_tuples.append(tuples)
-            list_of_relationships.append(relationships)
-
-        list_of_relationships = list(itertools.chain.from_iterable(list_of_relationships))
-        if len(list_of_relationships) > 0:
-            for rel in list_of_relationships:
-                list_of_tuples.append(list(rel))
-
-        actual_values = list(itertools.chain.from_iterable(list_of_tuples))
-
         print(f'Query: {query}')
-        p = precision(actual_values, predictions, k=5)
-        print(f'Precision at k=5 : {p}')
-        r = recall(actual_values, predictions, k=5)
-        print(f'Recall at k=5 : {r}')
+        acc = accuracy_k(mode, ground_truth, predictions, k=5)
+        print(f"Accuracy at k=5 : {acc}")
         print('\n')
 
 
@@ -65,6 +52,7 @@ if __name__ == '__main__':
     for file in file_list:
         filename = file.replace('.pickle', '')
         items = filename.split('_')
+        print("#" * 80)
         if len(items) == 3:
             wrapper = items[0]
             modality = items[1]
@@ -81,4 +69,4 @@ if __name__ == '__main__':
         with open(results_dir + file, 'rb') as handle:
             emb_results = pickle.load(handle)
 
-        compute_precision_and_recall(emb_results)
+        compute_precision_and_recall(emb_results, modality)

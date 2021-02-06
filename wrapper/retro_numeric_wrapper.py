@@ -249,7 +249,7 @@ class RETRONumericWrapper(object):
         term_list, Mk = retrofit(configuration)
 
         # Output result to file
-        output_filename = configuration['OUTPUT_PATH'] + 'retro__' + input_file + '.emb'
+        output_filename = configuration['OUTPUT_PATH'] + 'retronumeric__' + input_file + '.emb'
         output_vectors(term_list, Mk, output_filename, configuration['DATASETS_PATH'], with_zero_vectors=True)
         print('Exported vectors')
 
@@ -340,7 +340,7 @@ class RETRONumericWrapper(object):
         term_list, Mk = retrofit(configuration)
 
         # Output result to file
-        output_filename = configuration['OUTPUT_PATH'] + 'retro__datasets.emb'
+        output_filename = configuration['OUTPUT_PATH'] + 'retronumeric__datasets.emb'
         output_vectors(term_list, Mk, output_filename, configuration['DATASETS_PATH'], with_zero_vectors=True)
         print('Exported vectors')
 

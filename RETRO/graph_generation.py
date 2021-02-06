@@ -80,11 +80,10 @@ def construct_relation_graph(schema, columns, blacklist):
     return result
 
 
-def get_all_db_columns(columns_dir, blacklists, create_new_column_index):
+def get_all_db_columns(columns_dir, blacklists):
     """
     :param columns_dir: path to json file with columns types
     :param blacklists: lists of tables and columns not to be considered
-    :param create_new_column_index: boolean to check if create a new column with idx or not
     :return names: dictionary with column names
     """
     responses = []
@@ -96,8 +95,6 @@ def get_all_db_columns(columns_dir, blacklists, create_new_column_index):
             for column, type in json_data[table_name].items():
                 if type in ('text', 'varchar'):
                     responses.append((table_name, column))
-            if create_new_column_index:
-                responses.append((table_name, 'index'))
     else:
         raise ValueError(f'ERROR: Not found the db_columns.json file inside the directory {columns_dir}!')
 
@@ -114,7 +111,7 @@ def main(conf):
 
     # Read out data from database
     db_columns = get_all_db_columns(
-        conf['COLUMNS_TYPE_PATH'], (conf['TABLE_BLACKLIST'], conf['COLUMN_BLACKLIST']), conf['CREATE_NEW_COLUMN_INDEX'])
+        conf['COLUMNS_TYPE_PATH'], (conf['TABLE_BLACKLIST'], conf['COLUMN_BLACKLIST']))
 
     # Construct graph from relational data
     schema = get_schema(schema_path, conf['WE_ORIGINAL_TABLE_NAME'])

@@ -57,18 +57,22 @@ def tokenize(term):
 
 
 def get_terms(columns, conf):
-    create_new_column_index = conf['CREATE_NEW_COLUMN_INDEX']
     result = dict()
     for column in columns:
         table_name, column_name = column.split('.')
         df = pd.read_csv(conf['DATASETS_PATH'] + table_name + '.csv', na_filter=False)
-        if create_new_column_index:
-            df['index'] = range(len(df))
-            df['index'] = df['index'].apply(lambda x: 'index__' + table_name + '__' + str(x))
         res = df[column_name]
         res = res.fillna('')
         result[column] = [tokenize(x) for idx, x in res.iteritems()]
-        result[column] = list(set(result[column]))  # remove duplicates
+        # Added the following rows to support multi-words per token
+        prev_unstack = []
+        for val in result[column]:
+            if val is None:
+                prev_unstack += [None]
+            else:
+                prev_unstack += val.split('_')
+        result[column] = prev_unstack
+        result[column] = list(set(result[column]))  # Remove duplicates
     return result
 
 
@@ -77,25 +81,6 @@ def construct_index_lookup(list_obj):
     for i in range(len(list_obj)):
         result[list_obj[i]] = i
     return result
-
-
-def get_dist_params(vectors):
-    # Returns the distribution parameter for vector elements
-    m_value = 0
-    count = 0
-    values = []
-    for key in vectors:
-        max_inst = 0
-        for term in vectors[key]:
-            m_value += np.mean(vectors[key][term])
-            values.extend([x for x in vectors[key][term]])
-            max_inst += 1
-            count += 1
-            if max_inst > 100:
-                break
-    m_value /= count
-    s_value = np.mean((np.array(values) - m_value)**2)
-    return m_value, s_value
 
 
 def execute_threads_from_pool(thread_pool, verbose=False):
@@ -155,8 +140,6 @@ def get_terms_from_vector_set(df_vectors):
                 i += 1
             current[1] = vector
             current[2] = freq
-        if max_id >= 100000:
-            break
         min_id = max_id
         max_id += chunk_size
     return term_dict

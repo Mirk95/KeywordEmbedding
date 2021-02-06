@@ -19,6 +19,7 @@ with warnings.catch_warnings():
     warnings.simplefilter('ignore')
     from wrapper.embdi_wrapper import EmbDIWrapper
     from wrapper.retro_numeric_wrapper import RETRONumericWrapper
+    from wrapper.retro_wrapper import RETROWrapper
     from wrapper.base_wrapper import BaseWrapper
     from preprocessing.tokenizer import tokenize_dataset
     from dbms2graph import create_graph
@@ -29,7 +30,7 @@ def get_arguments():
     parser.add_argument('--wrapper',
                         type=str,
                         required=True,
-                        choices=['base', 'embdi', 'retro'],
+                        choices=['base', 'embdi', 'retro', 'retronumeric'],
                         help='Wrapper to use for query embedding')
     parser.add_argument('--mode',
                         type=str,
@@ -82,7 +83,17 @@ def extract_keywords(filename):
         lines = f.readlines()
 
     sentence = extract_query(lines[2])
-    search_ids = extract_gt(lines[3:])
+    search_ids = []
+    for line in lines[3:]:
+        line = line.split(']')[0]
+        line = line.replace('([', '')
+        if ',' in line:
+            for item in line.split(','):
+                search_ids.append(int(item))
+        else:
+            search_ids.append(int(line))
+    # Remove duplicates
+    search_ids = list(set(search_ids))
     return sentence, search_ids
 
 
@@ -279,7 +290,7 @@ def query_embeddings(arguments, embeddings_file):
                 clusters_indices = kmeans.labels_
 
     for label_name in label_files:
-        print('#' * 80)
+        print('#' * 100)
         print('File: {}'.format(label_name))
         keywords, search_ids = extract_keywords(os.path.join(label_dir, label_name))
         print('Keywords: {}'.format(keywords))
@@ -354,6 +365,9 @@ if __name__ == '__main__':
                                training_algorithm='word2vec', learning_method='skipgram',
                                with_tokenization=True)
     elif args.wrapper == 'retro':
+        wrapper = RETROWrapper(n_iterations=10, alpha=1.0, beta=0.0, gamma=3.0, delta=3.0,
+                               tokenization='simple', with_tokenization=True, table_blacklist=[])
+    elif args.wrapper == 'retronumeric':
         wrapper = RETRONumericWrapper(n_iterations=10, alpha=1.0, beta=0.0, gamma=3.0, delta=1.0,
                                       number_dims=300, standard_deviation=1.0, table_blacklist=[],
                                       with_tokenization=True)

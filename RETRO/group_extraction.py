@@ -44,15 +44,11 @@ def get_group(name, group_type, vector_dict, extended=None, query='', export_typ
 
 def get_column_groups(df_vectors, graph, terms, conf):
     print("Column relation extraction started:")
-    create_new_column_index = conf['CREATE_NEW_COLUMN_INDEX']
     result = dict()
     for node in graph.nodes:
         columns_attr = graph.nodes[node]['columns']
         column_names = columns_attr if type(columns_attr) == list else [columns_attr]
         df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv', na_filter=False)
-        if create_new_column_index:
-            df_node['index'] = range(len(df_node))
-            df_node['index'] = df_node['index'].apply(lambda x: 'index__' + node + '__' + str(x))
         df_node = df_node.applymap(str)
         df_node = df_node.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         for column_name in column_names:
@@ -65,54 +61,56 @@ def get_column_groups(df_vectors, graph, terms, conf):
             records = merging.to_records(index=False)
             term_vecs = list(records)
             for (term, vec_bytes, vec_id) in term_vecs:
-                if vec_bytes != '':
-                    vec_dict_fit[term] = dict()
-                    vec_dict_fit[term]['vector'] = np.array(vec_bytes.split(), dtype='float32')
-                    vec_dict_fit[term]['id'] = int(vec_id)
-                else:
-                    if term == '':
-                        continue
-                    splits = [x.replace('_', '') for x in term.split('_')]
-                    i = 1
-                    j = 0
-                    current = [terms, None, -1]
-                    vector = None
-                    last_match = (0, None, -1)
-                    count = 0
-                    while i <= len(splits) or last_match[1] is not None:
-                        sub_word = '_'.join(splits[j:i])
-                        if sub_word in current[0]:
-                            current = current[0][sub_word]
-                            if (current[1] != '') and (current[1] is not None):
-                                last_match = (i, np.array(current[1].split(), dtype='float32'), current[2])
-                        else:
-                            if last_match[1] is not None:
-                                if vector is not None:
-                                    if conf['TOKENIZATION'] == 'log10':
-                                        vector += last_match[1] * np.log10(last_match[2])
-                                        count += np.log10(last_match[2])
-                                    else:  # 'simple' or different
-                                        vector += last_match[1]
-                                        count += 1
-                                else:
-                                    if conf['TOKENIZATION'] == 'log10':
-                                        vector = last_match[1] * np.log10(last_match[2])
-                                        count += np.log10(last_match[2])
-                                    else:  # 'simple' or different
-                                        vector = last_match[1]
-                                        count += 1
-                                j = last_match[0]
-                                i = j
-                                last_match = (0, None, -1)
+                # Modified the following rows to support multi-words per token
+                for val in term.split('_'):
+                    if vec_bytes != '':
+                        vec_dict_fit[val] = dict()
+                        vec_dict_fit[val]['vector'] = np.array(vec_bytes.split(), dtype='float32')
+                        vec_dict_fit[val]['id'] = int(vec_id)
+                    else:
+                        if val == '':
+                            continue
+                        splits = [x.replace('_', '') for x in val.split('_')]
+                        i = 1
+                        j = 0
+                        current = [terms, None, -1]
+                        vector = None
+                        last_match = (0, None, -1)
+                        count = 0
+                        while i <= len(splits) or last_match[1] is not None:
+                            sub_word = '_'.join(splits[j:i])
+                            if sub_word in current[0]:
+                                current = current[0][sub_word]
+                                if (current[1] != '') and (current[1] is not None):
+                                    last_match = (i, np.array(current[1].split(), dtype='float32'), current[2])
                             else:
-                                j += 1
-                                i = j
-                            current = [terms, None, -1]
-                        i += 1
-                    if vector is not None:
-                        vector /= count
-                        vec_dict_inferred[term] = dict()
-                        vec_dict_inferred[term]['vector'] = vector
+                                if last_match[1] is not None:
+                                    if vector is not None:
+                                        if conf['TOKENIZATION'] == 'log10':
+                                            vector += last_match[1] * np.log10(last_match[2])
+                                            count += np.log10(last_match[2])
+                                        else:  # 'simple' or different
+                                            vector += last_match[1]
+                                            count += 1
+                                    else:
+                                        if conf['TOKENIZATION'] == 'log10':
+                                            vector = last_match[1] * np.log10(last_match[2])
+                                            count += np.log10(last_match[2])
+                                        else:  # 'simple' or different
+                                            vector = last_match[1]
+                                            count += 1
+                                    j = last_match[0]
+                                    i = j
+                                    last_match = (0, None, -1)
+                                else:
+                                    j += 1
+                                    i = j
+                                current = [terms, None, -1]
+                            i += 1
+                        if vector is not None:
+                            vector /= count
+                            vec_dict_inferred[val] = dict()
+                            vec_dict_inferred[val]['vector'] = vector
             result['%s.%s' % (node, column_name)] = [get_group('%s.%s' % (node, column_name),
                                                                'categorial',
                                                                vec_dict_fit,
@@ -122,14 +120,10 @@ def get_column_groups(df_vectors, graph, terms, conf):
 
 def get_row_groups(df_vectors, graph, conf):
     print("Row relation extraction started...")
-    create_new_column_index = conf['CREATE_NEW_COLUMN_INDEX']
     result = dict()
     for node in graph.nodes:
         columns = graph.nodes[node]['columns']
         df_node = pd.read_csv(conf['DATASETS_PATH'] + str(node) + '.csv', na_filter=False)
-        if create_new_column_index:
-            df_node['index'] = range(len(df_node))
-            df_node['index'] = df_node['index'].apply(lambda x: 'index__' + node + '__' + str(x))
         df_node = df_node.applymap(str)
         df_node = df_node.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         if type(columns) != list:
@@ -163,20 +157,13 @@ def get_row_groups(df_vectors, graph, conf):
 def get_relation_groups(df_vectors, graph, conf):
     # Assumption: two tables are only direct related by one foreign key relation
     print("Table relation extraction started:")
-    create_new_column_index = conf['CREATE_NEW_COLUMN_INDEX']
     result = dict()
     for (node1, node2, attrs) in graph.edges.data():
         table1, table2 = node1, node2
         df_table1 = pd.read_csv(conf['DATASETS_PATH'] + str(table1) + '.csv', na_filter=False)
-        if create_new_column_index:
-            df_table1['index'] = range(len(df_table1))
-            df_table1['index'] = df_table1['index'].apply(lambda x: 'index__' + node1 + '__' + str(x))
         df_table1 = df_table1.applymap(str)
         df_table1 = df_table1.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         df_table2 = pd.read_csv(conf['DATASETS_PATH'] + str(table2) + '.csv', na_filter=False)
-        if create_new_column_index:
-            df_table2['index'] = range(len(df_table2))
-            df_table2['index'] = df_table2['index'].apply(lambda x: 'index__' + node2 + '__' + str(x))
         df_table2 = df_table2.applymap(str)
         df_table2 = df_table2.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
         key_col1, key_col2 = attrs['col1'], attrs['col2']
@@ -224,9 +211,6 @@ def get_relation_groups(df_vectors, graph, conf):
                     pkey_col2 = graph.nodes[node2]['pkey']
                     rel_tab_name = attrs['name']
                     df_rel_tab = pd.read_csv(conf['DATASETS_PATH'] + str(rel_tab_name) + '.csv', na_filter=False)
-                    if create_new_column_index:
-                        df_rel_tab['index'] = range(len(df_rel_tab))
-                        df_rel_tab['index'] = df_rel_tab['index'].apply(lambda x: 'index__' + rel_name + '__' + str(x))
                     df_rel_tab = df_rel_tab.applymap(str)
                     df_rel_tab = df_rel_tab.applymap(lambda x: utils.tokenize(x) if isinstance(x, str) else x)
                     merge1 = pd.merge(df_table1, df_rel_tab, left_on=pkey_col1, right_on=key_col1)

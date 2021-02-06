@@ -7,27 +7,25 @@ from scipy.sparse import csr_matrix
 from scipy.sparse import lil_matrix
 from sklearn import preprocessing
 from os import linesep
-from threading import Thread
-from threading import Lock
 
 import RETRO.retro_utils as utils
 
-NUM_THREADS = 2
 MIN_GROUP_SIZE = 2
 
 
 def get_adjacency_vector(size, group_name, index_lookup, conf):
     # Get group elements (elements of column)
     print('Get adjacency vector for group:', group_name)
-    create_new_column_index = conf['CREATE_NEW_COLUMN_INDEX']
     table_name, column_name = utils.get_column_data_from_label(group_name, 'column')
     df = pd.read_csv(conf['DATASETS_PATH'] + table_name + '.csv', na_filter=False)
-    if create_new_column_index:
-        df['index'] = range(len(df))
-        df['index'] = df['index'].apply(lambda x: 'index__' + table_name + '__' + str(x))
     res = df[column_name]
     res = res.fillna('')
-    group_elements = [group_name + '#' + utils.tokenize(x) for idx, x in res.iteritems()]
+    group_elements = []
+    for idx, x in res.items():
+        # Modified the following rows to support multi-words per token
+        tokenize_x = utils.tokenize(x)
+        for val in tokenize_x.split('_'):
+            group_elements.append(group_name + '#' + val)
     # Construct vector
     vector = np.zeros(size)
     for element in group_elements:
@@ -40,7 +38,6 @@ def retrieve_relation_elements(group, conf):
     query = group['query']
     columns = query['SELECT'].split(',')
     table1 = query['FROM']
-    create_new_column_index = conf['CREATE_NEW_COLUMN_INDEX']
     if 'JOIN' in query:
         # Table Relation
         if not isinstance(query['JOIN'], list):
@@ -49,14 +46,8 @@ def retrieve_relation_elements(group, conf):
             left_column = query['LEFT_ON']
             right_column = query['RIGHT_ON']
             df_table1 = pd.read_csv(conf['DATASETS_PATH'] + table1 + '.csv')
-            if create_new_column_index:
-                df_table1['index'] = range(len(df_table1))
-                df_table1['index'] = df_table1['index'].apply(lambda x: 'index__' + table1 + '__' + str(x))
             columns_df_table1 = df_table1.columns.tolist()
             df_table2 = pd.read_csv(conf['DATASETS_PATH'] + table2 + '.csv')
-            if create_new_column_index:
-                df_table2['index'] = range(len(df_table2))
-                df_table2['index'] = df_table2['index'].apply(lambda x: 'index__' + table2 + '__' + str(x))
             columns_df_table2 = df_table2.columns.tolist()
             list1_as_set = set(columns_df_table1)
             intersection = list1_as_set.intersection(columns_df_table2)
@@ -79,17 +70,8 @@ def retrieve_relation_elements(group, conf):
             left_column = query['LEFT_ON']
             right_column = query['RIGHT_ON']
             df_table1 = pd.read_csv(conf['DATASETS_PATH'] + table1 + '.csv')
-            if create_new_column_index:
-                df_table1['index'] = range(len(df_table1))
-                df_table1['index'] = df_table1['index'].apply(lambda x: 'index__' + table1 + '__' + str(x))
             df_table2 = pd.read_csv(conf['DATASETS_PATH'] + table2 + '.csv')
-            if create_new_column_index:
-                df_table2['index'] = range(len(df_table2))
-                df_table2['index'] = df_table2['index'].apply(lambda x: 'index__' + table2 + '__' + str(x))
             df_table3 = pd.read_csv(conf['DATASETS_PATH'] + table3 + '.csv')
-            if create_new_column_index:
-                df_table3['index'] = range(len(df_table3))
-                df_table3['index'] = df_table3['index'].apply(lambda x: 'index__' + table3 + '__' + str(x))
             merge1 = pd.merge(df_table1, df_table2, left_on=left_column[0], right_on=right_column[0])
             merging = pd.merge(merge1, df_table3, left_on=left_column[1], right_on=right_column[1])
             group_elements = merging[columns]
@@ -98,9 +80,6 @@ def retrieve_relation_elements(group, conf):
     else:
         # Row Relation
         df_table1 = pd.read_csv(conf['DATASETS_PATH'] + table1 + '.csv')
-        if create_new_column_index:
-            df_table1['index'] = range(len(df_table1))
-            df_table1['index'] = df_table1['index'].apply(lambda x: 'index__' + table1 + '__' + str(x))
         group_elements = df_table1[columns]
         group_elements = group_elements.fillna('')
         return group_elements
@@ -120,11 +99,14 @@ def fill_adjacency_matrix_relational(size, column_names, index_lookup, group, co
     for (text_value1, text_value2) in group_elements:
         text_value1 = utils.tokenize(text_value1)
         text_value2 = utils.tokenize(text_value2)
-        i = index_lookup[utils.get_label(column_names[0], text_value1)]
-        j = index_lookup[utils.get_label(column_names[1], text_value2)]
-        A[i, j] = 1
-        c_out[i] = 1
-        c_in[j] = 1
+        # Modified the following rows to support multi-words per token
+        for val1 in text_value1.split('_'):
+            for val2 in text_value2.split('_'):
+                i = index_lookup[utils.get_label(column_names[0], val1)]
+                j = index_lookup[utils.get_label(column_names[1], val2)]
+                A[i, j] = 1
+                c_out[i] = 1
+                c_in[j] = 1
     return csr_matrix(A), (c_in + c_out)
 
 
@@ -171,7 +153,6 @@ def create_M0(all_terms, present_vectors, dim):
     term_list = []
     M0 = []
     presence_vector = []
-    m, s = utils.get_dist_params(present_vectors)
     for key in all_terms:
         for term in all_terms[key]:
             row_label = utils.get_label(key, term)
@@ -203,7 +184,7 @@ def get_v_c(A_cat,  M0, presence_vector):  # Parallel version
     return res_cat
 
 
-def calculate_Madd_rel(S, key, inv_key, c_inv, M_last, M_sum, v_denominator, conf, M_sum_lock, v_denominator_lock):
+def calculate_Madd_rel(S, key, inv_key, c_inv, M_last, M_sum, v_denominator, conf):
     GAMMA = conf['GAMMA']
     DELTA = conf['DELTA']
     start = time.time()
@@ -243,27 +224,19 @@ def calculate_Madd_rel(S, key, inv_key, c_inv, M_last, M_sum, v_denominator, con
         max_cardinality * max_c_inv**-1)) * DELTA * 2
     denum_sum = np.array(np.sum(S[inv_key].T.multiply(c_inv), axis=1)).T[0] * GAMMA + GAMMA * sources_one_hot * c_inv - 2 * DELTA * (
         num_targets - gamma_i_inv) / (max_cardinality * max_c_inv**-1) * sources_one_hot  # add to denominator
-    M_sum_lock.acquire()
     M_sum += (M_inc - M_dec)
-    M_sum_lock.release()
-    v_denominator_lock.acquire()
     v_denominator += denum_sum
-    v_denominator_lock.release()
     end = time.time()
     print('Calculation for relation', key, '--> done', 'time:', end - start)
     return
 
 
-def calculate_Madd_cat(A_cat, key, Mc, M_sum, v_denominator, v_c, conf, M_sum_lock, v_denominator_lock):
+def calculate_Madd_cat(A_cat, key, Mc, M_sum, v_denominator, v_c, conf):
     BETA = conf['BETA']
     start = time.time()
     centroid = v_c[key]
-    M_sum_lock.acquire()
     M_sum += np.array([Mc.diagonal() * A_cat[key]]).T * centroid * BETA
-    M_sum_lock.release()
-    v_denominator_lock.acquire()
     v_denominator += Mc.diagonal() * A_cat[key] * BETA
-    v_denominator_lock.release()
     end = time.time()
     print('Calculation for categorial relation', key, '--> done', 'time:', end - start)
     return
@@ -274,24 +247,11 @@ def calculate_Mk(M0, M_last, Mc, c_inv, S, v_c, v_P, A_cat, invert_rel, conf):
     M_sum = np.zeros(M0.shape)
     v_denominator = np.zeros(M0.shape[0], dtype='float32')
     M_sum += M0 * np.array([v_P]).T * ALPHA
-    threads = []
-    executer_threads = []
-    M_sum_lock = Lock()
-    v_denominator_lock = Lock()
 
     for key in A_cat:
-        threads.append(Thread(target=calculate_Madd_cat, args=(
-            A_cat, key, Mc, M_sum, v_denominator, v_c, conf, M_sum_lock, v_denominator_lock)))
+        calculate_Madd_cat(A_cat, key, Mc, M_sum, v_denominator, v_c, conf)
     for key in S:
-        threads.append(Thread(target=calculate_Madd_rel, args=(
-            S, key, invert_rel[key], c_inv, M_last, M_sum, v_denominator, conf, M_sum_lock, v_denominator_lock)))
-    for i in range(NUM_THREADS):
-        executer_threads.append(Thread(target=utils.execute_threads_from_pool, args=(threads,),
-                                       kwargs={'verbose': False}))
-    for thread in executer_threads:
-        thread.start()
-    for thread in executer_threads:
-        thread.join()
+        calculate_Madd_rel(S, key, invert_rel[key], c_inv, M_last, M_sum, v_denominator, conf)
 
     result = M_sum / ((v_P * ALPHA + v_denominator)[:, None])
     print('Delta:', sum(np.linalg.norm(result - M_last, ord=1, axis=1)))
@@ -394,8 +354,4 @@ def main(conf):
     Mk = run_retrofitting(M0, S, v_c, c, v_Q, A_cat, rel_key_pairs, conf)
     print('Retrofitting done, start to generate vectors file ...')
 
-    # Output result to file
-    output_vectors(term_list, Mk, conf['RETRO_VECS_FILE_NAME'],  with_zero_vectors=True)
-    print('Exported vectors')
-
-    return
+    return term_list, Mk

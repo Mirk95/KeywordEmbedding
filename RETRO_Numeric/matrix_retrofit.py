@@ -333,14 +333,13 @@ def main(conf):
     # Create M0 and presence vector
     term_list, M0, v_P = create_M0(all_terms, present_vectors, dim, conf)
     print('Constructed initial matrix M0 with size', M0.shape)
-
     print('Len', len(v_P.nonzero()[0]))
 
     # Create adjacency matrices, weight matrices, count vectors and vector for R
     A_cat, S, c, rel_key_pairs = create_adjacency_matrices(term_list, groups_info, conf)
     print('Created matrix representations')
 
-    # get category vectors v_c
+    # Get category vectors v_c
     v_c = get_v_c(A_cat, M0, v_P)
     for key in v_c:
         print(key, np.linalg.norm(v_c[key]))
