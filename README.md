@@ -17,32 +17,30 @@ Analyzing the various approaches proposed by numerous data scientists from all o
 * [RETRO](https://github.com/guenthermi/postgres-retrofit)
 
 ### EmbDI
->EmbDI is a Python library developed to perform Entity Resolution (ER) and Schema Matching (SM) tasks by employing
-word embeddings.
+>EmbDI is a Python library developed to perform Entity Resolution (ER) and Schema Matching (SM) tasks by employing word embeddings.
+
+EmbDI is a framework which consists of three major components, as depited in the following figure, taken from authors' paper:
+<p align="center">
+  <img src="https://github.com/Mirk95/KeywordEmbedding/images/EmbDI.png">
+</p>
+1. In the Graph Construction stage, the authors process the relational dataset and transform it to a compact tripartite graph that encodes various relationships inherent in it. Tuple and attribute ids are treated as first class citizens.
+2. Given this graph, the next step is *Sentence Construction* through the use of biased random walks. These walks are carefully constructed to avoid common issues such as rare words and imbalance in vocabulary sizes. This produces as output a series of sentences.
 
 ### RETRO
 >RETRO is a framework that provides tools to automatically extract text values from a PostgreSQL database, represent those text values by a continuous vector representation using a word embedding model. In order to incorporate semantic knowledge from the database into the representation, it extracts additional relational information from the database and uses this knowledge to refine the embeddings by a relational retrofitting method. The resulting embeddings can then be used to perform machine learning tasks.
 
-### Tree
+## Implementation Details
+### Project Tree
 ```
 .
 ├── Base
 │   ├── base.py
 │   ├── __init__.py
-│   └── __pycache__
-│       ├── base.cpython-38.pyc
-│       └── __init__.cpython-38.pyc
 ├── dbms2graph.py
 ├── EmbDI
 │   ├── embeddings.py
 │   ├── graph.py
 │   ├── logging.py
-│   ├── __pycache__
-│   │   ├── embeddings.cpython-38.pyc
-│   │   ├── graph.cpython-38.pyc
-│   │   ├── logging.cpython-38.pyc
-│   │   ├── sentence_generation_strategies.cpython-38.pyc
-│   │   └── utils.cpython-38.pyc
 │   ├── sentence_generation_strategies.py
 │   └── utils.py
 ├── pipeline
@@ -65,52 +63,7 @@ word embeddings.
 │   │   └── IMDB
 │   │       ├── 001.txt
 │   │       ├── 002.txt
-│   │       ├── 003.txt
-│   │       ├── 004.txt
-│   │       ├── 005.txt
-│   │       ├── 006.txt
-│   │       ├── 007.txt
-│   │       ├── 008.txt
-│   │       ├── 009.txt
-│   │       ├── 010.txt
-│   │       ├── 011.txt
-│   │       ├── 012.txt
-│   │       ├── 013.txt
-│   │       ├── 014.txt
-│   │       ├── 015.txt
-│   │       ├── 016.txt
-│   │       ├── 017.txt
-│   │       ├── 018.txt
-│   │       ├── 019.txt
-│   │       ├── 020.txt
-│   │       ├── 021.txt
-│   │       ├── 022.txt
-│   │       ├── 023.txt
-│   │       ├── 024.txt
-│   │       ├── 025.txt
-│   │       ├── 026.txt
-│   │       ├── 027.txt
-│   │       ├── 028.txt
-│   │       ├── 029.txt
-│   │       ├── 030.txt
-│   │       ├── 031.txt
-│   │       ├── 032.txt
-│   │       ├── 033.txt
-│   │       ├── 034.txt
-│   │       ├── 035.txt
-│   │       ├── 036.txt
-│   │       ├── 037.txt
-│   │       ├── 038.txt
-│   │       ├── 039.txt
-│   │       ├── 040.txt
-│   │       ├── 041.txt
-│   │       ├── 042.txt
-│   │       ├── 043.txt
-│   │       ├── 044.txt
-│   │       ├── 045.txt
-│   │       ├── 046.txt
-│   │       ├── 047.txt
-│   │       ├── 048.txt
+|   |       ├── ...
 │   │       ├── 049.txt
 │   │       ├── 050.txt
 │   │       ├── README
@@ -134,14 +87,8 @@ word embeddings.
 │       └── name.walks
 ├── preprocessing
 │   ├── __init__.py
-│   ├── __pycache__
-│   │   ├── __init__.cpython-38.pyc
-│   │   ├── tokenizer.cpython-38.pyc
-│   │   └── utils.cpython-38.pyc
 │   ├── tokenizer.py
 │   └── utils.py
-├── __pycache__
-│   └── dbms2graph.cpython-38.pyc
 ├── query_embedding.py
 ├── query_embedding_valutation.py
 ├── README.md
@@ -151,13 +98,6 @@ word embeddings.
 │   ├── graph_generation.py
 │   ├── group_extraction.py
 │   ├── matrix_retrofit.py
-│   ├── __pycache__
-│   │   ├── gml2json.cpython-38.pyc
-│   │   ├── graph_generation.cpython-38.pyc
-│   │   ├── group_extraction.cpython-38.pyc
-│   │   ├── matrix_retrofit.cpython-38.pyc
-│   │   ├── retro_utils.cpython-38.pyc
-│   │   └── retro_wrapper.cpython-38.pyc
 │   └── retro_utils.py
 ├── RETRO_Numeric
 │   ├── encoding_utils.py
@@ -165,26 +105,12 @@ word embeddings.
 │   ├── graph_generation.py
 │   ├── group_extraction.py
 │   ├── matrix_retrofit.py
-│   ├── __pycache__
-│   │   ├── encoding_utils.cpython-38.pyc
-│   │   ├── gml2json.cpython-38.pyc
-│   │   ├── graph_generation.cpython-38.pyc
-│   │   ├── group_extraction.cpython-38.pyc
-│   │   ├── matrix_retrofit.cpython-38.pyc
-│   │   └── retro_utils.cpython-38.pyc
 │   └── retro_utils.py
 └── wrapper
     ├── base_wrapper.py
     ├── edgelist.py
     ├── embdi_wrapper.py
     ├── __init__.py
-    ├── __pycache__
-    │   ├── base_wrapper.cpython-38.pyc
-    │   ├── edgelist.cpython-38.pyc
-    │   ├── embdi_wrapper.cpython-38.pyc
-    │   ├── __init__.cpython-38.pyc
-    │   ├── retro_numeric_wrapper.cpython-38.pyc
-    │   └── retro_wrapper.cpython-38.pyc
     ├── retro_numeric_wrapper.py
     └── retro_wrapper.py
 ```
