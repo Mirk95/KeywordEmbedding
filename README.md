@@ -21,10 +21,12 @@ Analyzing the various approaches proposed by numerous data scientists from all o
 
 EmbDI is a framework which consists of three major components, as depited in the following figure, taken from authors' paper:
 <p align="center">
-  <img src="https://github.com/Mirk95/KeywordEmbedding/images/EmbDI.png">
+  <img src="https://github.com/Mirk95/KeywordEmbedding/blob/master/images/EmbDI.png">
 </p>
-1. In the Graph Construction stage, the authors process the relational dataset and transform it to a compact tripartite graph that encodes various relationships inherent in it. Tuple and attribute ids are treated as first class citizens.
-2. Given this graph, the next step is *Sentence Construction* through the use of biased random walks. These walks are carefully constructed to avoid common issues such as rare words and imbalance in vocabulary sizes. This produces as output a series of sentences.
+
+1. In the **Graph Construction** stage, the relational dataset is processed and transformed into a compact tripartite graph that encodes various relationships inherent in it. Tuple and attribute ids are treated as first class citizens.
+2. Given this graph, the next step is **Sentence Construction** through the use of biased random walks. These walks are carefully constructed to avoid common issues such as rare words and imbalance in vocabulary sizes. This produces as output a series of sentences.
+3. In **Embedding Construction**, the corpus of sentences is passed to an algorithm for learning word embeddings. Depending on available external information, some optimizations can be performed to the graph and the workflow to improve the embeddings’ quality.
 
 ### RETRO
 >RETRO is a framework that provides tools to automatically extract text values from a PostgreSQL database, represent those text values by a continuous vector representation using a word embedding model. In order to incorporate semantic knowledge from the database into the representation, it extracts additional relational information from the database and uses this knowledge to refine the embeddings by a relational retrofitting method. The resulting embeddings can then be used to perform machine learning tasks.
