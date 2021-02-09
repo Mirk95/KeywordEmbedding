@@ -8,18 +8,18 @@ Supervisor: Prof. *Francesco Guerra*
 
 Advisors: Ing. *Matteo Paganelli*, Ing. *Francesco Del Buono*
 
-## Related Works
+# Related Works
 
 At the beginning of our work, we started to study the main word embedding techniques known in Literature (such as Word2Vec, GloVe, Naive Bayes, BERT, ELMo, GPT etc.) and to understanding how to use them for structured data taken from databases.
 Analyzing the various approaches proposed by numerous data scientists from all over the world, we focused our attention on two frameworks:
-* [EmbDI](https://gitlab.eurecom.fr/cappuzzo/embdi)
+* [EmbDI by R. Cappuzzo, P. Papotti, and S. Thirumuruganathan](https://gitlab.eurecom.fr/cappuzzo/embdi)
 
-* [RETRO](https://github.com/guenthermi/postgres-retrofit)
+* [RETRO by M. Günther, P. Oehme, M. Thiele, and W. Lehner](https://github.com/guenthermi/postgres-retrofit)
 
-### EmbDI
->EmbDI is a Python library developed to perform Entity Resolution (ER) and Schema Matching (SM) tasks by employing word embeddings.
+## EmbDI
+>"EmbDI is a Python library developed to perform Entity Resolution (ER) and Schema Matching (SM) tasks by employing word embeddings".
 
-EmbDI is a framework which consists of three major components, as depited in the following figure, taken from authors' paper:
+EmbDI is a framework which consists of three major components, as depicted in the following figure, taken from authors' paper:
 <p align="center">
   <img src="https://github.com/Mirk95/KeywordEmbedding/blob/master/images/EmbDI.png">
 </p>
@@ -28,11 +28,21 @@ EmbDI is a framework which consists of three major components, as depited in the
 2. Given this graph, the next step is **Sentence Construction** through the use of biased random walks. These walks are carefully constructed to avoid common issues such as rare words and imbalance in vocabulary sizes. This produces as output a series of sentences.
 3. In **Embedding Construction**, the corpus of sentences is passed to an algorithm for learning word embeddings. Depending on available external information, some optimizations can be performed to the graph and the workflow to improve the embeddings’ quality.
 
-### RETRO
+### Graph Construction:
+The modeling of relational data as a graph provides a more expressive representation of the data with a number of advantages. First, it elegantly handles
+many of the various relationships between entities that are common in relational
+datasets. Second, it provides a straight-forward way to incorporate external
+information such as “two tokens are synonyms of each other”. Finally, when multiple relations are involved, a graph representation enables a unified view over the
+different datasets that is invaluable for learning embeddings for data integration.
+
+### Sentence Construction:
+To generate the distributed representation of each node in the graph, the authors proposed to produce a large number of random walks and gather them in a training corpus where each random walk will correspond to a sentence. Using graphs and random walks allows to have a richer and more diverse set of neighborhoods than what would be possible by encoding a tuple as a single sentence.
+
+## RETRO
 >RETRO is a framework that provides tools to automatically extract text values from a PostgreSQL database, represent those text values by a continuous vector representation using a word embedding model. In order to incorporate semantic knowledge from the database into the representation, it extracts additional relational information from the database and uses this knowledge to refine the embeddings by a relational retrofitting method. The resulting embeddings can then be used to perform machine learning tasks.
 
-## Implementation Details
-### Project Tree
+# Implementation Details
+## Project Tree
 ```
 .
 ├── Base
@@ -116,6 +126,6 @@ EmbDI is a framework which consists of three major components, as depited in the
     ├── retro_numeric_wrapper.py
     └── retro_wrapper.py
 ```
-## References
+# References
 * Cappuzzo, Riccardo and Papotti, Paolo and Thirumuruganathan, Saravanan - 2020 - [*Creating Embeddings of Heterogeneous Relational Datasets for Data Integration Tasks*](http://dx.doi.org/10.1145/3318464.3389742) - Proceedings of the 2020 ACM SIGMOD International Conference on Management of Data.
 * Michael Günther, Philipp Oehme, Maik Thiele, and Wolfgang Lehner - 2020 - [*Learning from Textual Data in Database Systems*](https://doi.org/10.1145/3340531.3412056) - In Proceedings of the 29th ACM International Conference on Information & Knowledge Management (CIKM '20). ACM, New York, NY, USA, 375–384.
