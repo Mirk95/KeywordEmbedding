@@ -32,6 +32,55 @@ def accuracy_k(mode, ground_truth, predicted, k):
         return np.any(pred_at_k)
 
 
+def complex_accuracy(document, predicted, th=1):
+    assert th >= 1
+    th = min(len(document), th)
+    ground_truth_set = set(document)
+    predicted_set = set(predicted)
+    return True if len(ground_truth_set & predicted_set) >= th else False
+
+
+def average_precision(ground_truth, predicted, th=1):
+    check_relevant_document = [False] * len(ground_truth)
+    check_predicted_document = []
+
+    # check which prediction is relevant
+    for i, single_predicted in enumerate(predicted):
+
+        relevant_predicted = False
+
+        # for each relevant document compute accuracy with the given prediction
+        for j, single_relevant in enumerate(ground_truth):
+            if check_relevant_document[j]:
+                # that document is already relevant
+                continue
+
+            res = complex_accuracy(single_relevant, single_predicted, th=th)
+            if res:
+                check_relevant_document[j] = res
+                relevant_predicted = True
+
+        check_predicted_document.append(relevant_predicted)
+
+        if np.all(check_relevant_document):
+            break
+
+    # compute precision for each relevant prediction
+    precision_array = []
+    num_relevant = 0
+    for i, res in enumerate(check_predicted_document, 1):
+        if res:
+            num_relevant += 1
+            precision_array.append(num_relevant / i)
+
+    # add 0 precision for not retrieved document
+    for res in check_relevant_document:
+        if res is False:
+            precision_array.append(0)
+
+    return np.mean(precision_array)
+
+
 def compute_precision_and_recall(query_results, mode):
     for file in query_results.keys():
         print(f'Computing precision and recall at k for file {file}: ')
