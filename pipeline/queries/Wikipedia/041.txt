@@ -1,0 +1,9 @@
+# exxon valdez oil spill
+([179279], []) # Exxon_Valdez_oil_spill
+([184807], []) # Exxon_Valdez_oil_spill
+([185495], []) # 1989
+([186201], []) # Orca
+([189544], []) # History_of_Alaska
+([187404], []) # Ship
+([188231], []) # Bacteria
+([184807, 1510811, 179279], [(184807, 1510811), (1510811, 179279)]) # Exxon_Valdez_oil_spill

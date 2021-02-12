@@ -1,0 +1,2 @@
+# oral civilization
+([179788, 363621, 180908], [(363621, 179788), (363621, 180908)]) # Civilization -> Oral_history

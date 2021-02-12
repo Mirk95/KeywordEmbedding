@@ -1,0 +1,12 @@
+# soviet casualties world war ii
+([179392], []) # Eastern_Front_(World_War_II)
+([179433], []) # World_War_II
+([182671], []) # Soviet_Union
+([184912], []) # Eastern_Front_(World_War_II)
+([184738], []) # World_War_II
+([189550], []) # History_of_Russia
+([187690], []) # Soviet_Union
+([188736], []) # Modern_history
+([184912, 1510757, 179392], [(184912, 1510757), (1510757, 179392)]) # Eastern_Front_(World_War_II)
+([184738, 1510895, 179433], [(184738, 1510895), (1510895, 179433)]) # World_War_II
+([187690, 1507950, 182671], [(187690, 1507950), (1507950, 182671)]) # Soviet_Union

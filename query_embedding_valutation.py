@@ -1,6 +1,4 @@
-import os
 import numpy as np
-import pickle
 
 
 def precision(ground_truth, predicted, k):
@@ -44,15 +42,14 @@ def average_precision(ground_truth, predicted, th=1):
     check_relevant_document = [False] * len(ground_truth)
     check_predicted_document = []
 
-    # check which prediction is relevant
+    # Check which prediction is relevant
     for i, single_predicted in enumerate(predicted):
-
         relevant_predicted = False
 
-        # for each relevant document compute accuracy with the given prediction
+        # For each relevant document compute accuracy with the given prediction
         for j, single_relevant in enumerate(ground_truth):
             if check_relevant_document[j]:
-                # that document is already relevant
+                # That document is already relevant
                 continue
 
             res = complex_accuracy(single_relevant, single_predicted, th=th)
@@ -61,11 +58,10 @@ def average_precision(ground_truth, predicted, th=1):
                 relevant_predicted = True
 
         check_predicted_document.append(relevant_predicted)
-
         if np.all(check_relevant_document):
             break
 
-    # compute precision for each relevant prediction
+    # Compute precision for each relevant prediction
     precision_array = []
     num_relevant = 0
     for i, res in enumerate(check_predicted_document, 1):
@@ -73,7 +69,7 @@ def average_precision(ground_truth, predicted, th=1):
             num_relevant += 1
             precision_array.append(num_relevant / i)
 
-    # add 0 precision for not retrieved document
+    # Add 0 precision for not retrieved document
     for res in check_relevant_document:
         if res is False:
             precision_array.append(0)
@@ -91,31 +87,46 @@ def compute_precision_and_recall(query_results, mode):
         print('\n')
 
 
-if __name__ == '__main__':
-    # Read pickle files with query embedding results
-    results_dir = 'pipeline/query_emb_results/'
+def compute_mean_average_precision(query_results):
+    average_precisions = []
+    for file in query_results.keys():
+        print(f'Computing Average Precision for file {file}: ')
+        query, ground_truth, predictions = query_results[file]
+        print(f'Query: {query}')
+        ap = average_precision(ground_truth, predictions)
+        average_precisions.append(ap)
+        print(f"Average Precision : {ap}")
+        print('\n')
+    mean_ap = np.mean(average_precisions)
+    print(f"Mean Average Precision : {mean_ap}")
+    print('\n')
 
-    # Get list of files
-    file_list = [f for f in os.listdir(results_dir) if f.endswith('.pickle')]
 
-    for file in file_list:
-        filename = file.replace('.pickle', '')
-        items = filename.split('_')
-        print("#" * 80)
-        if len(items) == 3:
-            wrapper = items[0]
-            modality = items[1]
-            technique = items[2]
-            print(f"Wrapper: {wrapper}")
-            print(f"Modality: {modality}")
-            print(f"Technique: {technique}")
-        else:
-            wrapper = items[0]
-            modality = items[1]
-            print(f"Wrapper: {wrapper}")
-            print(f"Modality: {modality}")
-
-        with open(results_dir + file, 'rb') as handle:
-            emb_results = pickle.load(handle)
-
-        compute_precision_and_recall(emb_results, modality)
+# if __name__ == '__main__':
+    # # Read pickle files with query embedding results
+    # results_dir = 'pipeline/query_emb_results/'
+    #
+    # # Get list of files
+    # file_list = [f for f in os.listdir(results_dir) if f.endswith('.pickle')]
+    #
+    # for file in file_list:
+    #     filename = file.replace('.pickle', '')
+    #     items = filename.split('_')
+    #     print("#" * 80)
+    #     if len(items) == 3:
+    #         wrapper = items[0]
+    #         modality = items[1]
+    #         technique = items[2]
+    #         print(f"Wrapper: {wrapper}")
+    #         print(f"Modality: {modality}")
+    #         print(f"Technique: {technique}")
+    #     else:
+    #         wrapper = items[0]
+    #         modality = items[1]
+    #         print(f"Wrapper: {wrapper}")
+    #         print(f"Modality: {modality}")
+    #
+    #     with open(results_dir + file, 'rb') as handle:
+    #         emb_results = pickle.load(handle)
+    #
+    #     compute_mean_average_precision(emb_results)

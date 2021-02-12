@@ -1,0 +1,12 @@
+# spanish flu
+([190072], []) # Aspirin
+([190074], []) # Amelia_Earhart
+([185583], []) # 1918
+([186179], []) # 20th_century
+([189604], []) # History_of_the_United_States
+([189609], []) # History_of_the_Royal_Australian_Navy
+([186852], []) # Natural_disaster
+([187857], []) # Influenza_A_virus_subtype_H5N1
+([187862], []) # Influenza
+([187968], []) # Infectious_disease
+([186360], []) # Virus

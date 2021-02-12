@@ -1,0 +1,6 @@
+# atomic numbers lanthanides
+([186356], []) # Valence_(chemistry)
+([186457], []) # Periodic_table_(standard)
+([186532], []) # Periodic_table_(large_version)
+([186667], []) # Periodic_table
+([188141], []) # Lanthanoid

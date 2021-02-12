@@ -1,0 +1,10 @@
+# pride and prejudice author
+([181368], []) # Pride_and_Prejudice
+([186590], []) # Peak_District
+([186653], []) # Pride_and_Prejudice
+([186844], []) # Napoleonic_Wars
+([186879], []) # Novel
+([187049], []) # Keira_Knightley
+([187732], []) # Jane_Austen
+([188293], []) # BBC_television_drama
+([186653, 1508992, 181368], [(186653, 1508992), (1508992, 181368)]) # Pride_and_Prejudice

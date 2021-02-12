@@ -1,0 +1,12 @@
+# einstein special relativity
+([180205], []) # Albert_Einstein
+([182417], []) # Special_relativity
+([184455], []) # Theory_of_relativity
+([189985], []) # Albert_Einstein
+([185647], []) # 1905
+([186767], []) # Physics
+([187471], []) # Special_relativity
+([189148], []) # Theory_of_relativity
+([189985, 1505787, 180205], [(189985, 1505787), (1505787, 180205)]) # Albert_Einstein
+([187471, 1508442, 182417], [(187471, 1508442), (1508442, 182417)]) # Special_relativity
+([189148, 1506595, 184455], [(189148, 1506595), (1506595, 184455)]) # Theory_of_relativity

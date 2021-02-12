@@ -1,7 +1,6 @@
 import os
 import re
 import nltk
-import pickle
 import argparse
 import warnings
 import numpy as np
@@ -23,6 +22,7 @@ with warnings.catch_warnings():
     from wrapper.base_wrapper import BaseWrapper
     from preprocessing.tokenizer import tokenize_dataset
     from dbms2graph import create_graph
+    from query_embedding_valutation import compute_mean_average_precision
 
 
 def get_arguments():
@@ -37,21 +37,21 @@ def get_arguments():
                         choices=['single-to-single', 'single-to-many'],
                         default='single-to-single',
                         help='Mode to use for query embedding')
-    parser.add_argument('--approach',
-                        type=str,
-                        choices=['cn_search', 'clustering'],
-                        default='cn_search',
-                        help='Approach to use for Single-to-Many mode')
+    # parser.add_argument('--approach',
+    #                     type=str,
+    #                     choices=['cn_search', 'clustering'],
+    #                     default='cn_search',
+    #                     help='Approach to use for Single-to-Many mode')
     parser.add_argument('--cn_technique',
                         type=str,
                         choices=['base', 'first'],
                         default='base',
                         help='Technique used for Candidate Network Search')
-    parser.add_argument('--clustering_method',
-                        type=str,
-                        choices=['elbow', 'silhouette', 'offline'],
-                        default='offline',
-                        help='Clustering method to use for query embedding')
+    # parser.add_argument('--clustering_method',
+    #                     type=str,
+    #                     choices=['elbow', 'silhouette', 'offline'],
+    #                     default='offline',
+    #                     help='Clustering method to use for query embedding')
     args = parser.parse_args()
     return args
 
@@ -88,12 +88,12 @@ def extract_keywords(filename):
         line = line.split(']')[0]
         line = line.replace('([', '')
         if ',' in line:
+            search_ids_line = []
             for item in line.split(','):
-                search_ids.append(int(item))
+                search_ids_line.append(int(item))
+            search_ids.append(search_ids_line)
         else:
-            search_ids.append(int(line))
-    # Remove duplicates
-    search_ids = list(set(search_ids))
+            search_ids.append([int(line)])
     return sentence, search_ids
 
 
@@ -278,16 +278,16 @@ def query_embeddings(arguments, embeddings_file):
         print("Dbms graph successfully created!")
         print('\n')
 
-        if arguments.approach == 'clustering':
-            # Compute clusters only once, instead computing it for each query
-            print("Starting clustering...")
-            cond = [True if x.startswith('idx') else False for x in wrapper.keys]
-            if arguments.clustering_method == 'offline':
-                k, clusters_indices = offline_clustering(wrapper.mat[cond])
-            else:
-                k = find_optimal_clusters(wrapper.mat[cond], method=arguments.clustering_method)
-                kmeans = KMeans(n_clusters=k).fit(wrapper.mat[cond])
-                clusters_indices = kmeans.labels_
+        # if arguments.approach == 'clustering':
+        #     # Compute clusters only once, instead computing it for each query
+        #     print("Starting clustering...")
+        #     cond = [True if x.startswith('idx') else False for x in wrapper.keys]
+        #     if arguments.clustering_method == 'offline':
+        #         k, clusters_indices = offline_clustering(wrapper.mat[cond])
+        #     else:
+        #         k = find_optimal_clusters(wrapper.mat[cond], method=arguments.clustering_method)
+        #         kmeans = KMeans(n_clusters=k).fit(wrapper.mat[cond])
+        #         clusters_indices = kmeans.labels_
 
     for label_name in label_files:
         print('#' * 100)
@@ -315,39 +315,38 @@ def query_embeddings(arguments, embeddings_file):
                 print(df.loc[int(idx)])
                 print('\n')
                 search_ids_found.append(df.loc[int(idx), '__search_id'])
-            results[label_name] = (keywords, search_ids, search_ids_found)
+            results[label_name] = (keywords, search_ids, [search_ids_found])
         else:
             # Single-to-Many mode
             for neighbour in neighbours:
                 table, idx = neighbour.split('__')
                 if '.csv' in table:
                     table = table.replace('.csv', '')
-                if arguments.approach == 'cn_search':
-                    # Candidate Network Searching approach
-                    node_name = table + '__' + idx
-                    print(f"Searching Candidate Network for node {node_name}: ")
-                    search_ids_neighbour = candidate_network_search(datasets_dir, node_name, graph,
-                                                                    sentence, technique=arguments.cn_technique)
-                    search_ids_found.append(search_ids_neighbour)
-                else:
-                    # Clustering approach
-                    df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
-                    df = tokenize_dataset(df, stem=False)
-                    print(df.loc[int(idx)])
-                    print('\n')
-                    search_ids_found.append(df.loc[int(idx), '__search_id'])
-                    keys_with_only_idx = [wrapper.keys[i] for i in range(len(wrapper.keys)) if cond[i]]
-                    key_index = keys_with_only_idx.index('idx__' + table + '__' + str(idx))
-                    cluster = clusters_indices[key_index]
-                    items_list = list(np.array(np.where(clusters_indices == cluster)).ravel())
-                    for item in items_list:
-                        row = keys_with_only_idx[item]
-                        row = row.replace('idx__', '')
-                        table_item, idx_item = row.split('__')
-                        df = pd.read_csv(datasets_dir + table_item + '.csv', na_filter=False)
-                        print(df.loc[int(idx_item)])
-                        print('\n')
-                        search_ids_found.append(df.loc[int(idx_item), '__search_id'])
+                # Candidate Network Searching approach
+                node_name = table + '__' + idx
+                print(f"Searching Candidate Network for node {node_name}: ")
+                search_ids_neighbour = candidate_network_search(datasets_dir, node_name, graph,
+                                                                sentence, technique=arguments.cn_technique)
+                search_ids_found.append(search_ids_neighbour)
+
+                #     # Clustering approach
+                #     df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
+                #     df = tokenize_dataset(df, stem=False)
+                #     print(df.loc[int(idx)])
+                #     print('\n')
+                #     search_ids_found.append(df.loc[int(idx), '__search_id'])
+                #     keys_with_only_idx = [wrapper.keys[i] for i in range(len(wrapper.keys)) if cond[i]]
+                #     key_index = keys_with_only_idx.index('idx__' + table + '__' + str(idx))
+                #     cluster = clusters_indices[key_index]
+                #     items_list = list(np.array(np.where(clusters_indices == cluster)).ravel())
+                #     for item in items_list:
+                #         row = keys_with_only_idx[item]
+                #         row = row.replace('idx__', '')
+                #         table_item, idx_item = row.split('__')
+                #         df = pd.read_csv(datasets_dir + table_item + '.csv', na_filter=False)
+                #         print(df.loc[int(idx_item)])
+                #         print('\n')
+                #         search_ids_found.append(df.loc[int(idx_item), '__search_id'])
             results[label_name] = (keywords, search_ids, search_ids_found)
     return results
 
@@ -382,22 +381,24 @@ if __name__ == '__main__':
         emb_file = 'pipeline/embeddings/' + args.wrapper + '__datasets.emb'
 
     if os.path.isfile(emb_file):
-        results_dir = 'pipeline/query_emb_results/'
-        os.makedirs(results_dir, exist_ok=True)
+        # results_dir = 'pipeline/query_emb_results/'
+        # os.makedirs(results_dir, exist_ok=True)
 
         final_results = query_embeddings(args, emb_file)
-        # Saving results in file pickle
-        if args.wrapper == 'base':
-            name_wrapper = args.wrapper + str(wrapper.training_algorithm).replace('_', '')
-        else:
-            name_wrapper = args.wrapper
+        compute_mean_average_precision(final_results)
 
-        if args.mode == 'single-to-single':
-            query_emb_filename = name_wrapper + '_singletosingle.pickle'
-        else:
-            query_emb_filename = name_wrapper + '_cnsearch_' + args.cn_technique + '.pickle'
-
-        with open(results_dir + query_emb_filename, 'wb') as handle:
-            pickle.dump(final_results, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        # # Saving results in file pickle
+        # if args.wrapper == 'base':
+        #     name_wrapper = args.wrapper + str(wrapper.training_algorithm).replace('_', '')
+        # else:
+        #     name_wrapper = args.wrapper
+        #
+        # if args.mode == 'single-to-single':
+        #     query_emb_filename = name_wrapper + '_singletosingle.pickle'
+        # else:
+        #     query_emb_filename = name_wrapper + '_cnsearch_' + args.cn_technique + '.pickle'
+        #
+        # with open(results_dir + query_emb_filename, 'wb') as handle:
+        #     pickle.dump(final_results, handle, protocol=pickle.HIGHEST_PROTOCOL)
     else:
         raise ValueError(f'The file {emb_file} does not exist!')

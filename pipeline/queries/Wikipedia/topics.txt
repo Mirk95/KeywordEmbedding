@@ -1,0 +1,60 @@
+Topics
+
+1-15: (exact) titles
+The relevant result contains a single tuple from the page relation; the tuple's title field must match the specified title exactly.
+
+16-25: "over-specified" titles
+The relevant result includes a page and article text (i.e., page <- revision -> pagecontent). The query includes the page title and additional text present in the article. The page titles are listed below.
+16: Tianjin
+17: Amazon Basin
+18: Gas tungsten arc welding
+19: Moorhen
+20: Hawfinch
+21: Hilda of Whitby
+22: Eifel Aqueduct
+23: Financial Services Authority
+24: Lance Armstrong
+25: History of Russia
+
+26-35: "under-specified" titles
+The relevant result contains a single tuple from the page relation; the tuple's title field must match the follow titles exactly (the queries do not contain all words present in the title):
+26: Separation of powers under the United States Constitution
+27: Bank of China (Hong Kong)
+28: The Legend of Zelda (series)
+29: Battle of the Eastern Solomons
+30: George V of the United Kingdom
+31: Amda Seyon I of Ethiopia
+32: Galveston Hurricane of 1900
+33: White cliffs of Dover
+34: War in Somalia (2006-present)
+35: William Pitt the Younger
+
+36-45: "Trec-style" queries
+Relevant results must address the following information needs:
+36: What was the total number of Soviet casualties in World War II?
+37: What is the name of the dam that forms Lake Mead?
+38: What is the definition of an irrational number? Note that articles that define rational numbers are deemed relevant (because an irrational number is simply the opposite of a rational number).
+39: Which artist painted the Mona Lisa?
+40: What was the starting year of the Spanish Flu pandemic?
+41: What was the specific location (i.e., Prince William Sound) of the Exxon Valdez oil spill?
+42: What was the name of Einstein's 1905 paper that introduced special relativity?
+43: Who was the author of "Pride and Prejudice?"
+44: Which (atomic) elements are in the Lanthanoid series?
+45: Who discovered/invented the smallpox vaccine?
+
+46:
+Relevant results include each page modified by the user "AlleborgoBot."
+
+47:
+Relevant results list all editors who have modified a page related to nuclear weapons.
+
+48:
+Relevant results identify the relationship between articles about international development and the World Bank.
+
+49:
+Relevant results identify the relationship between articles about England and Liverpool.
+
+50:
+Relevant results identify the relationship between articles about oral history and civilization.
+
+

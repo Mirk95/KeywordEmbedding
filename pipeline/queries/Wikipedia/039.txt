@@ -1,0 +1,9 @@
+# mona lisa artist
+([183941], []) # Mona_Lisa
+([185710], []) # 16th_century
+([185696], []) # 1962
+([187504], []) # Sistine_Chapel_ceiling
+([188076], []) # Leonardo_da_Vinci
+([188184], []) # Louvre
+([188665], []) # Mona_Lisa
+([188665, 1507034, 183941], [(188665, 1507034), (1507034, 183941)]) # Mona_Lisa
