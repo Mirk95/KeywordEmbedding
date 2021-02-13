@@ -48,9 +48,9 @@ def average_precision(ground_truth, predicted, th=1):
 
         # For each relevant document compute accuracy with the given prediction
         for j, single_relevant in enumerate(ground_truth):
-            if check_relevant_document[j]:
-                # That document is already relevant
-                continue
+            # if check_relevant_document[j]:
+            #     # That document is already relevant
+            #     continue
 
             res = complex_accuracy(single_relevant, single_predicted, th=th)
             if res:
