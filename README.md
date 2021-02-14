@@ -41,6 +41,17 @@ The relational retrofitting approach is shown in the folloqing figure, taken fro
 3. The graph encodes all the relations between text values according to the given database schema. The relational retrofitting approach RETRO adapts the base word embedding representation W<sub>0</sub> using the set of relationships encoded in the graph. The result will be the retrofitted embeddings (*Step 3a*) containing vectors for all terms appearing in the input database. In addition to the core algorithm, the authors investigated an existing node embedding technique called *DeepWalk* taking the already derived graph representation (*Step 2c*) as an input. Node embedding approaches can encode relational information more accurately than retrofitting approaches which also need to maintain connection with the word representation. Since node embeddings (*Step 3b*) should perform better than retrofitted embeddings (*Step 3a*) when relational features are prevalent in a ML task in opposite to pure to textual information, the authors looked for how node embeddings can be trained on relational databases and combined with retrofitted embeddings (*Step 3c*).
 
 # Implementation Details
+The purpose of this Master Thesis is to understand which are the approaches that are used in Literature to create the most efficient vector representations for structured data and try to use these embeddings to perform keyword search tasks on databases. 
+In particular, we focused our attention on the [Coffman & Weaver's benchmark](https://dataverse.lib.virginia.edu/dataset.xhtml?persistentId=doi:10.18130/V3/KEVCF8), which is widely used by numerous data scientists to evaluate database keyword search techniques.
+
+> The benchmark for relational keyword search is a collection of data sets, queries, and relevance assessments designed to facilitate the evaluation of systems supporting keyword search in databases. The benchmark includes three separate data sets with fifty information needs (i.e., queries) for each data set and follows the traditional approach to evaluate keyword search systems developed by the information retrieval (IR) research community.
+
+Among the three datasets available in the benchmark, we have considered IMDB, which is a subset of the original database. It consists of six tables: cast_info, char_name, movie_info, name, role_type and title, linked by foreign key relations. 
+
+The following figure shows an explanatory diagram of the dataset:
+<p align="center">
+  <img src="https://github.com/Mirk95/KeywordEmbedding/blob/master/images/DB_Schema.png">
+</p>
 ## Project Tree
 ```
 .
@@ -127,4 +138,5 @@ The relational retrofitting approach is shown in the folloqing figure, taken fro
 ```
 # References
 * Cappuzzo, Riccardo and Papotti, Paolo and Thirumuruganathan, Saravanan - 2020 - [*Creating Embeddings of Heterogeneous Relational Datasets for Data Integration Tasks*](http://dx.doi.org/10.1145/3318464.3389742) - Proceedings of the 2020 ACM SIGMOD International Conference on Management of Data.
-* Michael Günther, Philipp Oehme, Maik Thiele, and Wolfgang Lehner - 2020 - [*Learning from Textual Data in Database Systems*](https://doi.org/10.1145/3340531.3412056) - In Proceedings of the 29th ACM International Conference on Information & Knowledge Management (CIKM '20). ACM, New York, NY, USA, 375–384.
+* Michael Günther, Philipp Oehme, Maik Thiele, and Wolfgang Lehner - 2020 - [*Learning from Textual Data in Database Systems*](https://doi.org/10.1145/3340531.3412056) - Proceedings of the 29th ACM International Conference on Information & Knowledge Management (CIKM '20). ACM, New York, NY, USA, 375–384.
+* Joel Coffman and Alfred C. Weaver, [*A Framework for Evaluating Database Keyword Search Strategies*](https://dl.acm.org/doi/10.1145/1871437.1871531) - Proceedings of the 19th ACM International Conference on Information and Knowledge Management (CIKM ‘10), pp. 729–738, Toronto, Canada, pp. 729–738, October 2010
