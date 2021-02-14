@@ -29,7 +29,7 @@ EmbDI is a framework which consists of three major components, as depicted in th
 3. Finally, in **Embedding Construction**, the corpus of sentences is passed to an algorithm for learning word embeddings. The approach is totally agnostic to the actual word embedding algorithm used. Depending on available external information, some optimizations can be performed to the graph and the workflow to improve the embeddings’ quality.
 
 ## RETRO
->RETRO is a framework that provides tools to automatically extract text values from a PostgreSQL database, represent those text values by a continuous vector representation using a word embedding model. In order to incorporate semantic knowledge from the database into the representation, it extracts additional relational information from the database and uses this knowledge to refine the embeddings by a relational retrofitting method. The resulting embeddings can then be used to perform machine learning tasks.
+> "RETRO is a framework that provides tools to automatically extract text values from a PostgreSQL database, represent those text values by a continuous vector representation using a word embedding model. In order to incorporate semantic knowledge from the database into the representation, it extracts additional relational information from the database and uses this knowledge to refine the embeddings by a relational retrofitting method. The resulting embeddings can then be used to perform machine learning tasks".
 
 The relational retrofitting approach is shown in the folloqing figure, taken from the authors' paper:
 <p align="center">
@@ -44,7 +44,7 @@ The relational retrofitting approach is shown in the folloqing figure, taken fro
 The purpose of this Master Thesis is to understand which are the approaches that are used in Literature to create the most efficient vector representations for structured data and try to use these embeddings to perform keyword search tasks on databases. 
 In particular, we focused our attention on the [Coffman & Weaver's benchmark](https://dataverse.lib.virginia.edu/dataset.xhtml?persistentId=doi:10.18130/V3/KEVCF8), which is widely used by numerous data scientists to evaluate database keyword search techniques.
 
-> The benchmark for relational keyword search is a collection of data sets, queries, and relevance assessments designed to facilitate the evaluation of systems supporting keyword search in databases. The benchmark includes three separate data sets with fifty information needs (i.e., queries) for each data set and follows the traditional approach to evaluate keyword search systems developed by the information retrieval (IR) research community.
+> "The benchmark for relational keyword search is a collection of data sets, queries, and relevance assessments designed to facilitate the evaluation of systems supporting keyword search in databases. The benchmark includes three separate data sets with fifty information needs (i.e., queries) for each data set and follows the traditional approach to evaluate keyword search systems developed by the information retrieval (IR) research community".
 
 Among the three datasets available in the benchmark, we have considered IMDB, which is a subset of the original database. It consists of six tables: cast_info, char_name, movie_info, name, role_type and title, linked by foreign key relations. 
 
@@ -52,6 +52,7 @@ The following figure shows an explanatory diagram of the dataset:
 <p align="center">
   <img src="https://github.com/Mirk95/KeywordEmbedding/blob/master/images/DB_Schema.png">
 </p>
+
 ## Project Tree
 ```
 .
