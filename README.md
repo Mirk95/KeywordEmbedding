@@ -19,27 +19,26 @@ Analyzing the various approaches proposed by numerous data scientists from all o
 ## EmbDI
 >"EmbDI is a Python library developed to perform Entity Resolution (ER) and Schema Matching (SM) tasks by employing word embeddings".
 
-EmbDI is a framework which consists of three major components, as depicted in the following figure, taken from authors' paper:
+EmbDI is a framework which consists of three major components, as depicted in the following figure, taken from the authors' paper:
 <p align="center">
   <img src="https://github.com/Mirk95/KeywordEmbedding/blob/master/images/EmbDI.png">
 </p>
 
-1. In the **Graph Construction** stage, the relational dataset is processed and transformed into a compact tripartite graph that encodes various relationships inherent in it. Tuple and attribute ids are treated as first class citizens.
-2. Given this graph, the next step is **Sentence Construction** through the use of biased random walks. These walks are carefully constructed to avoid common issues such as rare words and imbalance in vocabulary sizes. This produces as output a series of sentences.
-3. In **Embedding Construction**, the corpus of sentences is passed to an algorithm for learning word embeddings. Depending on available external information, some optimizations can be performed to the graph and the workflow to improve the embeddings’ quality.
-
-### Graph Construction:
-The modeling of relational data as a graph provides a more expressive representation of the data with a number of advantages. First, it elegantly handles
-many of the various relationships between entities that are common in relational
-datasets. Second, it provides a straight-forward way to incorporate external
-information such as “two tokens are synonyms of each other”. Finally, when multiple relations are involved, a graph representation enables a unified view over the
-different datasets that is invaluable for learning embeddings for data integration.
-
-### Sentence Construction:
-To generate the distributed representation of each node in the graph, the authors proposed to produce a large number of random walks and gather them in a training corpus where each random walk will correspond to a sentence. Using graphs and random walks allows to have a richer and more diverse set of neighborhoods than what would be possible by encoding a tuple as a single sentence.
+1. In the **Graph Construction** stage, the relational dataset is processed and transformed into a compact tripartite graph that encodes various relationships inherent in it. Tuple and attribute ids are treated as first class citizens. In detail, a heterogeneous graph with three types of nodes is obtained: *Token* nodes correspond to information found in the dataset (i.e. the content of each cell in the relation), *Record Id* nodes (RIDs) represent each tuple in the dataset, *Column Id* nodes (CIDs) represent each column/attribute. These nodes are connected by edges according to the structural relationships in the schema.
+2. Given this graph, the next step is **Sentence Construction** through the use of biased random walks. These walks are carefully constructed to avoid common issues such as rare words and imbalance in vocabulary sizes. This produces as output a series of sentences. The use of graphs and random walks allows to have a richer and more diverse set of neighborhoods than what would be possible by encoding a tuple as a single sentence.
+3. Finally, in **Embedding Construction**, the corpus of sentences is passed to an algorithm for learning word embeddings. The approach is totally agnostic to the actual word embedding algorithm used. Depending on available external information, some optimizations can be performed to the graph and the workflow to improve the embeddings’ quality.
 
 ## RETRO
 >RETRO is a framework that provides tools to automatically extract text values from a PostgreSQL database, represent those text values by a continuous vector representation using a word embedding model. In order to incorporate semantic knowledge from the database into the representation, it extracts additional relational information from the database and uses this knowledge to refine the embeddings by a relational retrofitting method. The resulting embeddings can then be used to perform machine learning tasks.
+
+The relational retrofitting approach is shown in the folloqing figure, taken from the authors' paper:
+<p align="center">
+  <img src="https://github.com/Mirk95/KeywordEmbedding/blob/master/images/RETRO.png">
+</p>
+
+1. The input of the overall process consists of a database (*Step 1a*) as well as a given word embedding W<sub>0</sub>, either pre-trained or self-trained for a specific domain (*Step 1b*).
+2. In a first step (*Step 2a*), all database text values are extracted together with the information in which column they appeared, capturing their “category". Further the relationships between all text values are extracted, e.g. PrimaryKey-ForeignKey relations. Multi-word phrases for which word embeddings are available are preserved by a specific tokenization approach. Words in the database having no counter-part in the given embedding W<sub>0</sub> are initialized with a null vector. The extracted relationships (*Step 2a*) and the tokenized text values (*Step 2b*) are combined to a property graph representation (*Step 2c*).
+3. The graph encodes all the relations between text values according to the given database schema. The relational retrofitting approach RETRO adapts the base word embedding representation W<sub>0</sub> using the set of relationships encoded in the graph. The result will be the retrofitted embeddings (*Step 3a*) containing vectors for all terms appearing in the input database. In addition to the core algorithm, the authors investigated an existing node embedding technique called *DeepWalk* taking the already derived graph representation (*Step 2c*) as an input. Node embedding approaches can encode relational information more accurately than retrofitting approaches which also need to maintain connection with the word representation. Since node embeddings (*Step 3b*) should perform better than retrofitted embeddings (*Step 3a*) when relational features are prevalent in a ML task in opposite to pure to textual information, the authors looked for how node embeddings can be trained on relational databases and combined with retrofitted embeddings (*Step 3c*).
 
 # Implementation Details
 ## Project Tree
