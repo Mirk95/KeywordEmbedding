@@ -41,17 +41,22 @@ The relational retrofitting approach is shown in the folloqing figure, taken fro
 3. The graph encodes all the relations between text values according to the given database schema. The relational retrofitting approach RETRO adapts the base word embedding representation W<sub>0</sub> using the set of relationships encoded in the graph. The result will be the retrofitted embeddings (*Step 3a*) containing vectors for all terms appearing in the input database. In addition to the core algorithm, the authors investigated an existing node embedding technique called *DeepWalk* taking the already derived graph representation (*Step 2c*) as an input. Node embedding approaches can encode relational information more accurately than retrofitting approaches which also need to maintain connection with the word representation. Since node embeddings (*Step 3b*) should perform better than retrofitted embeddings (*Step 3a*) when relational features are prevalent in a ML task in opposite to pure to textual information, the authors looked for how node embeddings can be trained on relational databases and combined with retrofitted embeddings (*Step 3c*).
 
 # Implementation Details
-The purpose of this Master Thesis is to understand which are the approaches that are used in Literature to create the most efficient vector representations for structured data and try to use these embeddings to perform keyword search tasks on databases. 
+The purpose of this Master Thesis is to understand which are the best approaches that are used in Literature to create the most efficient vector representations for structured data and try to use these embeddings to perform keyword search tasks on databases. 
 In particular, we focused our attention on the [Coffman & Weaver's benchmark](https://dataverse.lib.virginia.edu/dataset.xhtml?persistentId=doi:10.18130/V3/KEVCF8), which is widely used by numerous data scientists to evaluate database keyword search techniques.
 
 > "The benchmark for relational keyword search is a collection of data sets, queries, and relevance assessments designed to facilitate the evaluation of systems supporting keyword search in databases. The benchmark includes three separate data sets with fifty information needs (i.e., queries) for each data set and follows the traditional approach to evaluate keyword search systems developed by the information retrieval (IR) research community".
 
-Among the three datasets available in the benchmark, we have considered IMDB, which is a subset of the original database. It consists of six tables: cast_info, char_name, movie_info, name, role_type and title, linked by foreign key relations. 
+Among the three datasets available in the benchmark (i.e., *IMDB*, *Mondial* and *Wikipedia*), we have considered ***IMDB***, which is a subset of the original database. It consists of six relations: *cast_info*, *char_name*, *movie_info*, *name*, *role_type* and *title*, linked by foreign key relations. 
 
 The following figure shows an explanatory diagram of the dataset:
 <p align="center">
   <img src="https://github.com/Mirk95/KeywordEmbedding/blob/master/images/DB_Schema.png">
 </p>
+
+
+The *title* relation contains 181.706 tuples, each representing a particular movie with related information.
+The *name* relation contains 273.034, each representing an actor/actress with related information.
+The *char_name* relation contains 206.951 tuples, each representing the name of a character from a given movie.
 
 ## Project Tree
 ```

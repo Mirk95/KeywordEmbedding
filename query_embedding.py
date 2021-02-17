@@ -3,6 +3,7 @@ import re
 import nltk
 import argparse
 import warnings
+import pickle
 import numpy as np
 import pandas as pd
 from ast import literal_eval
@@ -302,7 +303,7 @@ def query_embeddings(arguments, embeddings_file):
 
         print('Get K nearest records:')
         search_ids_found = []
-        neighbours = wrapper.get_k_nearest_token(sentence, k=5, distance='cosine', pref='idx', withMean=True)
+        neighbours = wrapper.get_k_nearest_token(sentence, k=20, distance='cosine', pref='idx', withMean=True)
         neighbours = [x.replace('idx__', '') for x in neighbours]
 
         if arguments.mode == 'single-to-single':
@@ -312,6 +313,7 @@ def query_embeddings(arguments, embeddings_file):
                 if '.csv' in table:
                     table = table.replace('.csv', '')
                 df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
+                columns = df.columns.tolist()
                 print(df.loc[int(idx)])
                 print('\n')
                 search_ids_found.append(df.loc[int(idx), '__search_id'])
@@ -381,11 +383,16 @@ if __name__ == '__main__':
         emb_file = 'pipeline/embeddings/' + args.wrapper + '__datasets.emb'
 
     if os.path.isfile(emb_file):
-        # results_dir = 'pipeline/query_emb_results/'
-        # os.makedirs(results_dir, exist_ok=True)
+        results_dir = 'query_emb_results/'
+        os.makedirs(results_dir, exist_ok=True)
 
         final_results = query_embeddings(args, emb_file)
-        compute_mean_average_precision(final_results)
+        # compute_mean_average_precision(final_results)
+
+        for file in final_results.keys():
+            filename = file.replace('.txt', '')
+            with open(results_dir + filename + '_' + args.mode + '.pickle', 'wb') as handle:
+                pickle.dump(final_results[file], handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         # # Saving results in file pickle
         # if args.wrapper == 'base':
