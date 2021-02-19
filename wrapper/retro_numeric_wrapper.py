@@ -107,37 +107,67 @@ def transform_keys_embeddings(keys):
     return new_keys
 
 
+def list_duplicates(seq):
+    seen = set()
+    seen_add = seen.add
+    seen_twice = set(x for x in seq if x in seen or seen_add(x))
+    return list(seen_twice)
+
+
+def check_duplicates(keys, mat):
+    # Check duplicates
+    embeddings = []
+    keys_to_delete = []
+    if len(list(set(keys))) != len(keys):
+        # There are some duplicates
+        duplicates = list_duplicates(keys)
+        for item in duplicates:
+            embs = []
+            indices = [i for i, x in enumerate(keys) if x == item]
+            for idx in indices:
+                embs.append(mat[idx])
+                keys_to_delete.append(idx)
+            new_embedding = np.mean(embs, axis=0, keepdims=True)
+            keys.append(item)
+            mat = np.append(mat, new_embedding, axis=0)
+    for k in keys_to_delete:
+        keys.pop(k)
+        mat = np.delete(mat, k, 0)
+    return keys, mat
+
+
 def output_vectors(term_list, Mk, output_file, datasets_path, with_zero_vectors=True):
     keys, matrix = create_idx_embeddings(term_list, Mk, datasets_path)
     keys_transformed = transform_keys_embeddings(keys)
+    final_keys, final_mat = check_duplicates(keys_transformed, matrix)
     # Init output file
     f_out = open(output_file, 'w')
     if with_zero_vectors:
         # Write meta information
-        f_out.write('%d %d' % (matrix.shape[0], matrix.shape[1]) + linesep)
+        f_out.write('%d %d' % (final_mat.shape[0], final_mat.shape[1]) + linesep)
         # Write term vector pairs
-        for i, term in enumerate(keys_transformed):
+        for i, term in enumerate(final_keys):
             if i % 1000 == 0:
                 print('Exported', i, 'term vectors | Current term:', term)
-            f_out.write('%s %s' % (term, ' '.join([str(x) for x in matrix[i]])))
+            f_out.write('%s %s' % (term, ' '.join([str(x) for x in final_mat[i]])))
             f_out.write(linesep)
     else:
         counter = 0
-        for i, term in enumerate(keys_transformed):
-            is_all_zero = np.all((matrix[i] == 0))
+        for i, term in enumerate(final_keys):
+            is_all_zero = np.all((final_mat[i] == 0))
             if not is_all_zero:
                 counter += 1
 
         # Init output file
         f_out = open(output_file, 'w')
         # Write meta information
-        f_out.write('%d %d' % (counter, matrix.shape[1]) + linesep)
+        f_out.write('%d %d' % (counter, final_mat.shape[1]) + linesep)
         # Write term vector pairs
-        for i, term in enumerate(keys_transformed):
-            is_all_zero = np.all((matrix[i] == 0))
+        for i, term in enumerate(final_keys):
+            is_all_zero = np.all((final_mat[i] == 0))
             if not is_all_zero:
                 print('Exported', i, 'term vectors | Current term:', term)
-                f_out.write('%s %s' % (term, ' '.join([str(x) for x in matrix[i]])))
+                f_out.write('%s %s' % (term, ' '.join([str(x) for x in final_mat[i]])))
                 f_out.write(linesep)
     f_out.close()
     return

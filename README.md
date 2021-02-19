@@ -42,22 +42,30 @@ The relational retrofitting approach is shown in the folloqing figure, taken fro
 
 # Implementation Details
 The purpose of this Master Thesis is to understand which are the best approaches that are used in Literature to create the most efficient vector representations for structured data and try to use these embeddings to perform keyword search tasks on databases. 
-In particular, we focused our attention on the [Coffman & Weaver's benchmark](https://dataverse.lib.virginia.edu/dataset.xhtml?persistentId=doi:10.18130/V3/KEVCF8), which is widely used by numerous data scientists to evaluate database keyword search techniques.
+
+## The Dataset
+We focused our attention on the [Coffman & Weaver's benchmark](https://dataverse.lib.virginia.edu/dataset.xhtml?persistentId=doi:10.18130/V3/KEVCF8), which is widely used by numerous data scientists to evaluate database keyword search techniques.
 
 > "The benchmark for relational keyword search is a collection of data sets, queries, and relevance assessments designed to facilitate the evaluation of systems supporting keyword search in databases. The benchmark includes three separate data sets with fifty information needs (i.e., queries) for each data set and follows the traditional approach to evaluate keyword search systems developed by the information retrieval (IR) research community".
 
-Among the three datasets available in the benchmark (i.e., *IMDB*, *Mondial* and *Wikipedia*), we have considered ***IMDB***, which is a subset of the original database. It consists of six relations: *cast_info*, *char_name*, *movie_info*, *name*, *role_type* and *title*, linked by foreign key relations. 
+Among the three datasets available in the benchmark (i.e., *IMDB*, *Mondial* and *Wikipedia*), we have considered ***IMDB***, which is a subset of the original database. It consists of six relations: *cast_info*, *char_name*, *movie_info*, *name*, *role_type* and *title*, linked by foreign key relations. Each record in each table has a unique attribute, *search_id*, which will be used in the keyword search phase.
 
-The following figure shows an explanatory diagram of the dataset:
+An explanatory diagram of the dataset with the respective primary key and foreign key relationships is shown in the following figure:
 <p align="center">
   <img src="https://github.com/Mirk95/KeywordEmbedding/blob/master/images/DB_Schema.png">
 </p>
 
 
-The *title* relation contains 181.706 tuples, each representing a particular movie with related information.
-The *name* relation contains 273.034, each representing an actor/actress with related information.
-The *char_name* relation contains 206.951 tuples, each representing the name of a character from a given movie.
+* The *title* relation contains 181.706 tuples, each representing a particular movie with related information, such as production year, season number, episode number and many others.
+* The *name* relation is composed by 273.034 tuples, each representing a person with related information.
+* The *char_name* relation consists of 206.951 tuples, each representing the name of a character from a given movie.
+* The *role_type* relation is made up of 11 tuples, each representing a specific role (between actor, actress, producer, writer, cinematographer, composer, costume designer, director, editor, miscellaneous crew and production designer) that a person has in a movie.
+* The *movie_info* relation, consisting of 192.678 tuples, contains additional information, such as famous quotes from movies. The table has a foreign key relationship with the *title* table.
+* Finally, the *cast_info* relation is made up of 812,694 tuples and links a specific person who has participated in a particular film with a certain character name and a specific role in the cast through foreign key relations.
 
+## EmbDI Wrapper
+The first wrapper created was the one based on the *EmbDI* framework code, developed entirely in Python language, version 3.8.
+First of all, I had to modify the original *EmbDI* code to take as input not a single table at a time but multiple tables, since the database under consideration consists of six relations.
 ## Project Tree
 ```
 .
