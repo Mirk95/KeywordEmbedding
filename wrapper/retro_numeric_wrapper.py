@@ -85,6 +85,7 @@ def create_idx_embeddings(keys, mat, datasets_directory):
                     new_embedding = np.mean(embeddings, axis=0, keepdims=True)
                     keys.append(new_embedding_idx)
                     mat = np.append(mat, new_embedding, axis=0)
+                    print(f"Created new embedding for key {new_embedding_idx}")
     return keys, mat
 
 
@@ -137,8 +138,11 @@ def check_duplicates(keys, mat):
 
 
 def output_vectors(term_list, Mk, output_file, datasets_path, with_zero_vectors=True):
+    print("Start creation idx embeddings...")
     keys, matrix = create_idx_embeddings(term_list, Mk, datasets_path)
+    print("Start transformation keys embeddings...")
     keys_transformed = transform_keys_embeddings(keys)
+    print("Check duplicates...")
     final_keys, final_mat = check_duplicates(keys_transformed, matrix)
     # Init output file
     f_out = open(output_file, 'w')

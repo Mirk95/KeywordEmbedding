@@ -1,4 +1,5 @@
 import string
+import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 
@@ -74,8 +75,9 @@ def tokenize_dataset(df, stem=False):
 
 
 if __name__ == '__main__':
-    input_file = 'pipeline/datasets/name.csv'
-    df = tokenize_dataset(input_file, stem=False)
+    input_file = 'pipeline/datasets/title.csv'
+    df = pd.read_csv(input_file, quotechar='"', error_bad_lines=False)
+    new_df = tokenize_dataset(df, stem=True)
     s = tokenize_sentence("A Study in Red: The Secret Journal of Jack the Ripper", stem=True)
     w = tokenize_word("Word", stem=True)
     print(df.head(10))
