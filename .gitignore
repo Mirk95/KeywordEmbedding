@@ -15,3 +15,6 @@ pipeline/nlp/tokenizers/*
 *.wv
 *.pickle
 *.uxf
+keycheck.py
+retro_postprocessing.py
+retronumeric_postprocessing.py

@@ -119,7 +119,8 @@ def check_duplicates(keys, mat):
     # Check duplicates
     embeddings = []
     keys_to_delete = []
-    if len(list(set(keys))) != len(keys):
+    m = len(set(keys))
+    if len(set(keys)) != len(keys):
         # There are some duplicates
         duplicates = list_duplicates(keys)
         for item in duplicates:
@@ -131,47 +132,46 @@ def check_duplicates(keys, mat):
             new_embedding = np.mean(embs, axis=0, keepdims=True)
             keys.append(item)
             mat = np.append(mat, new_embedding, axis=0)
-    for k in keys_to_delete:
-        keys.pop(k)
-        mat = np.delete(mat, k, 0)
-    return keys, mat
+
+    out_keys = [i for j, i in enumerate(keys) if j not in keys_to_delete]
+    out_mat = np.delete(mat, keys_to_delete, 0)
+    assert [len(out_keys) != out_mat.shape[0]], "Error, something went wrong during checking duplicates!"
+    return out_keys, out_mat
 
 
 def output_vectors(term_list, Mk, output_file, datasets_path, with_zero_vectors=True):
-    print("Start creation idx embeddings...")
-    keys, matrix = create_idx_embeddings(term_list, Mk, datasets_path)
-    print("Start transformation keys embeddings...")
-    keys_transformed = transform_keys_embeddings(keys)
-    print("Check duplicates...")
-    final_keys, final_mat = check_duplicates(keys_transformed, matrix)
+    # print("Start creation idx embeddings...")
+    # keys, matrix = create_idx_embeddings(term_list, Mk, datasets_path)
+    # print("Start transformation keys embeddings...")
+    # keys_transformed = transform_keys_embeddings(keys)
     # Init output file
     f_out = open(output_file, 'w')
     if with_zero_vectors:
         # Write meta information
-        f_out.write('%d %d' % (final_mat.shape[0], final_mat.shape[1]) + linesep)
+        f_out.write('%d %d' % (Mk.shape[0], Mk.shape[1]) + linesep)
         # Write term vector pairs
-        for i, term in enumerate(final_keys):
+        for i, term in enumerate(term_list):
             if i % 1000 == 0:
                 print('Exported', i, 'term vectors | Current term:', term)
-            f_out.write('%s %s' % (term, ' '.join([str(x) for x in final_mat[i]])))
+            f_out.write('%s %s' % (term, ' '.join([str(x) for x in Mk[i]])))
             f_out.write(linesep)
     else:
         counter = 0
-        for i, term in enumerate(final_keys):
-            is_all_zero = np.all((final_mat[i] == 0))
+        for i, term in enumerate(term_list):
+            is_all_zero = np.all((Mk[i] == 0))
             if not is_all_zero:
                 counter += 1
 
         # Init output file
         f_out = open(output_file, 'w')
         # Write meta information
-        f_out.write('%d %d' % (counter, final_mat.shape[1]) + linesep)
+        f_out.write('%d %d' % (counter, Mk.shape[1]) + linesep)
         # Write term vector pairs
-        for i, term in enumerate(final_keys):
-            is_all_zero = np.all((final_mat[i] == 0))
+        for i, term in enumerate(term_list):
+            is_all_zero = np.all((Mk[i] == 0))
             if not is_all_zero:
                 print('Exported', i, 'term vectors | Current term:', term)
-                f_out.write('%s %s' % (term, ' '.join([str(x) for x in final_mat[i]])))
+                f_out.write('%s %s' % (term, ' '.join([str(x) for x in Mk[i]])))
                 f_out.write(linesep)
     f_out.close()
     return

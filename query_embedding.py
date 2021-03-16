@@ -14,6 +14,7 @@ from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
 from scipy.cluster.hierarchy import linkage, fcluster
 from scipy.spatial.distance import pdist
+from sklearn.manifold import TSNE
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
@@ -203,6 +204,29 @@ def plot_embeddings(matrix):
     plt.show()
 
 
+def tsne_plot(labels, tokens):
+    # Creates TSNE model and plots it
+    tsne_model = TSNE(perplexity=40, n_components=2, init='pca', n_iter=2500, random_state=23)
+    new_values = tsne_model.fit_transform(tokens)
+    x = []
+    y = []
+    for value in new_values:
+        x.append(value[0])
+        y.append(value[1])
+
+    plt.figure(figsize=(16, 16))
+    for i in range(len(x)):
+        plt.scatter(x[i], y[i])
+        plt.annotate(labels[i],
+                     xy=(x[i], y[i]),
+                     xytext=(5, 2),
+                     textcoords='offset points',
+                     ha='right',
+                     va='bottom')
+    plt.savefig('embeddings.png', dpi=100)
+    plt.show()
+
+
 def candidate_network_search(datasets_dir, record, graph, sentence, technique):
     search_ids_found = []
     table, idx = record.split('__')
@@ -266,7 +290,12 @@ def query_embeddings(arguments, embeddings_file):
     # Load embedding matrix
     wrapper.load_embedding(embeddings_file)
     # Plot embeddings
-    # plot_embeddings(wrapper.mat)
+    # labels = [k for k in wrapper.keys if k.startswith('idx')]
+    # tokens = []
+    # for l in labels:
+    #     i = wrapper.keys.index(l)
+    #     tokens.append(wrapper.mat[i])
+    # tsne_plot(labels, tokens)
 
     label_dir = 'pipeline/queries/IMDB'
     datasets_dir = 'pipeline/datasets/'
@@ -313,7 +342,6 @@ def query_embeddings(arguments, embeddings_file):
                 if '.csv' in table:
                     table = table.replace('.csv', '')
                 df = pd.read_csv(datasets_dir + table + '.csv', na_filter=False)
-                columns = df.columns.tolist()
                 print(df.loc[int(idx)])
                 print('\n')
                 search_ids_found.append(df.loc[int(idx), '__search_id'])
@@ -383,16 +411,16 @@ if __name__ == '__main__':
         emb_file = 'pipeline/embeddings/' + args.wrapper + '__datasets.emb'
 
     if os.path.isfile(emb_file):
-        results_dir = 'query_emb_results/'
-        os.makedirs(results_dir, exist_ok=True)
+        # results_dir = 'query_emb_results/'
+        # os.makedirs(results_dir, exist_ok=True)
 
         final_results = query_embeddings(args, emb_file)
-        # compute_mean_average_precision(final_results)
+        compute_mean_average_precision(final_results, args.mode)
 
-        for file in final_results.keys():
-            filename = file.replace('.txt', '')
-            with open(results_dir + filename + '_' + args.mode + '.pickle', 'wb') as handle:
-                pickle.dump(final_results[file], handle, protocol=pickle.HIGHEST_PROTOCOL)
+        # for file in final_results.keys():
+        #     filename = file.replace('.txt', '')
+        #     with open(results_dir + filename + '_' + args.mode + '.pickle', 'wb') as handle:
+        #         pickle.dump(final_results[file], handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         # # Saving results in file pickle
         # if args.wrapper == 'base':

@@ -1,33 +1,33 @@
 import numpy as np
 
 
-def precision(ground_truth, predicted, k):
-    ground_truth_set = set(ground_truth)
-    predicted_set = set(predicted[:k])
-    result = len(ground_truth_set & predicted_set) / float(k)
-    return result
+# def precision(ground_truth, predicted, k):
+#     ground_truth_set = set(ground_truth)
+#     predicted_set = set(predicted[:k])
+#     result = len(ground_truth_set & predicted_set) / float(k)
+#     return result
+#
+#
+# def recall(ground_truth, predicted, k):
+#     ground_truth_set = set(ground_truth)
+#     predicted_set = set(predicted[:k])
+#     result = len(ground_truth_set & predicted_set) / float(len(ground_truth_set))
+#     return result
 
 
-def recall(ground_truth, predicted, k):
-    ground_truth_set = set(ground_truth)
-    predicted_set = set(predicted[:k])
-    result = len(ground_truth_set & predicted_set) / float(len(ground_truth_set))
-    return result
-
-
-def simple_accuracy(ground_truth, predicted):
-    ground_truth_set = set(ground_truth)
-    predicted_set = set(predicted)
-    return True if len(ground_truth_set & predicted_set) > 0 else False
-
-
-def accuracy_k(mode, ground_truth, predicted, k):
-    if mode == 'singletosingle':
-        pred_at_k = simple_accuracy(ground_truth, predicted[:k])
-        return pred_at_k
-    else:
-        pred_at_k = [simple_accuracy(ground_truth, val) for val in predicted[:k]]
-        return np.any(pred_at_k)
+# def simple_accuracy(ground_truth, predicted):
+#     ground_truth_set = set(ground_truth)
+#     predicted_set = set(predicted)
+#     return True if len(ground_truth_set & predicted_set) > 0 else False
+#
+#
+# def accuracy_k(mode, ground_truth, predicted, k):
+#     if mode == 'singletosingle':
+#         pred_at_k = simple_accuracy(ground_truth, predicted[:k])
+#         return pred_at_k
+#     else:
+#         pred_at_k = [simple_accuracy(ground_truth, val) for val in predicted[:k]]
+#         return np.any(pred_at_k)
 
 
 def complex_accuracy(document, predicted, th=1):
@@ -61,6 +61,11 @@ def average_precision(ground_truth, predicted, th=1):
         if np.all(check_relevant_document):
             break
 
+    print('Predicted Document')
+    print(check_predicted_document)
+    print('Founded Relevant Document')
+    print(check_relevant_document)
+
     # Compute precision for each relevant prediction
     precision_array = []
     num_relevant = 0
@@ -74,26 +79,33 @@ def average_precision(ground_truth, predicted, th=1):
         if res is False:
             precision_array.append(0)
 
+    print('Precision array')
+    print(precision_array)
     return np.mean(precision_array)
 
 
-def compute_precision_and_recall(query_results, mode):
-    for file in query_results.keys():
-        print(f'Computing precision and recall at k for file {file}: ')
-        query, ground_truth, predictions = query_results[file]
-        print(f'Query: {query}')
-        acc = accuracy_k(mode, ground_truth, predictions, k=5)
-        print(f"Accuracy at k=5 : {acc}")
-        print('\n')
+# def compute_precision_and_recall(query_results, mode):
+#     for file in query_results.keys():
+#         print(f'Computing precision and recall at k for file {file}: ')
+#         query, ground_truth, predictions = query_results[file]
+#         print(f'Query: {query}')
+#         acc = accuracy_k(mode, ground_truth, predictions, k=5)
+#         print(f"Accuracy at k=5 : {acc}")
+#         print('\n')
 
 
-def compute_mean_average_precision(query_results):
+def compute_mean_average_precision(query_results, mode):
     average_precisions = []
     for file in query_results.keys():
         print(f'Computing Average Precision for file {file}: ')
         query, ground_truth, predictions = query_results[file]
         print(f'Query: {query}')
-        ap = average_precision(ground_truth, predictions)
+        if mode == 'single-to-single':
+            single_array = [[val] for val in predictions[0]]
+            ap = average_precision(ground_truth, single_array, th=1)
+        else:
+            many_array = predictions
+            ap = average_precision(ground_truth, many_array, th=1)
         average_precisions.append(ap)
         print(f"Average Precision : {ap}")
         print('\n')
