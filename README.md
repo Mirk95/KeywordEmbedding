@@ -172,6 +172,53 @@ cid__cast_info____search_id 0.46975017 -1.191399 0.52531374 -0.0718253 0.2116088
 
 By carefully analyzing the various techniques proposed by the scientific community to address the problem of keyword search on structured data, it seems that no approach, to the best of our knowledge, uses embeddings to translate tokens and relationships within datasets and then retrieve only the relevant embeddings based on a user’s query. For this reason, we decided to take the vector representations produced by the three wrappers described above (*EmbDI*, *RETRO* and *Base*) and implement two new techniques called *Single-to-Single* and *Single-to-Many* that allow to perform keyword search effectively.
 
+### Query Benchmark
+
+Most of the scientific papers base the evaluation of keyword search techniques on a single [benchmark](https://joel-coffman.github.io/resources.html), developed by *Coffman and Weaver*.
+In particular, it consists of three datasets: two of these derive from popular websites (*IMDb* and *Wikipedia*), while the third (*MONDIAL*) is an ideal counterpoint due to its smaller size and the complex relations of the tables. Even if these datasets are relatively small, they are sufficiently challenging for search techniques, and both *IMDb* and *Wikipedia* can be scaled up as search techniques improve.
+
+For each dataset there are *50* queries: this is the traditional minimum for evaluating retrieval systems. This number of information needs to reflect the fact that performance varies widely across queries for the same document collection, and all queries in the benchmark reflect distinct information needs.
+
+Each query file contains the relevance assessments for the topic corresponding to the file name. Each file has the following structure:
+```
+# <query>
+<relevant result>
+<relevant result>
+```
+
+Where hash marks *’#’* denote comments and should be ignored. Most comments relate additional information about a particular result judged relevant or clarification about the topic. Each relevant result has the following structure:
+```
+([<comma-separated list of tuples>], [<comma-separated list of relationships between tuples>])
+```
+
+Where tuples are identified by their unique *__search_id* in the database. Each relationship is an edge (foreign key) between tuples, labeled by the source and destination of the edge.
+
+```
+# 001.txt
+# denzel washington
+([39927668], [])
+
+# 002.txt
+# clint eastwood
+([39172749], [])
+
+# 003.txt
+# john wayne
+([39931125], [])
+
+# 004.txt
+# will smith
+([39807078], [])
+
+# 005.txt
+# harrison ford
+([39214967], [])
+
+# 006.txt
+# julia roberts
+([40463372], [])
+
+```
 
 # References
 * Cappuzzo, Riccardo and Papotti, Paolo and Thirumuruganathan, Saravanan - 2020 - [*Creating Embeddings of Heterogeneous Relational Datasets for Data Integration Tasks*](http://dx.doi.org/10.1145/3318464.3389742) - Proceedings of the 2020 ACM SIGMOD International Conference on Management of Data.
