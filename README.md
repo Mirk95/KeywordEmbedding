@@ -174,10 +174,7 @@ By carefully analyzing the various techniques proposed by the scientific communi
 
 ### Query Benchmark
 
-Most of the scientific papers base the evaluation of keyword search techniques on a single [benchmark](https://joel-coffman.github.io/resources.html), developed by *Coffman and Weaver*.
-In particular, it consists of three datasets: two of these derive from popular websites (*IMDb* and *Wikipedia*), while the third (*MONDIAL*) is an ideal counterpoint due to its smaller size and the complex relations of the tables. Even if these datasets are relatively small, they are sufficiently challenging for search techniques, and both *IMDb* and *Wikipedia* can be scaled up as search techniques improve.
-
-For each dataset there are *50* queries: this is the traditional minimum for evaluating retrieval systems. This number of information needs to reflect the fact that performance varies widely across queries for the same document collection, and all queries in the benchmark reflect distinct information needs.
+For each dataset of the *Coffman and Weaver*'s benchmark, there are *50* queries: this is the traditional minimum for evaluating retrieval systems. This number of information needs to reflect the fact that performance varies widely across queries for the same document collection, and all queries in the benchmark reflect distinct information needs.
 
 Each query file contains the relevance assessments for the topic corresponding to the file name. Each file has the following structure:
 ```
@@ -192,6 +189,8 @@ Where hash marks *’#’* denote comments and should be ignored. Most comments 
 ```
 
 Where tuples are identified by their unique *__search_id* in the database. Each relationship is an edge (foreign key) between tuples, labeled by the source and destination of the edge.
+
+These are the queries regarding the *IMDb* dataset:
 
 ```
 # 001.txt
@@ -226,7 +225,101 @@ Where tuples are identified by their unique *__search_id* in the database. Each 
 # johnny depp
 ([39141807], [])
 
-...
+# 009.txt
+# angelina jolie
+([40255278], [])
+
+# 010.txt
+# morgan freeman
+([39223764], [])
+
+# 011.txt
+# gone with the wind
+([43846320], []) # 1939 production
+
+# 012.txt
+# star wars
+([44182175], []) # Star Wars
+([44190586], []) # Star Wars: Episode III - Revenge of the Sith
+([44160570], []) # Star Wars: Episode V - The Empire Strikes Back
+([44209805], []) # Star Wars: Episode I - The Phantom Menace
+([44215230], []) # Star Wars: Episode II - Attack of the Clones
+([44215530], []) # Star Wars: Episode VI - Return of the Jedi
+
+# 013.txt
+# casablanca
+([43757282], []) # 1942 production
+
+# 014.txt
+# lord of the rings
+([44246360], []) # The Lord of the Rings: The Return of the King
+([44300268], []) # The Lord of the Rings: The Two Towers
+([44282840], []) # The Lord of the Rings: The Fellowship of the Ring
+
+# 015.txt
+# the sound of music
+([44308629], []) # 1965 production
+
+# 016.txt
+# wizard of oz
+([44317680], []) # 1939 production
+
+# 017.txt
+# the notebook
+([44278650], [])
+
+# 018.txt
+# forrest gump
+([43843863], [])
+
+# 019.txt
+# the princess bride
+([44311171], []) # produced 1987
+
+# 020.txt
+# the godfather
+([44306726], []) # produced 1972
+
+# 021.txt
+# title atticus finch
+([44264090, 7900883, 22335633], [(7900883, 44264090), (7900883, 22335633)]) # Peck, Gregory in "To Kill a Mockingbird"
+
+# 022.txt
+# title indiana jones
+([44158312, 4783449, 21302298], [(4783449, 44158312), (4783449, 21302298)]) # Ford, Harrison in "Raiders of the Lost Ark"
+([43952269, 4783414, 21302298], [(4783414, 43952269), (4783414, 21302298)]) # Ford, Harrison in "Indiana Jones and the Temple of Doom"
+([43931406, 4783412, 21302298], [(4783412, 43931406), (4783412, 21302298)]) # Ford, Harrison in "Indiana Jones and the Last Crusade"
+([44013047, 4783411, 21302298], [(4783411, 44013047), (4783411, 21302298)]) # Ford, Harrison in "Indiana Jones and the Kingdom of the Crystal Skull"
+
+# 023.txt
+# title james bond
+([43888349, 3860902, 21253184], [(3860902, 43888349), (3860902, 21253184)]) # Connery, Sean in "Dr. No"
+([43912633, 3860913, 21253184], [(3860913, 43912633), (3860913, 21253184)]) # Connery, Sean in "From Russia with Love"
+([43874345, 3860915, 21253184], [(3860915, 43874345), (3860915, 21253184)]) # Connery, Sean in "Goldfinger"
+([44319790, 3861043, 21253184], [(3861043, 44319790), (3861043, 21253184)]) # Connery, Sean in "Thunderball"
+([44230834, 3861058, 21253184], [(3861058, 44230834), (3861058, 21253184)]) # Connery, Sean in "You Only Live Twice"
+([44063958, 6454410, 21253184], [(6454410, 44063958), (6454410, 21253184)]) # Lazenby, George in "On Her Majesty's Secret Service"
+([43904881, 3860898, 21253184], [(3860898, 43904881), (3860898, 21253184)]) # Connery, Sean in "Diamonds Are Forever"
+([44066193, 7328489, 21253184], [(7328489, 44066193), (7328489, 21253184)]) # Moore, Roger in "Live and Let Die"
+([44260665, 7328561, 21253184], [(7328561, 44260665), (7328561, 21253184)]) # Moore, Roger in "The Man with the Golden Gun"
+([44322188, 7328590, 21253184], [(7328590, 44322188), (7328590, 21253184)]) # Moore, Roger in "The Spy Who Loved Me"
+([44028316, 7328494, 21253184], [(7328494, 44028316), (7328494, 21253184)]) # Moore, Roger in "Moonraker"
+([43905671, 7328442, 21253184], [(7328442, 43905671), (7328442, 21253184)]) # Moore, Roger in "For Your Eyes Only"
+([44103656, 3860959, 21253184], [(3860959, 44103656), (3860959, 21253184)]) # Connery, Sean in "Never Say Never Again"
+([44083502, 7328502, 21253184], [(7328502, 44083502), (7328502, 21253184)]) # Moore, Roger in "Octopussy"
+([43820265, 7328399, 21253184], [(7328399, 43820265), (7328399, 21253184)]) # Moore, Roger in "A View to a Kill"
+([44306714, 4068906, 21253184], [(4068906, 44306714), (4068906, 21253184)]) # Dalton, Timothy in "The Living Daylights"
+([44034783, 4068882, 21253184], [(4068882, 44034783), (4068882, 21253184)]) # Dalton, Timothy in "Licence to Kill"
+([43888167, 3324877, 21253184], [(3324877, 43888167), (3324877, 21253184)]) # Brosnan, Pierce in "GoldenEye"
+([44226252, 3324992, 21253184], [(3324992, 44226252), (3324992, 21253184)]) # Brosnan, Pierce in "Tomorrow Never Dies"
+([44230855, 3324989, 21253184], [(3324989, 44230855), (3324989, 21253184)]) # Brosnan, Pierce in "The World Is Not Enough"
+([43923452, 3324865, 21253184], [(3324865, 43923452), (3324865, 21253184)]) # Brosnan, Pierce in "Die Another Day"
+([43756690, 3959151, 21253184], [(3959151, 43756690), (3959151, 21253184)]) # Craig, Daniel in "Casino Royale"
+([44201168, 3959180, 21253184], [(3959180, 44201168), (3959180, 21253184)]) # Craig, Daniel in "Quantum of Solace"
+
+# 024.txt
+# title rick blaine
+([43757282, 3145461, 21325369], [(3145461, 43757282), (3145461, 21325369)]) # Bogart, Humphrey in "Casablanca"
 
 # 025.txt
 # title will kane
@@ -235,6 +328,7 @@ Where tuples are identified by their unique *__search_id* in the database. Each 
 # 026.txt
 # title dr. hannibal lecter
 ([44304292, 5660456, 21950448], [(5660456, 44304292), (5660456, 21950448)]) # Hopkins, Anthony in "The Silence of the Lambs"
+...
 
 ```
 
