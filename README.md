@@ -218,6 +218,24 @@ Where tuples are identified by their unique *__search_id* in the database. Each 
 # julia roberts
 ([40463372], [])
 
+# 007.txt
+# tom hanks
+([39295438], [])
+
+# 008.txt
+# johnny depp
+([39141807], [])
+
+...
+
+# 025.txt
+# title will kane
+([43896494, 3076468, 21376359], [(3076468, 43896494), (3076468, 21376359)]) # Bird, Tom in "Give and Take, and Take"
+
+# 026.txt
+# title dr. hannibal lecter
+([44304292, 5660456, 21950448], [(5660456, 44304292), (5660456, 21950448)]) # Hopkins, Anthony in "The Silence of the Lambs"
+
 ```
 
 # References
