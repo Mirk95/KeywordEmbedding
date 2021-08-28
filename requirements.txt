@@ -17,7 +17,7 @@ six==1.15.0
 smart-open==3.0.0
 threadpoolctl==2.1.0
 tqdm==4.50.2
-urllib3==1.25.10
+urllib3==1.26.5
 networkx~=2.5
 simplejson~=3.17.2
 word2number~=1.1
